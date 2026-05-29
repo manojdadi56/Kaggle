@@ -1,0 +1,22 @@
+# 04 — Open Questions
+
+Priority: **High** (blocks design/go-live) · **Med** (affects robustness) · **Low** (nice to confirm).
+Status: **Open** · **Resolved** · **Escalated** (needs user/login).
+
+| ID | Question | Priority | Status | How to resolve |
+|----|----------|----------|--------|----------------|
+| Q-001 | Exact submissions-per-day limit and number of selectable final submissions for Nemotron? | **High** | Escalated | Login-gated `/rules` + Submit page. Read at runtime via `kaggle competitions submissions` / MCP `competition_submissions`; confirm cap manually before go-live. Drives the auto-submit budget (user set "3/day" — must not exceed the real cap). |
+| Q-002 | Does the competition/Kaggle ToS permit scripted/automated submission for this comp? | **High** | Escalated | Read gated `/rules`. Single-account scripted submit via official API is normally allowed; confirm no special clause. |
+| Q-003 | Exact JSON nesting of `outputs[].pullRequest.url` and where the branch name surfaces on a COMPLETED Jules session? | **High** | Open | Run ONE real Jules session during setup and dump the COMPLETED session + activities JSON. (Read-only verify; not "production" work.) |
+| Q-010 | Does the user have a usable local/cloud GPU, or do we rely on Kaggle free GPU for training? | **High** | **Escalated (ask user)** | Decision fork — see DECISIONS. Determines whether the GPU executor is Kaggle-kernels-only, a local agent, or paid cloud. |
+| Q-011 | Will the orchestrator build-out finish with enough of the ~16-day window left to actually iterate on the model? | **High** | **Escalated (ask user)** | Decide scope: thin baseline-first MVP vs full SDLC mesh. See DECISIONS. |
+| Q-004 | Do API-created Jules sessions share the same daily/concurrent quota as the UI? Is there a per-minute HTTP limit? | Med | Open | Observe `429`s empirically; implement exponential backoff regardless. Free tier = 15/day, 3 concurrent (F-007). |
+| Q-005 | Max wall-clock runtime per Jules session? | Med | Open | Undocumented. Implement a client-side timeout + `:sendMessage` nudge / re-trigger on stall. |
+| Q-006 | Full field list of `claude -p --output-format json` (num_turns, is_error, subtype…)? | Low | Open | Run once and inspect stdout. Only `.result`/`.session_id`/`.total_cost_usd`/`.structured_output` are doc-confirmed. |
+| Q-007 | Does `--allowedTools mcp__kaggle` allow-list ALL Kaggle MCP tools, or must each be named? | Low | Open | Test; otherwise enumerate exact tool names. |
+| Q-008 | Exact verbatim name of the Kaggle MCP upload tool + params of `create_code_competition_submission`? | Med | Open | `claude mcp add --transport http kaggle … --header "Authorization: Bearer KGAT_…"` then `/mcp` to dump the live tool schema. |
+| Q-009 | Does Claude Code's native HTTP-MCP + bearer header work against Kaggle (skipping mcp-remote)? | Med | Open | Try direct `{"type":"http","headers":{...}}` in `--mcp-config`; fall back to mcp-remote `--header`. |
+| Q-012 | Can a 30B-MoE QLoRA (rank ≤ 32) actually fit + train to a useful point within Kaggle free-GPU limits (2×T4, ~30 GPU-hr/wk)? | **High** | Open | Empirical — fork the winner's repo (F-026) and dry-run a tiny training job. Determines if free compute yields any competitive signal. |
+| Q-013 | Will the user keep `feedback.xlsx` closed while the orchestrator runs (Windows file-lock risk, A-009)? | Med | **Resolved** | D-3 = chat-only; git-tracked `feedback.md` is truth, `.xlsx` is a read-only view. No lock risk. |
+| Q-014 | Exact specs of the user's 40 GB 2-GPU box (GPU models, per-GPU VRAM, OS, how to reach it — SSH/local agent)? | **High** | **Escalated (user will share later)** | User said "configure later, keep ready." Determines the `local_40g` executor adapter (job submission, multi-GPU sharding, whether 30B QLoRA fits comfortably). Until then, `kaggle_gpu` is the default trainer. |
+| Q-015 | Can the Jules VM reach the public internet (e.g. `git clone` a public GitHub repo, fetch a URL) beyond package installs? | Med | **Resolved-by-design** | Don't depend on it. **Design decision:** operator vendors reference solutions into `competitions/<slug>/references/`; Jules analyzes in-repo (TASK-1.0). Optional one-time probe TASK-0.P confirms Jules clone access; if yes, later analysis tasks may self-fetch. Kaggle creds are NEVER placed on the Jules VM. |

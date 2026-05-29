@@ -1,0 +1,9 @@
+# 09 — Meta Log (notes on the research process)
+
+- **What worked:** A live `GET /v1alpha/sources` with the user's key was the single highest-value move — it converted ~5 documentation inferences into primary-source facts and revealed that `manojdadi56/Kaggle` is already a connected Jules source (killing a whole setup step, A-002). Lesson: when an API key is in hand, a read-only probe beats any amount of doc-reading.
+- **Parallel fan-out:** Four independent research streams (SDLC digest, Jules API, Claude/Kaggle, competition) ran concurrently and returned in one batch. The SDLC digest was internal (read the user's files); the other three were web research. No stream blocked another.
+- **Biggest surprise:** The Nemotron competition is a **LoRA-training/artifact** competition, not a prediction/CSV one — and Jules has **no GPU**. These two facts collided into the plan's central pivot (separate GPU executor). Neither was in the original concept. This is exactly the kind of thing pre-registration (E-2, E-3) is designed to catch.
+- **Dead end avoided:** Initially assumed the submission tool names from the user's notes were authoritative; the catalog/community check (C-001) corrected `competition_submit` and steered toward the CLI for the deterministic submit.
+- **Could-not-confirm, honestly flagged:** Kaggle's gated pages blocked the exact submission cap (Q-001) and rules (Q-002); marked OPEN rather than guessed. The plan is built to read the cap at runtime instead of hard-coding it.
+- **Fast-moving-domain note:** All three vendor surfaces are <1 year old. Findings are dated 2026-05-30; the plan isolates each contract behind a thin client to localize drift.
+- **Where I'd dig next if continuing:** one real Jules session (Q-003 PR JSON shape) and a tiny Kaggle-GPU QLoRA dry-run (Q-012) — both are setup-time live checks, not desk research.

@@ -1,0 +1,29 @@
+# secrets — NEVER commit
+.env
+*.key
+kaggle.json
+.mcp-auth/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# claude / ralph local state
+.claude/*.local.md
+.claude/settings.local.json
+
+# large / generated artifacts
+competitions/*/data/*
+!competitions/*/data/.gitkeep
+competitions/*/references/*/
+competitions/*/experiments/*/adapter/
+competitions/*/submissions/**/*.zip
+state/snapshots/
+
+# os
+.DS_Store
+Thumbs.db
