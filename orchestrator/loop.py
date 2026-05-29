@@ -32,13 +32,14 @@ def _utc_today() -> str:
 class Orchestrator:
     def __init__(self, *, state, locks, jules, kaggle, operator, git,
                  settings=None, executor_factory: Callable[[str], object] | None = None,
-                 today_fn: Callable[[], str] = _utc_today):
+                 today_fn: Callable[[], str] = _utc_today, github=None):
         self.state = state
         self.locks = locks
         self.jules = jules
         self.kaggle = kaggle
         self.operator = operator
         self.git = git
+        self.github = github  # GitHubOps (optional; enables PR listing + auto-merge)
         self.settings = settings or config.Settings()
         self.executor_factory = executor_factory or self._default_executor
         self.today_fn = today_fn
@@ -98,6 +99,11 @@ class Orchestrator:
     def gather_context(self, tick_id: str, feedback: str = "", open_prs=None) -> dict:
         cap = self.settings.max_auto_submits_per_day
         used = self.state.submits_today(self.today_fn())
+        if open_prs is None and self.github is not None:
+            try:
+                open_prs = self.github.list_open_prs()
+            except Exception as e:  # network/list failure must not crash the tick
+                open_prs = [{"error": f"could not list PRs: {e}"}]
         return {
             "tick_id": tick_id,
             "active_competition": self.settings.active_competition,
@@ -160,6 +166,19 @@ class Orchestrator:
                 {"op": "record_gpu_run", "idempotency_key": f"{tick_id}:{eid}:start",
                  "data": {"experiment_id": eid, "backend": g["backend"], "state": handle.state}}]})
             summary["gpu_started"].append(eid)
+
+        summary["merged_prs"] = []
+        for m in decision.get("pr_merges", []) or []:
+            if self.github is None:
+                summary["merged_prs"].append({"number": m["number"], "result": "no_github_ops"})
+                continue
+            rc, out = self.github.merge_pr(m["number"], message=m.get("reason"))
+            ok = rc == 0
+            self.state.apply_patch({"tick_id": tick_id, "operations": [
+                {"op": "append_event", "idempotency_key": f"{tick_id}:pr{m['number']}:merge",
+                 "data": {"pr": m["number"], "ok": ok, "reason": m.get("reason")},
+                 "summary": f"merge PR #{m['number']}: {'ok' if ok else 'failed'}"}]})
+            summary["merged_prs"].append({"number": m["number"], "ok": ok, "detail": out[:200]})
 
         sa = decision.get("submit_action") or {"action": "none"}
         if sa.get("action") == "submit":

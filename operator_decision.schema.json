@@ -45,6 +45,18 @@
         }
       }
     },
+    "pr_merges": {
+      "type": "array",
+      "description": "PRs the operator reviewed and approves for merge.",
+      "items": {
+        "type": "object",
+        "required": ["number", "reason"],
+        "properties": {
+          "number": {"type": "integer"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
     "gpu_dispatch": {
       "type": "array",
       "items": {

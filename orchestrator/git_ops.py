@@ -58,3 +58,9 @@ class GitOps:
     def merge(self, branch: str, ff_only: bool = False) -> tuple:
         args = ["merge"] + (["--ff-only"] if ff_only else ["--no-edit"]) + [branch]
         return self._git(*args)
+
+    def fetch(self, *args) -> tuple:
+        return self._git("fetch", *args)
+
+    def push(self, remote: str = "origin", branch: str = "main") -> tuple:
+        return self._git("push", remote, branch)
