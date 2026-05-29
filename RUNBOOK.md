@@ -18,8 +18,11 @@ cp .env.example .env
 Fill in `.env`. **Rotate the keys that were pasted into chat first** (Jules + Kaggle):
 - `JULES_API_KEY` — from jules.google settings (rotate the old one).
 - `KAGGLE_USERNAME` / `KAGGLE_KEY` — from kaggle.com account (rotate).
-- `ANTHROPIC_API_KEY` — Console key, or run `claude setup-token` for a CI token.
 - `KGAT` — only if you use the Kaggle MCP for agentic browsing (optional).
+
+**The operator is the Claude Code session on your subscription — there is NO `ANTHROPIC_API_KEY`.**
+- Do NOT set `ANTHROPIC_API_KEY` (if set, it overrides the subscription). Run `unset ANTHROPIC_API_KEY` / clear it in `/config`.
+- For the OPTIONAL unattended self-drive mode only: `claude setup-token` → put the printed token in `CLAUDE_CODE_OAUTH_TOKEN` (subscription OAuth, not an API key).
 
 `.env` is gitignored. Verify nothing secret is staged: `git status`.
 
@@ -47,11 +50,19 @@ python -m orchestrator.status  # current state snapshot
 4. Submit once: `kaggle competitions submit nvidia-nemotron-model-reasoning-challenge -f submission.zip -m "baseline"`.
 → first leaderboard score + a proven pipeline the loop then automates.
 
-## 5. Run the loop (after Phase 0/1)
+## 5. Run the operator (the Claude Code session IS the operator — no API key)
+The operator drives the toolkit each tick. One tick =
 ```bash
-python -m orchestrator.loop      # run_forever (or call Orchestrator.run_tick in a scheduler)
-python -m orchestrator.status    # monitor anytime
+python -m orchestrator.tools context --tick RUN-<ts>   # read decision-context JSON
+#   -> Claude Code (you / routine) decides, writes decision.json (schema: operator_decision.schema.json)
+python -m orchestrator.tools apply decision.json        # execute it (dispatch / merge / submit / commit)
+python -m orchestrator.tools status                     # monitor
 ```
+Recurring trigger options (all subscription, no API key) — see `prompts/operator_routine.md`:
+- **Cloud routine** (survives laptop-off, ≥1h): `/schedule every hour, run prompts/operator_routine.md`.
+- **Sub-hour, laptop-on**: Windows Task Scheduler → `claude -p "$(cat prompts/operator_routine.md)"` with `CLAUDE_CODE_OAUTH_TOKEN` set, `ANTHROPIC_API_KEY` unset.
+- **Interactive / while a session is open**: `/loop 30m run prompts/operator_routine.md`, or just run a tick yourself.
+
 Feedback channel (D-3): talk to Claude; the operator writes `feedback.md`. Pending
 submissions needing your approval appear in `competitions/<slug>/submissions/pending/`.
 

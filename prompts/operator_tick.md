@@ -17,5 +17,13 @@ Free Jules slots: {{free_slots}} · Auto-submits left today: {{submit_budget_lef
 3. **Parallel fan-out (optional):** if backlog tasks are independent of the primary move and of each other (disjoint `allowed_area`) and `free_slots > 0`, also dispatch them as concurrent Jules sessions. Certify independence in your rationale; if unsure, do not parallelize.
 4. **Emit** the decision per `operator_decision.schema.json`: `state_patch` ops (each with a deterministic idempotency_key `{{tick_id}}:<entity>:<action>`), any `jules_dispatch` (task_id + rendered prompt + allowed_area + starting_branch), any `gpu_dispatch` (experiment_id + backend), and `submit_action`.
 
+## How you run this tick (you ARE the operator — Claude Code on the subscription)
+You are not called via an API key. You drive the Python toolkit with your normal tools:
+1. `python -m orchestrator.tools context --tick <tick_id>` → read the decision-context JSON (state, feedback, open PRs, in-flight, plan, todo).
+2. Reason and decide (this step IS you — review PR diffs with `git`/the GitHub API, judge against acceptance criteria + invariants).
+3. Write your decision to `decision.json` (must match `operator_decision.schema.json`).
+4. `python -m orchestrator.tools apply decision.json` → the toolkit executes it (state patch, parallel Jules dispatch within cap+locks, GPU runs, approved `pr_merges`, budgeted submit, git commit).
+5. `python -m orchestrator.tools status` → confirm.
+
 ## Output
-Return ONLY the JSON object matching `operator_decision.schema.json`. No prose outside it.
+Your `decision.json` must be ONLY the JSON object matching `operator_decision.schema.json`.

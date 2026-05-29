@@ -1,10 +1,16 @@
-"""Operator integration — drive Claude Code headless as the per-tick brain.
+"""OPTIONAL headless-operator adapter (subscription auth, NO API key).
 
-The Operator renders the tick prompt, calls an injected `invoke(prompt) -> dict`
-(default shells `claude -p ... --output-format json --json-schema ...`), and
-validates the returned decision against operator_decision.schema.json.
+The PRIMARY operator is the Claude Code session itself (your subscription) driving
+the `orchestrator.tools` CLI — see tools.py. This class is only for the *unattended
+self-drive* mode where Windows Task Scheduler fires `claude -p` on a cadence; in
+that mode authenticate with a subscription OAuth token (`CLAUDE_CODE_OAUTH_TOKEN`
+from `claude setup-token`), and ensure `ANTHROPIC_API_KEY` is UNSET (it would
+override the subscription). No pay-per-token API key is ever required.
 
-Tests inject a fake `invoke`, so no Anthropic calls happen offline.
+It renders the tick prompt, calls an injected `invoke(prompt) -> dict` (default
+shells `claude -p ... --output-format json --json-schema ...`), and validates the
+returned decision against operator_decision.schema.json. Tests inject a fake
+`invoke`, so nothing is called offline.
 """
 from __future__ import annotations
 
