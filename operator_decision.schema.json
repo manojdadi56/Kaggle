@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OperatorDecision",
+  "description": "The single structured decision the operator returns each tick.",
+  "type": "object",
+  "required": ["tick_id", "status", "summary", "state_patch"],
+  "additionalProperties": false,
+  "properties": {
+    "tick_id": {"type": "string"},
+    "status": {"type": "string", "enum": ["complete", "blocked", "saturated", "needs_user"]},
+    "summary": {"type": "string"},
+    "actions_taken": {"type": "array", "items": {"type": "string"}},
+    "state_patch": {
+      "type": "object",
+      "required": ["operations"],
+      "properties": {
+        "patch_id": {"type": "string"},
+        "tick_id": {"type": "string"},
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["op", "idempotency_key"],
+            "properties": {
+              "op": {"type": "string"},
+              "idempotency_key": {"type": "string", "minLength": 1},
+              "data": {"type": "object"},
+              "summary": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "jules_dispatch": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task_id", "prompt", "allowed_area"],
+        "properties": {
+          "task_id": {"type": "string"},
+          "title": {"type": "string"},
+          "prompt": {"type": "string"},
+          "allowed_area": {"type": "string"},
+          "starting_branch": {"type": "string", "default": "main"}
+        }
+      }
+    },
+    "gpu_dispatch": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["experiment_id", "backend"],
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "backend": {"type": "string", "enum": ["kaggle_gpu", "dev_local", "local_40g", "cloud_paid"]},
+          "spec": {"type": "object"}
+        }
+      }
+    },
+    "submit_action": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": {"type": "string", "enum": ["submit", "queue", "none"]},
+        "reason": {"type": "string"},
+        "file": {"type": "string"},
+        "message": {"type": "string"},
+        "cv_score": {"type": ["number", "null"]},
+        "beats_best": {"type": "boolean"}
+      }
+    },
+    "next_recommended_action": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "risks": {"type": "array", "items": {"type": "string"}}
+  }
+}
