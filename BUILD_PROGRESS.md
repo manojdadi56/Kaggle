@@ -1,25 +1,25 @@
 # BUILD_PROGRESS — resume cursor for the Ralph build loop
 
-Update every iteration. Spec: `research-jules-orchestration/BUILD_RALPH_PROMPT.md` (§4 = Definition of Done).
+Spec: `research-jules-orchestration/BUILD_RALPH_PROMPT.md` (§4 = Definition of Done).
 
-## Status
+## Status — BUILD COMPLETE ✅
 | DoD | Item | State |
 |-----|------|-------|
-| 1 | Repo scaffold + AGENTS.md | ✅ done (commit 0d8a381) |
-| 4 | State layer (events/state/locks) | ▶ in progress |
-| 3 | Executor registry | ⬜ todo |
-| 2 | Thin clients (jules/kaggle/git) | ⬜ todo |
-| 5 | Operator integration | ⬜ todo |
-| 7 | Prompts + decision schema | ⬜ todo |
-| 6 | Tick loop + submit gate + packaging | ⬜ todo |
-| 9 | Seed initial backlog | ⬜ todo |
-| 10 | Tests + mock dry-run | ⬜ todo (grows alongside each module) |
-| 11 | RUNBOOK + monitoring | ⬜ todo |
+| 1 | Repo scaffold + AGENTS.md | ✅ done |
+| 4 | State layer (events/state/locks) | ✅ done |
+| 3 | Executor registry | ✅ done |
+| 2 | Thin clients (jules/kaggle/git) | ✅ done |
+| 5 | Operator integration | ✅ done |
+| 7 | Prompts + decision schema | ✅ done |
+| 6 | Tick loop + submit gate + packaging | ✅ done |
+| 9 | Seed initial backlog | ✅ done |
+| 10 | Tests + mock dry-run | ✅ done — `pytest -q` green, `python -m orchestrator.dryrun` exits 0 |
+| 11 | RUNBOOK + monitoring | ✅ done — RUNBOOK.md + `python -m orchestrator.status` |
 
-## Resume cursor
-Next: build `orchestrator/state.py` (event-sourced: append events.jsonl with idempotency dedup; project to state.json) + `orchestrator/locks.py` (concurrency cap + per-area path-prefix locks) + tests.
+## Verification
+- `pytest -q`: all green (state, locks, executors, clients, operator, prompts/schema, packaging/gate, loop, backlog, dryrun+status).
+- `python -m orchestrator.dryrun`: full mock end-to-end (dispatch→complete→train→package→submit) exits 0.
+- No live Jules/Kaggle/Anthropic calls anywhere in tests/dryrun; secrets only in gitignored `.env`.
 
-## Notes / decisions
-- All external integrations use dependency-injected transports → tests run offline.
-- pytest green required before each commit. Do not push during build.
-- Tooling confirmed: Python 3.13.12, pytest 9.0.3, git 2.47, claude CLI 2.1.132.
+## Next (human-gated, NOT part of the mock build — see RUNBOOK.md)
+Phase 0: creds in `.env` (rotate pasted keys) + confirm live submission cap & automation policy + one real Jules PR-shape probe. Phase 1: manual baseline submission. Then run the loop.
