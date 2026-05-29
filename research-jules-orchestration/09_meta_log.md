@@ -7,3 +7,10 @@
 - **Could-not-confirm, honestly flagged:** Kaggle's gated pages blocked the exact submission cap (Q-001) and rules (Q-002); marked OPEN rather than guessed. The plan is built to read the cap at runtime instead of hard-coding it.
 - **Fast-moving-domain note:** All three vendor surfaces are <1 year old. Findings are dated 2026-05-30; the plan isolates each contract behind a thin client to localize drift.
 - **Where I'd dig next if continuing:** one real Jules session (Q-003 PR JSON shape) and a tiny Kaggle-GPU QLoRA dry-run (Q-012) — both are setup-time live checks, not desk research.
+
+## R-001 pivot (2026-05-30, later same day) — operator execution model
+- **What happened:** after the system was built and live-proven (real Jules PRs #1–#3 merged), the user set a hard constraint: **no `ANTHROPIC_API_KEY` — the Claude Code session IS the operator.** This superseded the v1 design (operator = `claude -p` billed to an API key).
+- **Research move:** delegated a focused dive to the claude-code-guide agent (S-032) on subscription-only execution: routines/`/schedule` (cloud, no key, ≥1h), `claude setup-token`→`CLAUDE_CODE_OAUTH_TOKEN` (headless on subscription), `/loop`, and the auth-precedence gotcha (API key overrides subscription).
+- **Key surprise / gotcha:** `ANTHROPIC_API_KEY` *silently overrides* the subscription if set — so "no API key" means actively keeping it unset, not just "don't pass it." Captured as F-039.
+- **Consequence:** Python demoted from brain to toolkit (`orchestrator.tools`); the LLM-spawning `operator.py` became an optional self-drive adapter. This actually *simplified* the system — removed the only API-key dependency — and matches how the user already works (driving Claude Code directly). Live-merge of PRs #1–#3 had already validated the operator-drives-toolkit pattern by hand.
+- **Lesson reinforced:** verifying live beats designing in the abstract — we discovered the no-GPU Jules, the empty GitHub repo, the paid Jules tier, and now the auth-precedence trap only by touching real systems.

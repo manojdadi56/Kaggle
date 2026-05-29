@@ -26,6 +26,10 @@ Jules `v1alpha`, Kaggle MCP (~Nov 2025), Agent SDK billing change (2026-06-15). 
 The user wants seamless, minimal supervision (C-005).
 - **Engagement — REFRAMED, not refuted.** Steady-state supervision can be near-zero: once set up, the loop ticks, Jules PRs land, the operator reviews/merges/queues, and the user only approves submissions beyond the daily budget — via chat. What *cannot* be zero is the **one-time setup**: connect creds, confirm the submission cap/rules (Q-001/Q-002), and choose the compute path (D-1). The plan separates "one-time human setup" from "steady-state autonomy" so the promise is honest.
 
+## Counter-argument 7 (R-001) — "An operator with no API key, on a 1-hour cloud-routine cadence, is too weak/unreliable to run unattended."
+Routines are subscription-metered (daily allowance + a separate Agent-SDK credit pool from 2026-06-15), capped at a 1-hour minimum interval, and run as fresh cloud sessions that must re-orient from files each time.
+- **Engagement — mostly CONCEDED, and it's the right trade.** The user's hard constraint is "no API key," so subscription execution is non-negotiable; within that, routines are the *most* robust unattended option (survive laptop-off, no key). The 1-hour cadence is adequate because progress is event-accumulated: Jules PRs land between ticks and the operator batch-reviews them; nothing needs sub-minute latency. Fresh-session re-orientation is exactly what the git-committed state + `tools context` are designed for (the operator reads state each tick — same discipline as the SDLC single-cycle kernel). If the user later wants faster ticks while the laptop is on, Task-Scheduler + `claude -p` (OAuth token) gives 30-min without a key. Residual risk: subscription allowance (Q-017) — mitigated by a modest cadence and the fact that heavy lifting is Jules (separate quota) + GPU, not operator tokens.
+
 ## Residual unresolved (→ Open Questions / Decisions)
 - Whether free-GPU training yields any competitive signal (Q-012).
 - The real submission cap (Q-001) and automation-policy clause (Q-002).

@@ -173,3 +173,31 @@ Sources: S-030. **Confidence: Well-established.**
 ### F-036 — Feasibility scoring + always-feasible fallback (`reporter`) guarantees every tick does something useful
 Roles score by urgency (pending feedback ×5, ready tasks ×8, review queue ×7, …); if none feasible, `reporter` documents the blocker (score floor 0). **Maps to: the planner always has a productive move — advance, unblock, improve backlog, or explain why it's blocked.**
 Sources: S-030. **Confidence: Well-established.**
+
+---
+
+## Cluster F — Operator execution model (R-001: operator = Claude Code session, NO API key)
+
+### F-039 — The operator is the Claude Code session on the user's SUBSCRIPTION; `ANTHROPIC_API_KEY` must stay UNSET
+The user mandates no API key. Claude Code's auth precedence puts `ANTHROPIC_API_KEY` (and `ANTHROPIC_AUTH_TOKEN`) ABOVE subscription OAuth — so if the key is set it silently overrides the subscription and bills pay-per-token. Therefore the env var must be unset (or cleared in `/config`). The operator runs on the Pro/Max subscription via Claude Code.
+Sources: S-032. **Confidence: Well-established.**
+
+### F-040 — Scheduled **Routines** (`/schedule`) run on Anthropic cloud on the subscription, no API key — but ≥1-hour interval
+Routines (claude.ai/code/routines) execute remotely as full Claude Code sessions, survive the laptop being off, and are subscription-only (no API key, cannot use API billing). Minimum schedule interval is **1 hour** (cron supported); they draw on the account's daily run allowance. This is the cleanest unattended operator trigger — at the cost of the original 30-min heartbeat (→ Q-016).
+Sources: S-032. **Confidence: Supported** (single authoritative digest; verify exact daily allowance live).
+
+### F-041 — `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN` gives headless `claude -p` on the subscription (no API key)
+`claude setup-token` mints a ~1-year subscription OAuth token (inference-only). Exported as `CLAUDE_CODE_OAUTH_TOKEN`, it lets `claude -p` run non-interactively billed to the subscription — enabling sub-hour ticks via Windows Task Scheduler. Caveat: it does NOT work with `--bare` (bare requires API key/apiKeyHelper). This is the OPTIONAL `operator.py` self-drive adapter path.
+Sources: S-032. **Confidence: Supported.**
+
+### F-042 — `/loop` runs locally and is session-scoped — fine for interactive ticking, fragile for unattended
+`/loop <interval> <prompt>` keeps the current session alive and fires between turns; bills to whatever auth is active (subscription if logged in). It stops when the terminal/session closes and auto-expires recurring tasks after 7 days → not robust for true unattended operation; use a Routine or Task Scheduler for that.
+Sources: S-032. **Confidence: Supported.**
+
+### F-043 — Python is now a TOOLKIT the operator drives, not a brain that spawns an LLM
+Re-architecture: the tick is `tools context` → operator (Claude Code) decides → `tools apply decision.json`. `gather_context`/`apply_decision`/`poll_in_flight` are pure mechanics; the intelligence is the Claude Code session. The old `operator.py` (shells `claude -p`) is demoted to an optional unattended adapter (subscription-OAuth). This removes the only component that needed an API key.
+Sources: S-032, S-013/S-014 (headless flags), design. **Confidence: Well-established** (it's our design decision, grounded in F-039..F-042).
+
+### F-044 — Billing note: from 2026-06-15, subscription `claude -p` / Agent SDK draws from a separate monthly Agent-SDK credit pool
+Unattended operator usage on the subscription will consume a distinct monthly credit allotment (separate from interactive limits). Cadence should be budgeted accordingly (favors the 1-hour routine over very frequent ticks).
+Sources: S-032, S-017. **Confidence: Supported.**

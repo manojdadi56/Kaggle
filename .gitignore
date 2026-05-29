@@ -16,6 +16,9 @@ venv/
 .claude/*.local.md
 .claude/settings.local.json
 
+# selenium scraper local data (chrome profile + raw html) — never commit
+.scrape/
+
 # large / generated artifacts
 competitions/*/data/*
 !competitions/*/data/.gitkeep

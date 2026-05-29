@@ -1,8 +1,10 @@
 # Implementation Plan — Autonomous Kaggle Loop (Jules worker × Claude operator × local orchestrator)
 
-**Status:** Plan only — no code written, no Jules session created, no submission made.
+**Status:** BUILT + LIVE-PROVEN + re-architected (R-001). Orchestrator on GitHub `main` (84 tests green, mock dry-run exits 0); real Jules sessions triggered → PRs #1/#2/#3 merged live; 6 parallel sessions run; Jules tier confirmed paid (cap 15). **R-001:** operator = the Claude Code session on the subscription (NO `ANTHROPIC_API_KEY`); Python is a toolkit it drives.
 **Date:** 2026-05-30 · **First target:** NVIDIA Nemotron Model Reasoning Challenge (deadline 2026-06-15).
-**Verification level:** Jules API contract confirmed against the **live** API with the user's key; the target repo `manojdadi56/Kaggle` is **already connected** as a Jules source.
+**Verification level:** Jules API contract confirmed **live**; repo `manojdadi56/Kaggle` connected + populated; Jules has outbound internet (Q-015 resolved); PR-merge path dogfooded live.
+
+> **R-001 (operator execution) — supersedes the §4.2 v1 design.** The operator is the **Claude Code session on the user's Claude subscription** — never an API key, never a Python-spawned `claude -p`. The local Python is a **toolkit** (`orchestrator.tools`: `context`/`apply`/`status`) the operator drives each tick. The recurring trigger is a **scheduled Claude Code Routine** (`/schedule`, cloud, ≥1h, no key) or **Windows Task Scheduler → `claude -p`** authed by `CLAUDE_CODE_OAUTH_TOKEN` (subscription OAuth, from `claude setup-token`). `ANTHROPIC_API_KEY` must stay **unset** (it would override the subscription — F-039). See findings F-039..F-044.
 
 ---
 
@@ -11,7 +13,7 @@
 The system is three actors plus glue:
 
 - **Orchestrator** (local Python, always-on) — dumb scheduler. Polls Jules, watches the feedback inbox, fires the operator each tick, enforces "one Jules session at a time, one competition active."
-- **Operator** (Claude Code headless) — the brain. Each tick it plans the next move, reviews/merges Jules PRs, manages git-committed state, triggers the GPU executor, packages the adapter, and submits (within budget). Returns a machine-readable decision the orchestrator logs.
+- **Operator** (the Claude Code session on the user's subscription — **no API key**, R-001) — the brain. Each tick it plans the next move, reviews/merges Jules PRs, manages git-committed state, triggers the GPU executor, packages the adapter, and submits (within budget) — by driving the Python **toolkit** (`orchestrator.tools`).
 - **Worker** (Jules) — the code author. Picks up one task spec, writes/iterates the *non-GPU* code (synthetic-data generation, data curation, training script, packaging/validation, eval harness), opens a PR.
 - **GPU executor** (NOT Jules) — the component that actually trains the LoRA adapter, because **Jules has no GPU and the competition is GPU LoRA training** (the central finding, F-024 × F-008). Default candidate: **Kaggle Notebooks**, driven via the kaggle kernels API.
 
@@ -29,31 +31,33 @@ The trigger prompts are built from the user's SDLC skill DNA: a single-actor-per
             └───────────────────────────────────────────────────────────────┘
                                         │  feedback.md / feedback.xlsx (inbox)
                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  ORCHESTRATOR  (local Python, always-on)                                      │
-│  • loop: poll Jules session state every 60s while one is in-flight            │
-│  • event/heartbeat: fire operator when (PR opened) | (feedback changed) | 30m │
-│  • enforces: 1 session in flight, 1 active competition, idempotent ticks      │
-└───────────────┬─────────────────────────────────────────────┬───────────────┘
-                │ shells `claude -p`/SDK each tick              │ REST (httpx)
-                ▼                                               ▼
-┌──────────────────────────────┐                ┌──────────────────────────────┐
-│  OPERATOR  (Claude headless)  │   creates →    │  JULES  (worker)              │
-│  plan → review PR → merge →   │  POST /sessions│  one task → writes non-GPU    │
-│  trigger GPU run → package →  │◀── poll/PR ────│  code → opens GitHub PR       │
-│  submit (≤budget) → state     │                │  (no GPU; AGENTS.md-guided)   │
-└───────┬───────────────┬───────┘                └──────────────────────────────┘
-        │ kaggle CLI/API │ git commit (state of record)
-        ▼                ▼
-┌──────────────────────────────┐   ┌──────────────────────────────────────────┐
-│  GPU EXECUTOR                 │   │  STATE (git):                              │
-│  Kaggle Notebook (GPU) /      │   │  state.json · tasks/ · plan.md ·           │
-│  local GPU / cloud            │   │  decisions/ · experiments/ · submissions/  │
-│  → trains LoRA adapter        │   │  feedback.md(.xlsx) · events.jsonl         │
-└──────────────────────────────┘   └──────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TRIGGER (subscription, NO API key):                                           │
+│   scheduled Routine (/schedule, cloud, ≥1h)  |  Task Scheduler → claude -p      │
+│   (CLAUDE_CODE_OAUTH_TOKEN)  |  interactive / /loop                             │
+└───────────────────────────────────┬────────────────────────────────────────────┘
+                                     ▼  fires one tick
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  OPERATOR  =  the Claude Code session (the brain; subscription)                │
+│  reads context → reviews PR diffs → decides → writes decision.json             │
+└───────────────────────────────────┬────────────────────────────────────────────┘
+                                     │ drives (Bash):  tools context / tools apply
+                                     ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  TOOLKIT  (local Python `orchestrator/`, pure mechanics — no intelligence)     │
+│  gather_context · apply_decision · poll_in_flight · clients · executors        │
+└───┬───────────────────────┬───────────────────────┬───────────────────┬───────┘
+    │ REST (httpx)          │ kaggle CLI / kernels  │ git + GitHub API  │ git commit
+    ▼                       ▼                       ▼                   ▼
+┌─────────────┐   ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
+│ JULES       │   │ GPU EXECUTOR     │   │ GitHub PRs       │   │ STATE (git)      │
+│ (worker)    │   │ kaggle_gpu /     │   │ create / merge   │   │ state.json ·     │
+│ task → PR   │   │ local_40g /      │   │ (pr_merges)      │   │ events.jsonl ·   │
+│ (no GPU)    │   │ cloud_paid       │   │                  │   │ tasks/ plan/ ... │
+└─────────────┘   └──────────────────┘   └──────────────────┘   └──────────────────┘
 ```
 
-**Authority separation (from SDLC F-031):** only **Jules** writes project code; only the **operator** writes state files and submits; the **orchestrator** writes nothing but its own run log. Git is the rollback safety net.
+**Authority separation (SDLC F-031, R-001):** only **Jules** writes project code; only the **operator** (Claude Code) decides and — via the toolkit — writes state, merges PRs, and submits; the **toolkit** has no autonomy of its own (it validates + executes the operator's decision). No component uses an Anthropic API key. Git is the rollback safety net.
 
 ---
 
@@ -109,23 +113,26 @@ The trigger prompts are built from the user's SDLC skill DNA: a single-actor-per
 - **Limits/guards:** Free 15 tasks/day, 3 concurrent (F-007). Orchestrator enforces ≤1 in flight, exponential backoff on HTTP 429, a client-side wall-clock timeout (Q-005) with a `:sendMessage` nudge then re-trigger on stall.
 - **Client:** raw REST via `httpx` behind one `jules_client.py` module (F-009) — not the unofficial SDK.
 
-### 4.2 Operator — Claude Code headless contract
+### 4.2 Operator — the Claude Code session on the subscription (R-001; NO API key)
 
-- **Invocation each tick (CLI form):**
+The operator is **Claude Code itself** (this session, a scheduled Routine, or a Task-Scheduler `claude -p` run), authenticated by the user's **subscription** — never `ANTHROPIC_API_KEY` (F-039–F-041). It drives the Python **toolkit**; the toolkit holds the mechanics, the operator holds the judgment.
+
+- **A tick (what the operator does):**
   ```
-  claude -p "<operator tick prompt>" \
-    --output-format json --json-schema operator_decision.schema.json \
-    --permission-mode acceptEdits \
-    --allowedTools "Read,Edit,Write,Bash(git *),Bash(kaggle *),mcp__kaggle__competition_submissions,mcp__kaggle__competition_leaderboard_view" \
-    --mcp-config .mcp.json --strict-mcp-config \
-    --session-id <persistent-uuid-per-competition> \
-    --append-system-prompt-file prompts/operator_system.md \
-    --max-turns 60 --max-budget-usd <cap> --model opus
+  python -m orchestrator.tools context --tick RUN-<ts>   # decision-context JSON (state, feedback, open PRs, in-flight, plan, todo)
+  #   → operator reasons: reviews PR diffs vs acceptance criteria + invariants, plans the next move
+  #   → writes decision.json  (schema: operator_decision.schema.json)
+  python -m orchestrator.tools apply decision.json        # toolkit executes: state patch, parallel Jules dispatch (cap+locks),
+  #                                                          GPU runs, approved pr_merges, budgeted submit, git commit
+  python -m orchestrator.tools status                     # monitor
   ```
-  Parse `.structured_output` for the decision; `.session_id`/`.total_cost_usd` for bookkeeping (F-011). First tick uses `--session-id <uuid>`; later ticks `--resume <uuid>` for continuity (F-015).
-- **Recommended embedding:** the **Python `claude-agent-sdk`** (`query(prompt, options=ClaudeAgentOptions(allowed_tools=, permission_mode=, resume=, mcp_servers=, hooks=))`) over shelling out — native messages, no NDJSON parsing, and in-process **permission hooks to gate the submit tool** (F-014). Billing note: from **2026-06-15** Agent-SDK/`-p` usage on subscription plans draws a separate Agent-SDK credit (F-014).
-- **Unattended permissions:** `acceptEdits` + explicit `--allowedTools`, or `dontAsk`; never broad `bypassPermissions` outside a sandbox (F-012). Auth: `ANTHROPIC_API_KEY` or `claude setup-token`.
-- **Structured output schema** (`operator_decision.schema.json`) — the operator's RunResult (SDLC-style, F-032): `{ tick_id, status: complete|blocked|saturated|needs_user, actions_taken:[], jules_action: {create_session|none, task_id, prompt_ref}, gpu_action, submit_action: {submit|queue|none, reason, cv_score, beats_best}, state_patch:[ops], next_recommended_action, evidence:[], risks:[] }`.
+- **Decision schema** (`operator_decision.schema.json`, validated on `apply`): `{ tick_id, status: complete|blocked|saturated|needs_user, actions_taken:[], state_patch:{operations:[{op,idempotency_key,data}]}, jules_dispatch:[{task_id,prompt,allowed_area,starting_branch}], pr_merges:[{number,reason}], gpu_dispatch:[{experiment_id,backend,spec}], submit_action:{action:submit|queue|none,file,cv_score,...}, next_recommended_action, evidence:[], risks:[] }`.
+- **Recurring trigger (subscription, no key — F-040–F-042, see `prompts/operator_routine.md`):**
+  - **Cloud Routine** (`/schedule`) — runs on Anthropic cloud, survives laptop-off, ≥1h interval. Cleanest unattended path.
+  - **Windows Task Scheduler → `claude -p "$(cat prompts/operator_routine.md)"`** with `CLAUDE_CODE_OAUTH_TOKEN` set (from `claude setup-token`) and `ANTHROPIC_API_KEY` unset — for sub-hour ticks while the laptop is on.
+  - **Interactive / `/loop`** — run a tick yourself, or `/loop 30m run prompts/operator_routine.md` while a session is open.
+- **Optional self-drive adapter:** `orchestrator/operator.py` can render the tick prompt and call `claude -p` itself (for the Task-Scheduler path), parsing `.structured_output`. It is OPTIONAL and uses `CLAUDE_CODE_OAUTH_TOKEN`, never an API key. The primary mode is the Claude Code session driving `tools` directly.
+- **Permissions:** when run via `claude -p`, use `--permission-mode acceptEdits` + explicit `--allowedTools` (`Read,Edit,Write,Bash(git *),Bash(python *),Bash(kaggle *)`); the submit budget + invariants are enforced in `tools apply` regardless. Billing: from 2026-06-15 subscription `claude -p` draws a monthly Agent-SDK credit (F-044) → favor the hourly routine.
 
 ### 4.3 Kaggle — submission & inspection contract
 
@@ -241,9 +248,9 @@ The orchestrator fills `{{...}}` from the chosen `tasks/<id>.md` and sends it as
 
 ---
 
-## 9. Decisions needed from you (then code starts)
-- **D-1** compute path · **D-2** scope/sequencing · **D-3** feedback channel (see §3).
-- Confirm: rotate the two pasted keys after setup; operator may auto-merge clean PRs (you granted full autonomy); auto-submit budget clamps to the live cap.
+## 9. Decisions — all locked; remaining is setup, not design
+- **D-1** compute (Kaggle + 40 GB box), **D-2** baseline-first, **D-3** chat feedback, **R-001** operator = Claude Code/subscription (no API key) — all locked (§3).
+- **Remaining (human-gated setup, not decisions):** rotate the pasted Jules/Kaggle keys into `.env`; keep `ANTHROPIC_API_KEY` unset; confirm the live submission cap + that scripted submission is allowed; stand up the recurring trigger (Routine `/schedule` or Task Scheduler). Then it ticks unattended.
 
 ---
 

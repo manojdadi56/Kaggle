@@ -8,7 +8,7 @@ Status: **Validated** · **Invalidated** · **Active** (unverified, load-bearing
 | A-002 | The Kaggle repo must have the Jules GitHub App installed before we can trigger it. | **INVALIDATED** | F-016: live probe shows `sources/github/manojdadi56/Kaggle` is already connected. No setup step needed. |
 | A-003 | Jules runs fully autonomously without human plan-approval clicks when triggered via API. | **Validated** | F-004: API-created sessions auto-approve plans by default; `automationMode:AUTO_CREATE_PR` opens the PR. |
 | A-004 | A local Python script can serve as the always-on scheduler/orchestrator on the user's Windows laptop. | **Active** | User's chosen design. Caveat: it only runs while the laptop is on (accepted trade-off). Resilience handled via persisted state + idempotency. |
-| A-005 | Claude Code in headless mode (`claude -p`) can act as the operator and return machine-readable decisions to the orchestrator. | **Validated** | F-010, F-011: `--output-format json --json-schema` → `.structured_output`. |
+| A-005 | Claude Code in headless mode (`claude -p`) authenticated by `ANTHROPIC_API_KEY` is the operator. | **SUPERSEDED by R-001** | Original v1 design. Replaced: the operator is the Claude Code session on the **subscription** (no API key); Python is a toolkit it drives (F-039, F-043). Headless `claude -p` survives only as an OPTIONAL self-drive adapter authed by `CLAUDE_CODE_OAUTH_TOKEN` (F-041), never an API key. |
 | A-006 | The Kaggle submission can be automated without a browser. | **Validated** (file path) | F-017: kaggle CLI submits with env-var auth, no browser. MCP needs bearer-header workaround (F-019). |
 | A-007 | The competition allows scripted/automated submission (no anti-automation rule violation). | **Flagged** | Q-002: Kaggle prohibits multi-account & some automation; the gated `/rules` page must be confirmed before going live. Single-account scripted submit is normally fine, but verify. |
 | A-008 | Daily submission limit is ~5/day (Kaggle default). | **Flagged** | Q-001: NOT confirmed — host-side LLM scoring is expensive, cap may be 1–3/day. Design must read remaining-submissions at runtime, not hard-code. |
@@ -23,7 +23,11 @@ Status: **Validated** · **Invalidated** · **Active** (unverified, load-bearing
 | A-015 | The pasted keys are still valid for setup but should be rotated. | **Active** | Jules auto-disables publicly-exposed keys (F-001 note); both keys are now in the transcript. Plan assumes rotation before production. |
 | A-016 | Using multiple Kaggle accounts to pool free GPU quota for one competition is acceptable. | **INVALIDATED (governance)** | F-037: violates Kaggle's one-account-per-participant rule → disqualification from the ~$106k prize + bans across all linked accounts. Marginal compute upside vs catastrophic downside. **Declined; not built.** Use one account + own/paid compute instead. |
 
-## Locked user decisions (2026-05-30)
+| A-019 | A scheduled Claude Code Routine (cloud, ≥1h) is an acceptable unattended operator trigger despite losing the 30-min heartbeat. | **Active** | F-040/Q-016. 1h cadence is fine since Jules sessions take minutes+ and PRs accumulate between ticks; sub-hour available via Task Scheduler if needed. |
+| A-020 | Subscription usage (routines / `claude -p` via OAuth) stays within the user's plan allowance at the chosen cadence. | **Flagged** | F-044/Q-017. From 2026-06-15 a separate monthly Agent-SDK credit applies; confirm allowance and keep cadence modest. |
+
+## Locked user decisions
 - **D-2 = Baseline-first**, then automate. ✅
 - **D-3 = Chat-only feedback**: user talks to Claude; operator writes git-tracked `feedback.md` + a read-only `.xlsx` view. ✅
-- **D-1 = compute: REOPENED.** User proposed multi-Kaggle-account pooling → declined on ToS/governance grounds (A-016/F-037). Awaiting a compliant compute choice.
+- **D-1 = compute (2026-05-30):** Kaggle free GPU primary + user's 40 GB 2-GPU box (configure later) + RTX-3050 dev-only; paid cloud upgrade. Multi-account pooling declined (A-016/F-037).
+- **R-001 = operator execution (revised):** the operator is the **Claude Code session on the subscription — NO `ANTHROPIC_API_KEY`** (F-039). Python is a toolkit (`orchestrator.tools`) it drives; recurring trigger = scheduled Routine (`/schedule`) or Task-Scheduler `claude -p` via `CLAUDE_CODE_OAUTH_TOKEN`.

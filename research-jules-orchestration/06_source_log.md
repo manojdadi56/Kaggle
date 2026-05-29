@@ -36,4 +36,6 @@ Quality scale: **A** = official primary docs / live API response; **B** = offici
 | S-030 | `C:\Users\Manoj Sai\Downloads\Archive (3)\Archive\sdlc` (SKILL.md, references/, scripts/, schemas/) | User's local skill (read directly) | A | F-027..F-036 SDLC contract patterns |
 | S-031 | kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/rules | Official rules (reCAPTCHA-blocked) | A* | Q-001, Q-002 submission limit + eligibility (NOT readable) |
 
+| S-032 | claude-code-guide agent digest of docs.claude.com (headless, CLI reference, routines/`/schedule`, `/loop`, `claude setup-token`, auth precedence) — May 2026 | Official docs via expert agent | A | F-039..F-044 — operator-as-Claude-Code execution model, subscription auth, no API key |
+
 `A*` = authoritative source that exists but could not be read directly (JS-rendered / login / reCAPTCHA); facts came from corroborating C-grade sources and are flagged accordingly.

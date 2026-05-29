@@ -3,16 +3,15 @@
 Research workspace for the implementation plan. **The plan is [REPORT.md](REPORT.md).**
 
 ## Current state
-- **Phase:** 4 (Final report delivered); all decisions LOCKED → awaiting user green light to start Phase 0/1 implementation.
+- **Phase:** BUILT + LIVE-PROVEN + re-architected (R-001). The system exists on GitHub `main`, runs real Jules sessions, and merged 3 real PRs. Now: stand up the recurring operator trigger + human-gated Phase-0 setup.
 - **Last updated:** 2026-05-30.
-- **Decisions locked:** D-1 = pluggable trainer pool — **user's 40 GB 2-GPU box = primary (configure later, Q-014/A-017)** + Kaggle free GPU (2×T4, available now) + RTX-3050-4GB dev-only + paid-cloud upgrade (multi-account pooling rejected, F-037); D-2 = baseline-first; D-3 = chat-only feedback; repo = `C:\Users\Manoj Sai\Ksggle`.
-- **Concurrency/isolation:** parallel Jules sessions allowed for certified-independent tasks (cap = tier limit, free = 3; per-area locks); each competition is a self-contained `competitions/<slug>/` folder, one active at a time.
-- **Handoff:** the user will trigger the actual build in a **separate session** with a stated goal; this workspace + project memory are the spec to load first.
-- **Immediate next action:** Phase 0 (creds/`.env` + confirm submission cap & automation policy on gated pages, Q-001/Q-002) → Phase 1 (manual baseline submission). No build until user says go.
-- **Verification highlight:** Jules API contract confirmed **live**; `manojdadi56/Kaggle` is **already a connected Jules source** (no GitHub-App setup needed).
+- **R-001 (operator execution):** the operator is the **Claude Code session on the user's subscription — NO `ANTHROPIC_API_KEY`** (if set it overrides the subscription, F-039). Python is a **toolkit** (`orchestrator.tools`: context/apply/status) the operator drives. Recurring trigger = scheduled Routine (`/schedule`, cloud, ≥1h, no key) or Task-Scheduler `claude -p` via `CLAUDE_CODE_OAUTH_TOKEN`.
+- **Decisions locked:** D-1 = 40 GB 2-GPU box primary (configure later) + Kaggle free GPU + RTX-3050 dev-only + paid-cloud upgrade (multi-account pooling rejected, F-037); D-2 = baseline-first; D-3 = chat feedback; repo = `C:\Users\Manoj Sai\Ksggle` (pushed).
+- **Live status:** Jules tier **paid** (cap 15); Jules **has internet** (Q-015 resolved); PRs #1/#2/#3 merged via `github_ops`; 84 pytest green; mock dry-run exits 0.
+- **Immediate next action:** rotate Jules/Kaggle keys into `.env`, keep `ANTHROPIC_API_KEY` unset, confirm submission cap (Q-001/Q-002), set up the routine/Task-Scheduler trigger. Then unattended.
 
-## The one-paragraph answer
-A local Python **orchestrator** ticks continuously: it triggers **Jules** (worker, via `POST /v1alpha/sessions` with `AUTO_CREATE_PR` + auto-approved plans) to author non-GPU code and open PRs, and wakes **Claude Code headless** (operator) each tick to plan, review/merge PRs, drive a **GPU executor** (Kaggle Notebooks — because Jules has no GPU and the competition is LoRA training), package the adapter, and submit within a budget. State lives as git-committed JSON/markdown using the SDLC skill's event-sourced, idempotent, single-writer, 8-surface-prompt patterns. The real constraints are **compute** and a **~16-day deadline**, so the plan is **baseline-first**.
+## The one-paragraph answer (R-001)
+The **operator is the Claude Code session on the user's subscription** (no API key). On a recurring trigger (a scheduled Routine, or Task-Scheduler `claude -p` via an OAuth token), it runs one **tick**: `tools context` → review open PRs + decide → `tools apply`. That drives a pure Python **toolkit** which triggers **Jules** (worker, `POST /v1alpha/sessions` with `AUTO_CREATE_PR` + auto-approved plans) to author non-GPU code and open PRs, **reviews/merges** those PRs, drives a **GPU executor** (Kaggle / the 40 GB box — Jules has no GPU and the comp is LoRA training), packages the adapter, and submits within budget. State is git-committed JSON/markdown using the SDLC event-sourced, idempotent, single-writer patterns. Real constraints: **compute** + **~16-day deadline** → **baseline-first**.
 
 ## Key metrics
 - Findings **36** · Sources **31** (1 live primary probe) · Assumptions **15** (2 invalidated) · Open Qs **13** (5 High) · Contradictions **5** · Steel-man counter-args **6**.
@@ -40,3 +39,4 @@ A local Python **orchestrator** ticks continuously: it triggers **Jules** (worke
 3. The Jules API contract is **clean and verified live**; the target repo is already connected (F-001/F-016).
 4. The dominant risks are **compute** and **~16 days left** — so **baseline-first**, automate second (F-024/F-025, steel-man #1).
 5. **Submission cap & automation policy are unconfirmed** (login-gated) — read the cap live, never hard-code; confirm before unattended submits (Q-001/Q-002).
+6. **(R-001) The operator is the Claude Code session on the subscription — no API key.** Python is a toolkit it drives; `ANTHROPIC_API_KEY` must stay unset; recurring trigger = a scheduled Routine or Task-Scheduler `claude -p` via `CLAUDE_CODE_OAUTH_TOKEN` (F-039..F-044).

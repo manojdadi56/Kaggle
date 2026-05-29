@@ -8,8 +8,12 @@
 | G-004 | **Activity** (Jules) | An event within a session (planGenerated, agentMessaged, progressUpdated, sessionCompleted…). Polled via `…/activities` with a `createTime` cursor. |
 | G-005 | **automationMode / AUTO_CREATE_PR** | Session setting that makes Jules open a GitHub PR automatically at the end. |
 | G-006 | **requirePlanApproval** | Session flag; API sessions auto-approve by default (false ⇒ fully autonomous). |
-| G-007 | **Operator** | Claude Code run headless (`claude -p` / `claude-agent-sdk`) by the orchestrator each tick to plan, review Jules PRs, merge, manage state, package, and submit. The **brain**. |
-| G-008 | **Orchestrator** | The always-on local Python process. Dumb glue: polls Jules, watches feedback, fires the operator, enforces the loop. Holds no intelligence of its own. |
+| G-007 | **Operator** | (R-001) The **Claude Code session itself**, on the user's subscription — the brain that each tick reads context, decides, reviews/merges PRs, dispatches Jules, triggers training, and submits. It is NOT an API key and NOT a `claude -p` subprocess spawned by Python. It drives the toolkit (G-022). Triggered interactively, by a routine (G-019), or by Task-Scheduler `claude -p` via an OAuth token (G-020). |
+| G-008 | **Orchestrator / toolkit** | (R-001) The local Python package `orchestrator/` — pure mechanics (state, locks, Jules/Kaggle/GitHub clients, executors, packaging, submit gate) plus the `tools` CLI (`context`/`apply`/`status`). It holds **no intelligence**; the operator (Claude Code) drives it. |
+| G-019 | **Routine** (`/schedule`) | A scheduled Claude Code session that runs on Anthropic cloud on the subscription (no API key), survives the laptop being off, min 1-hour interval. The recommended unattended operator trigger. |
+| G-020 | **CLAUDE_CODE_OAUTH_TOKEN** | A ~1-year subscription OAuth token from `claude setup-token` that lets `claude -p` run headless billed to the subscription (no API key). Used by the optional Task-Scheduler self-drive path. |
+| G-021 | **ANTHROPIC_API_KEY (avoided)** | Pay-per-token API credential. Deliberately NOT used; if set it overrides subscription auth, so it must stay unset (F-039). |
+| G-022 | **Operator tick** | One run of the operator: `tools context` → decide → write `decision.json` → `tools apply`. The unit the routine/loop/Task-Scheduler repeats. |
 | G-009 | **GPU executor** | The component that actually trains the LoRA adapter (needs a real GPU). NOT Jules. Candidates: Kaggle Notebooks (free GPU, API-driven), user's local GPU, or paid cloud. |
 | G-010 | **LoRA adapter** | Low-Rank Adaptation weights fine-tuned on top of a frozen base model. Nemotron submission = a rank-≤32 adapter + `adapter_config.json` zipped. |
 | G-011 | **Nemotron-3-Nano-30B-A3B-BF16** | The fixed base model for the competition (30B total / 3B active MoE). Provided as a Kaggle Model; may not be replaced or full-fine-tuned. |
