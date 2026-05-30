@@ -109,6 +109,17 @@ Verified across ~12 programmatic `save_notebook` attempts spanning two notebooks
 - **For checking code syntax/deps cheaply**: API `SaveAndRunAll` is OK if your code has an early hard assertion that catches the P100 in <30s before doing real work (see cell 0 in `notebook_fork_working.ipynb`: `assert cc >= 7.0`).
 - **Operator role going forward**: edit code via MCP, monitor sessions via MCP, auto-submit via MCP (`tools/auto_submit.py`). The user role is reduced to: **one browser Save & Run All click per experiment iteration**.
 
+### DEFINITIVE EVIDENCE (smoke test v15, 2026-05-31)
+Pushed a deliberately tolerant smoke notebook via API SaveAndRunAll on the demo fork (`sai1881/nvidia-nemotron-submission-demo` v15) — no model load, no assertions, just `os.walk('/kaggle/input')`. Notebook had **4 dataSources** in metadata.kaggle (competition + modelInstanceVersion + datasetVersion + kernelVersion, all with proper IDs). Result:
+```
+GPU0: Tesla P100-PCIE-16GB | 15.9GB | sm_60
+/kaggle/input: dirs=[] files=[]
+bitsandbytes wheels found: 0
+train.csv found: 0
+config.json found: 0
+```
+API runs land in a stripped-down sandbox with EMPTY `/kaggle/input` regardless of metadata. Don't test this again. Iterate code via QuickSave; require user browser action for runs.
+
 **Workflow that actually works**: USER does a ONE-TIME interactive setup in the web editor (open notebook → Add Input: competition + `metric/nemotron-3-nano-30b-a3b-bf16` model → Settings→Accelerator: NVIDIA RTX Pro 6000 → Save & Run All). AFTER that one interactive save, the inputs + accelerator are baked into the notebook config, and the operator CAN iterate via MCP: `save_notebook` (new code, inherits attached inputs) + `get_notebook_session_status` + `download_notebook_output` + `submit_to_competition`. So: **1 manual setup, then fully API-driven iteration + monitoring + submission.**
 
 ### Orphan PRs to ignore
