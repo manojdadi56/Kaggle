@@ -38,6 +38,24 @@ For tasks where the actual GPU run happens on Kaggle:
 4. Pull outputs via `kernel-output … -d competitions/<slug>/experiments/<exp-id>/`.
 5. PR body must include kernel URL, terminal state, and the `cv_score.json` contents.
 
+### Nemotron kernel — 7 hard-learned fixes (verified working as of E-002 v7)
+The first GPU dispatch iterated 7 versions before passing setup. Every Nemotron Mamba-hybrid kernel MUST include all 7 of these or it will fail. Use `train-baseline-e002/train.py` as the reference; it has them all. Run `python tools/check_kernel.py <kernel-dir>` to lint.
+
+1. **`enable_internet: true`** in `kernel-metadata.json` — required to pip-install Mamba deps. (Default in Jules templates is `false`.)
+2. **Real model_sources slug**: `metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1` (the *official* Kaggle Competition Metrics account `metric/`; do NOT pick `daroai/`, `barnobarno/`, or any community fork — they may be stale or missing files).
+3. **Inline cv + score modules at top of train.py** — script-type kernels upload ONLY the `code_file`; sibling `cv.py` / `score.py` are not uploaded. Use the `exec(compile(...))` + `sys.modules[name] = mod` pattern in `train-baseline-e002/train.py` lines 25-36.
+4. **Install Mamba deps inline**: `causal-conv1d`, `mamba-ssm`, `bitsandbytes` are NOT in Kaggle's base image. The `_ensure_deps()` function at the top of `train.py` handles this with `pip install --no-build-isolation`.
+5. **Offline flags + local_files_only=True**: set `os.environ['TRANSFORMERS_OFFLINE'] = '1'` and `os.environ['HF_HUB_OFFLINE'] = '1'` before any `from_pretrained` call. Pass `local_files_only=True` to `AutoModelForCausalLM.from_pretrained` and `AutoTokenizer.from_pretrained`. Otherwise transformers tries to interpret `/kaggle/input/...` as an HF repo id and fails with `OSError: Repo id must be in the form 'repo_name'`.
+6. **`trust_remote_code=True`**: Nemotron has custom Mamba-hybrid modeling code that transformers doesn't ship. Required on BOTH `from_pretrained` calls. Without it: `ValueError: The repository ... contains custom code which must be executed`.
+7. **Auto-detect mount path with `os.walk`**: the actual Kaggle Models mount path is `/kaggle/input/models/<owner>/<slug>/<framework>/<variation>/<version>/` (note the `models/<owner>/` prefix). A hardcoded path WILL be wrong. Walk `/kaggle/input` looking for a dir with both `config.json` and `tokenizer.json`; that's the model. See `train-baseline-e002/train.py` lines 78-101.
+
+### Hardware constraint: T4×2 only
+**Do NOT push without setting `enable_gpu: true`** — but Kaggle's API has NO field to request a specific GPU type. The web UI's Settings → Accelerator dropdown is the only way to force `GPU T4 x2`. If Kaggle assigns a P100 (sm_60), the PyTorch wheel in Kaggle's base image errors out (`Tesla P100 with CUDA capability sm_60 is not compatible`). The Mamba kernels MUST run on T4×2 — meaning kernel pushes via API may need to be re-run via the web UI to pick the accelerator type. Manual notebook upload (see `notebook_e002_manual.ipynb`) is the workaround.
+
+### Orphan PRs to ignore
+- **PR #42** (`tools/package_submission.py`): superseded by operator-rescue merge `868481f`. Functionally identical.
+- **PR #47** (kernel-metadata fix): partially correct but uses non-canonical model slug `daroai/nvidia-nemotron-3-nano-30b-a3b-bf16` instead of official `metric/nemotron-3-nano-30b-a3b-bf16`, and missing fixes 3-7 above. Superseded by `train-baseline-e002` direct edits. **Do NOT merge.**
+
 ## Coordination with the ledger
 Up to 5 Jules sessions run in parallel; each is blind to the others. Before pushing a kernel or proposing a submission, glance at `state/state.json` (in your clone) for the current `best_cv` and today's submission count — keep your task small, additive, and within its `allowed_area`. The operator deduplicates and gates.
 
