@@ -318,17 +318,7 @@
   },
   "metrics": [],
   "schema_version": 1,
-  "sessions": {
-    "12749140667475037666": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
-      "branch": "main",
-      "created_at": "2026-05-30T14:19:13.062724+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/47",
-      "state": "COMPLETED",
-      "task_id": "TASK-FIX-kernel-metadata"
-    }
-  },
+  "sessions": {},
   "submit_counter": {},
   "suggestions": {},
   "tasks": {
@@ -691,7 +681,7 @@
       "session_id": "12749140667475037666",
       "size_hint": "~30 min",
       "spec": "Each kernel-metadata.json has dataset_sources=['TODO/REPLACE-WITH-CORPUS-DATASET-SLUG'] and model_sources=['TODO/REPLACE-WITH-REAL-MODEL-VERSION-FROM-KAGGLE']. Replace with the real Kaggle dataset slug owned by sai1881 holding corpus.jsonl v1 (built by TASK-E001), and the real model-version slug for Nemotron-3-Nano-30B-A3B-BF16. Validate with kaggle_lite kernel-push dry-run. Blocked on Q-018/Q-019.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Replace TODO dataset_sources + model_sources in 8 kernel-metadata.json files"
     },
@@ -1175,5 +1165,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T16:03:17.870098+00:00"
+  "updated_at": "2026-05-30T16:17:48.519311+00:00"
 }
