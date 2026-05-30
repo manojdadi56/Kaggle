@@ -20,6 +20,7 @@ def summarize(state: dict, free_slots: int | None = None) -> dict:
         "in_flight_gpu_runs": len(gpu),
         "gpu_runs": {eid: g.get("state") for eid, g in gpu.items()},
         "best_cv": state.get("best_cv"),
+        "best_cv_source": state.get("best_cv_source"),
         "submits_by_day": today_counts,
         "free_jules_slots": free_slots,
         "tasks_tracked": len(state.get("tasks", {})),

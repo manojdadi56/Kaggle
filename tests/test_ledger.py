@@ -45,7 +45,11 @@ def test_hypothesis_experiment_decision_metric(store):
     assert store.state["hypotheses"]["H-001"]["status"] == "proposed"
     assert store.state["experiments"]["E-001"]["cv_score"] == 0.71
     assert store.state["decisions"]["D-001"]["decision"].startswith("adopt")
-    assert store.state["metrics"][0]["value"] == 0.71
+    m = store.state["metrics"]
+    if isinstance(m, list):
+        assert m[0]["value"] == 0.71
+    else:
+        assert m["cv"]["value"] == 0.71
 
 
 def test_ledger_replay(store):
