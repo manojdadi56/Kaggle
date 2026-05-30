@@ -81,6 +81,7 @@
   "gpu_runs": {
     "nvidia-nemotron-submission-demo": {
       "backend": null,
+      "corpus_attached": "v5 (1029 verified CoT rows: gravity+unit_conversion)",
       "created_at": null,
       "cv_score": null,
       "fix": "corpus v2 uploaded to Kaggle dataset sai1881/nemotron-cot-corpus-v2; attached to notebook as dataSources entry \u2014 first time corpus is auto-mounted via /kaggle/input/",
@@ -88,7 +89,7 @@
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
       "machine": "NvidiaRtxPro6000",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 31,
+      "notebook_version": 32,
       "state": "AWAITING_USER_RUN"
     }
   },
@@ -388,8 +389,8 @@
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
       "branch": "main",
       "created_at": "2026-05-30T22:40:22.697826+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/59",
+      "state": "COMPLETED",
       "task_id": "TASK-EVAL-cv-fixture-9cat"
     },
     "6780419095411095356": {
@@ -762,7 +763,7 @@
       "priority": "P0",
       "session_id": "6061109906340266177",
       "spec": "Read data/raw/train.csv (run tools/download_competition_data.py if missing) and data/curation/classify.py (the 9-category classifier from R28). Build competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2.jsonl with: (a) 300 rows total, stratified across 9 categories with floor(33/cat). (b) Schema per line: {id, category, prompt, answer}. (c) HARD requirement: rows MUST NOT appear in data/corpus/v4/corpus.jsonl (no train/eval leakage). (d) The fixture file itself is gitignored (contains answers); commit the builder script + README +   per-category count manifest at eval/cv_fixture_v2_manifest.json. (e) Add eval/build_cv_fixture_v2.py + tests/test_cv_fixture_v2.py asserting 300 rows, 9 cats, no overlap with corpus, schema valid. Acceptance: pytest -q green; manifest committed with counts.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Build held-out CV fixture (300 rows stratified across all 9 host categories)"
     },
     "TASK-EVAL-cv-score-ingest": {
@@ -1417,5 +1418,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T23:45:40.773510+00:00"
+  "updated_at": "2026-05-30T23:58:13.148508+00:00"
 }

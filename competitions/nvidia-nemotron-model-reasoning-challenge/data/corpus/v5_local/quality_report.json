@@ -1,0 +1,18 @@
+{
+  "total_rows": 1029,
+  "per_category": {
+    "unit_conversion": 500,
+    "gravity": 529
+  },
+  "rejected_per_category": {},
+  "verified_pct": 100.0,
+  "method": "deterministic solver + numeric tolerance verification",
+  "schema": [
+    "id",
+    "category",
+    "prompt",
+    "completion (with CoT + boxed)",
+    "answer",
+    "verified"
+  ]
+}

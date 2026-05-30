@@ -9,10 +9,6 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
       "kind": "jules"
     },
-    "TASK-EVAL-cv-fixture-9cat": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
-      "kind": "jules"
-    },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "kind": "jules"
