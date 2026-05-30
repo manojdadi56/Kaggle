@@ -288,15 +288,6 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-E007-cryptarithm-guess-integration"
-    },
-    "5869851881805383251": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
-      "branch": "main",
-      "created_at": "2026-05-30T11:18:13.229176+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-E002-baseline-kernel"
     }
   },
   "submit_counter": {},
@@ -430,7 +421,7 @@
       "session_id": "5869851881805383251",
       "size_hint": "~75 min",
       "spec": "Clone kernels/train/ to kernels/train-baseline-e002/. Final config: LoRA rank=32, alpha=64, 1 epoch, LinearDecayLRSchedule 2e-5 -> 1e-5 (per winner-lr_schedule.py), AdamW weight_decay=0.01, BF16 mixed precision, Mamba+attention target list from E-PRECOND, grad-accum for the largest stable micro-batch on 2xT4 4-bit, eval at end of epoch using eval/cv.py, write adapter/ + cv_score.json on success. Loss objective: maximize min log-prob over the masked CoT+answer span per winner-loss_config.py (CrossEntropyLossConfig baseline; no clipping/branch-weighting). Reject if smoke fails. Offline test that asserts rank<=32 and 1 epoch.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Finalize winner-faithful baseline training kernel (rank32/alpha64/1-epoch/LinearDecay)"
     },
@@ -1014,5 +1005,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T12:22:27.657986+00:00"
+  "updated_at": "2026-05-30T12:25:36.371500+00:00"
 }

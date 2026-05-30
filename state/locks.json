@@ -1,10 +1,6 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-E002-baseline-kernel": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
-      "kind": "jules"
-    },
     "TASK-E007-cryptarithm-guess-integration": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "kind": "jules"
