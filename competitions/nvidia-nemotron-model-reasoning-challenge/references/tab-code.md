@@ -2,7 +2,7 @@
 
 - **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/code?sortBy=voteCount
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 4711
+- **chars:** 5026
 
 ---
 
@@ -19,32 +19,34 @@ smart_toy
 Game Arena
 code
 Data Hub
-expand_less
-Datasets
-Models
-Code
+expand_more
 format_list_bulleted
 More
-expand_less
-comment
-Discussions
-school
-Learn
-Kaggle Rankings
-Progression
-Documentation
-Blog
-Host a Competition
-Research Grants
-Educator Resources
-Support/Contact
-Community Guidelines
-Team
-Terms
-Privacy
+expand_more
 note_alt
 Your Work
-expand_more
+expand_less
+Viewed
+expand_less
+NVIDIA Nemotron Model Reasoning Challenge
+Save order db V1
+Kitesdata
+97.2% Gold-Conditioned Symbolic Solver Exposing Digit Mappings and Operators
+[Dataset Hallucination?] How did you resolve these problems by human?
+Edited
+expand_less
+Save order db V1
+Kitesdata
+History inferencing V3
+History inferencing
+Fork of inferencing
+Bookmarks
+expand_less
+ARC Prize 2024
+LMSYS - Chatbot Arena Human Preference Predictions
+notebookc7a610ad46
+train Swin_T[pytorch lightning]
+Viral Pneumonia Classification | GoogLeNet
 auto_awesome_motion
 1
 View Active Events
