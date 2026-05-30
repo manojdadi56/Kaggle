@@ -38,4 +38,4 @@ state/snapshots/
 # os
 .DS_Store
 Thumbs.db
-competitions/*/eval/cv_fixture.jsonl
+competitions/*/eval/cv_fixture*.jsonl

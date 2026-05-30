@@ -1,0 +1,24 @@
+{
+  "total_rows": 198,
+  "categories": {
+    "bit_manipulation": 33,
+    "cipher": 33,
+    "cryptarithm": 0,
+    "cryptarithm_guess": 0,
+    "equation_numeric": 33,
+    "gravity": 33,
+    "numeral": 33,
+    "select2reason": 0,
+    "unit_conversion": 33
+  },
+  "source": "data/raw/train.csv",
+  "stratification": "33 per category (or fewer if underrepresented)",
+  "fixture_path_gitignored": "competitions\\nvidia-nemotron-model-reasoning-challenge\\eval\\cv_fixture_v2.jsonl",
+  "schema": [
+    "id",
+    "category",
+    "prompt",
+    "answer"
+  ],
+  "purpose": "held-out CV evaluation; NOT to be included in any training corpus"
+}
