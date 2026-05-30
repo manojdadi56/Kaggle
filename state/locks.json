@@ -13,18 +13,6 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
       "kind": "jules"
     },
-    "TASK-EVAL-host-chat-template": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
-      "kind": "jules"
-    },
-    "TASK-NOTEBOOK-stratified-batching": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/notebook_patches/v25_stratified.py, tests/test_stratified_batching.py",
-      "kind": "jules"
-    },
-    "TASK-NOTEBOOK-target-masking": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/notebook_patches/v24_target_masking.py, tests/test_notebook_patch_v24.py",
-      "kind": "jules"
-    },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "kind": "jules"
