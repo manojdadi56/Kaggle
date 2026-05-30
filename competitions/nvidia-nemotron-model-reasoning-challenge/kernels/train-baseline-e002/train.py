@@ -3,8 +3,8 @@ import json
 import os
 import sys
 
-# Ensure evaluating modules can be found
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../eval')))
+# Ensure evaluating modules can be found (cv.py + score.py copied alongside this script)
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import cv
 import score
 
@@ -48,7 +48,8 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     if rank > 32:
         raise ValueError(f"LoRA rank must be <= 32, but got {rank}")
 
-    model_name = "gpt2" if smoke else f"/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/placeholder-version/1"
+    # Kaggle Models attach mount: /kaggle/input/<model-slug>/<framework>/<variation>/<version>
+    model_name = "gpt2" if smoke else "/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/default/1"
     print(f"Loading model: {model_name}")
 
     if data_path and os.path.exists(data_path):
@@ -255,7 +256,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="QLoRA training script skeleton")
     parser.add_argument("--rank", type=int, default=32, help="LoRA rank")
     parser.add_argument("--smoke", action="store_true", help="Run on a tiny toy model for validation")
-    parser.add_argument("--data", type=str, help="Path to training data")
+    # Default points at the competition train.csv attached via competition_sources;
+    # garbage-in-garbage-out baseline run to validate the end-to-end pipeline first.
+    parser.add_argument("--data", type=str,
+        default="/kaggle/input/nvidia-nemotron-model-reasoning-challenge/train.csv",
+        help="Path to training data")
 
     args = parser.parse_args()
 

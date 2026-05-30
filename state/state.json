@@ -78,7 +78,14 @@
       "status": "PROPOSED"
     }
   },
-  "gpu_runs": {},
+  "gpu_runs": {
+    "nemotron-e-002-baseline-lora-train": {
+      "experiment_id": "E-002",
+      "kernel_url": null,
+      "started_at": null,
+      "state": "QUEUED"
+    }
+  },
   "hypotheses": {
     "H-1EPOCH": {
       "expected_effect": "simpler training; no degradation",
@@ -1168,5 +1175,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T15:18:10.643686+00:00"
+  "updated_at": "2026-05-30T15:42:10.651837+00:00"
 }
