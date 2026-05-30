@@ -1,0 +1,28 @@
+## Summary
+Created a skeleton writeup (`SOLUTION.md`) and a public notebook (`public_notebook.ipynb`) for the NVIDIA Nemotron Model Reasoning Challenge, complying with the open progress prize requirements. The writeup details the methodology of generating deterministic chain-of-thought data, and using 1-epoch LoRA SFT to maximize the minimum logprob. The notebook contains boilerplate code to load the `Nemotron-3-Nano-30B-A3B-BF16` base model and a LoRA adapter (rank <= 32) using vLLM for high-throughput offline inference.
+
+## Plan & steps
+1. Explored the `references` directory, specifically mining `discussion-689915.md` for the winner's rationale and `winner-notebook_tinker.py.md` for vLLM usage patterns.
+2. Created the `SOLUTION.md` writeup template with the appropriate placeholders and methodology matching the Open Progress Prize winner strategy.
+3. Created a valid Jupyter notebook `public_notebook.ipynb` defining variables in accordance to the system requirements: `Nemotron-3-Nano-30B-A3B-BF16`, temperature 0.0, LoRA enabled, rank 32. It also contains the `\boxed{}` extraction logic.
+4. Validated the generated notebook syntax via `jq` and validated that the overall project test suite is still passing via `pytest`.
+
+## Evidence
+- `SOLUTION.md` and `public_notebook.ipynb` generated under `competitions/nvidia-nemotron-model-reasoning-challenge/writeup/`
+- JSON validation passed (`jq . competitions/nvidia-nemotron-model-reasoning-challenge/writeup/public_notebook.ipynb`)
+- `PYTHONPATH=. pytest -q` passed 100%.
+
+## Self-review
+- Verified that the notebook and markdown files reside strictly within the allowed area (`competitions/nvidia-nemotron-model-reasoning-challenge/writeup/`).
+- Confirmed the base model is exactly `Nemotron-3-Nano-30B-A3B-BF16` and the LoRA rank invariant is respected ($\le 32$).
+- Verified that the notebook extracts answers securely using the `\boxed{...}` regular expression.
+- Handled GPU unavailability via `try-except` in the notebook code so the dry run offline doesn't crash during evaluation on CPU VMs.
+
+## Risks
+- Placeholders in `SOLUTION.md` and `public_notebook.ipynb` need to be explicitly filled during future pipeline runs. The paths for weights are just mock Kaggle paths right now.
+- `DATA_PATH` is currently mocked. The inference generation needs a real dataset to feed real prompts.
+
+## Definition-of-done check
+- [x] Writeup (`SOLUTION.md`) present with method, pipeline, config, CV, reproducibility steps, and license.
+- [x] Public notebook skeleton (`public_notebook.ipynb`) present that loads the adapter, uses vLLM, and is formatted for publish.
+- [x] Tests pass and valid JSON format.
