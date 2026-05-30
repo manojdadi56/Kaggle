@@ -14,6 +14,10 @@ Every external dependency is injected, so the whole loop runs offline in
 from __future__ import annotations
 
 import time
+import subprocess
+import os
+import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
@@ -92,15 +96,50 @@ class Orchestrator:
             handle = self._gpu_handles.get(eid)
             if handle is None:
                 continue
-            ex = self.executor_factory(run.get("backend"))
-            st = ex.poll(handle)
-            self.state.apply_patch({"tick_id": tick_id, "operations": [
-                {"op": "update_gpu_run", "idempotency_key": f"{tick_id}:{eid}:gpu:{st}",
-                 "data": {"experiment_id": eid, "state": st}}]})
-            if st in ("COMPLETED", "FAILED"):
-                changed["gpu_terminal"].append(eid)
-                if st == "COMPLETED":
-                    self._fetch_and_package(tick_id, ex, handle, eid)
+
+            if isinstance(handle, subprocess.Popen):
+                if run.get("state") in ("COMPLETE", "ERROR", "TIMEOUT", "COMPLETED", "FAILED"):
+                    continue
+
+                ret = handle.poll()
+                if ret is not None:
+                    if hasattr(handle, "_log_file"):
+                        handle._log_file.seek(0)
+                        out = handle._log_file.read()
+                        handle._log_file.close()
+                    else:
+                        out = ""
+                    try:
+                        # Find the last JSON output
+                        lines = [line for line in out.splitlines() if line.strip().startswith("{")]
+                        if lines:
+                            res = json.loads(lines[-1])
+                            st = res.get("terminal_state", "ERROR").upper()
+                            cv = res.get("cv_aggregate")
+                            url = res.get("kernel_url")
+                        else:
+                            st = "ERROR" if ret != 0 else "COMPLETE"
+                            cv = None
+                            url = None
+                    except json.JSONDecodeError:
+                        st = "ERROR" if ret != 0 else "COMPLETE"
+                        cv = None
+                        url = None
+
+                    self.state.apply_patch({"tick_id": tick_id, "operations": [
+                        {"op": "update_gpu_run", "idempotency_key": f"{tick_id}:{eid}:gpu:{st}",
+                         "data": {"slug": eid, "state": st, "cv_score": cv, "kernel_url": url}}]})
+                    changed["gpu_terminal"].append(eid)
+            else:
+                ex = self.executor_factory(run.get("backend"))
+                st = ex.poll(handle)
+                self.state.apply_patch({"tick_id": tick_id, "operations": [
+                    {"op": "update_gpu_run", "idempotency_key": f"{tick_id}:{eid}:gpu:{st}",
+                     "data": {"experiment_id": eid, "state": st}}]})
+                if st in ("COMPLETED", "FAILED"):
+                    changed["gpu_terminal"].append(eid)
+                    if st == "COMPLETED":
+                        self._fetch_and_package(tick_id, ex, handle, eid)
         return changed
 
     def _fetch_and_package(self, tick_id, ex, handle, eid):
@@ -183,15 +222,43 @@ class Orchestrator:
             summary["sessions_created"].append(sid)
 
         for g in decision.get("gpu_dispatch", []) or []:
-            eid = g["experiment_id"]
-            ex = self.executor_factory(g["backend"])
-            spec = dict(g.get("spec", {})); spec.setdefault("experiment_id", eid)
-            handle = ex.submit_run(spec)
-            self._gpu_handles[eid] = handle
-            self.state.apply_patch({"tick_id": tick_id, "operations": [
-                {"op": "record_gpu_run", "idempotency_key": f"{tick_id}:{eid}:start",
-                 "data": {"experiment_id": eid, "backend": g["backend"], "state": handle.state}}]})
-            summary["gpu_started"].append(eid)
+            if "slug" in g:
+                # new code path
+                eid = g["experiment_id"]
+                slug = g["slug"]
+                kernel_dir = g["kernel_dir"]
+                owner = g["owner"]
+                out_dir = g["out_dir"]
+                started_at = g.get("started_at", self.today_fn())
+
+                self.state.apply_patch({"tick_id": tick_id, "operations": [
+                    {"op": "gpu_dispatch", "idempotency_key": f"{tick_id}:{slug}:start",
+                     "data": {"experiment_id": eid, "slug": slug, "kernel_dir": kernel_dir,
+                              "owner": owner, "out_dir": out_dir, "started_at": started_at}}]})
+
+                cmd = [sys.executable, "tools/run_kernel.py", "--kernel-dir", kernel_dir,
+                       "--owner", owner, "--slug", slug, "--out-dir", out_dir]
+                if os.environ.get("RUN_KERNEL_MOCK"):
+                    cmd.append("--mock")
+
+                # The instructions say "(via subprocess.run with --mock=$RUN_KERNEL_MOCK) and update gpu_runs[slug] with terminal_state + cv_aggregate. (3) loop.py.poll_in_flight: extend to also poll non-terminal gpu_runs and update their state."
+                # It says "subprocess.run", but polling requires it to be async, so we use subprocess.Popen
+                out_file = open(f"/tmp/gpu_run_{slug}.log", "w+", encoding="utf-8")
+                proc = subprocess.Popen(cmd, stdout=out_file, stderr=subprocess.STDOUT, text=True)
+                # Store the file object so we can read it later
+                proc._log_file = out_file
+                self._gpu_handles[slug] = proc
+                summary["gpu_started"].append(slug)
+            else:
+                eid = g["experiment_id"]
+                ex = self.executor_factory(g["backend"])
+                spec = dict(g.get("spec", {})); spec.setdefault("experiment_id", eid)
+                handle = ex.submit_run(spec)
+                self._gpu_handles[eid] = handle
+                self.state.apply_patch({"tick_id": tick_id, "operations": [
+                    {"op": "record_gpu_run", "idempotency_key": f"{tick_id}:{eid}:start",
+                     "data": {"experiment_id": eid, "backend": g["backend"], "state": handle.state}}]})
+                summary["gpu_started"].append(eid)
 
         summary["merged_prs"] = []
         for m in decision.get("pr_merges", []) or []:
