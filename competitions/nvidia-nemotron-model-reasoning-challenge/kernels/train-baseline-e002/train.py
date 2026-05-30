@@ -56,8 +56,30 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     if rank > 32:
         raise ValueError(f"LoRA rank must be <= 32, but got {rank}")
 
+    # === DIAGNOSTIC: show what's actually mounted at /kaggle/input ===
+    if not smoke and os.path.isdir("/kaggle/input"):
+        print("=== /kaggle/input contents ===", flush=True)
+        for root, dirs, files in os.walk("/kaggle/input"):
+            # only show first 2 levels deep + 5 files per dir
+            depth = root.count(os.sep) - "/kaggle/input".count(os.sep)
+            if depth <= 3:
+                print(f"  {root}: dirs={dirs[:5]} files={files[:5]}", flush=True)
+            if depth >= 3:
+                dirs.clear()
+        print("=== end mount listing ===", flush=True)
+
     # Kaggle Models attach mount: /kaggle/input/<model-slug>/<framework>/<variation>/<version>
     model_name = "gpt2" if smoke else "/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/default/1"
+    # Auto-find the real model path if our guess doesn't exist
+    if not smoke and not os.path.isdir(model_name):
+        # walk /kaggle/input for any dir with config.json
+        for root, dirs, files in os.walk("/kaggle/input"):
+            if "config.json" in files and "tokenizer.json" in files:
+                model_name = root
+                print(f"=== Found model dir: {model_name} ===", flush=True)
+                break
+        else:
+            print(f"=== WARNING: No config.json found anywhere in /kaggle/input. Falling back to: {model_name} ===", flush=True)
     print(f"Loading model: {model_name}")
 
     if data_path and os.path.exists(data_path):
@@ -69,7 +91,7 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
     if smoke:
-        model = AutoModelForCausalLM.from_pretrained(model_name, local_files_only=True)
+        model = AutoModelForCausalLM.from_pretrained(model_name, local_files_only=True, trust_remote_code=True)
     else:
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=LOAD_IN_4BIT,
@@ -83,6 +105,7 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
             device_map="auto",
             torch_dtype=torch.bfloat16,
             local_files_only=True,
+            trust_remote_code=True,
         )
         model = prepare_model_for_kbit_training(model)
 
@@ -99,7 +122,7 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=True, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 

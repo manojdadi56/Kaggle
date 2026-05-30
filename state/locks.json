@@ -1,10 +1,6 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-FIX-kernel-metadata": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
-      "kind": "jules"
-    },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "kind": "jules"
