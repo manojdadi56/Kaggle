@@ -30,7 +30,36 @@ You may use the Kaggle web API via `python tools/kaggle_lite.py …`. The helper
 3. In your PR body under a new `## Submission proposal` section, include: `cv_score`, `blob_token`, `file path`, and a short message. The operator's reviewer picks this up and runs the gated submit (or queues for approval).
 4. Do NOT submit yourself, even if a stretch goal asks you to. If a future task spec explicitly contains `submit_authorized: true`, only then may you call submit — and only after re-reading `submissions <comp>` to confirm headroom.
 
-## Kernel-experiment task pattern
+## ⭐ CANONICAL GPU WORKFLOW — read this FIRST (supersedes everything below)
+**This is the ONLY proven way to run a Nemotron training notebook on Kaggle GPU for this competition.** It was found after ~12 failed attempts with API-created kernels. Any new session/run should start here.
+
+### The hard platform facts (do not re-discover these)
+1. **The competition GPU is `nvidiaRtxPro6000` (96 GB, sm_120)** — NOT T4/P100. Full bf16 fits; no 4-bit/bitsandbytes needed.
+2. **A notebook created from scratch via API/MCP NEVER gets the GPU + model grant.** It always lands on a generic **P100 (sm_60, incompatible)** with **`/kaggle/input` empty**, and `kagglehub.model_download` fails with `New Models cannot be attached in non-interactive sessions`. The `metadata.kaggle` block you embed is cosmetic — the API runner ignores it.
+3. **The grant only attaches to a notebook created INSIDE the competition context** — i.e. by **"Copy & Edit" (fork) of the official demo** `ryanholbrook/nvidia-nemotron-submission-demo`, or the competition's "Code → New Notebook" button. A fork carries the proper `dataSources` with `databundleVersionId` pins + `accelerator: nvidiaRtxPro6000` + `dockerImageVersionId: 31287`.
+4. **An API-triggered run (`save_notebook` `kernelExecutionType: SaveAndRunAll`) does NOT mount inputs or honor the GPU**, even on a fork. Only the **browser "Save & Run All (Commit)"** button provisions inputs + RTX Pro 6000. (Quick Save = snapshot only, does NOT run.)
+
+### The division of labor (operator ↔ user)
+| Step | Who | Tool |
+|---|---|---|
+| One-time: fork the official demo (`Copy & Edit`) | USER (browser) | gives a notebook with working bindings, e.g. `sai1881/nvidia-testing` |
+| Edit/iterate the notebook CODE | OPERATOR | MCP `save_notebook` (preserves the fork's `metadata.kaggle` bindings — verified) |
+| RUN it (mount inputs + GPU) | USER (browser) | **Save Version → Save & Run All (Commit)** — the ONLY thing that provisions GPU+inputs |
+| Monitor → pull outputs → submit | OPERATOR | MCP `get_notebook_session_status`, `download_notebook_output`, `submit_to_competition`, `get_competition_leaderboard` |
+
+So the steady-state loop is: **operator writes code via API → user taps "Save & Run All" → operator monitors + submits.** Not fully hands-off (Kaggle forbids it for this comp's GPU), but the user only presses one button per iteration.
+
+### Working reference
+- Reference notebook source: `notebook_fork_working.ipynb` (repo root) — data-load (glob `/kaggle/input/*/train.csv`) → kagglehub model + LoRA rank 32 → 1-epoch answer-masked SFT → `\boxed{}` eval + `cv_score.json` → `submission.zip`.
+- Live working fork: `sai1881/nvidia-testing` (kernel_id 121127681).
+- Demo's proven LoRA targeting: `target_modules=r".*\.(in_proj|out_proj|up_proj|down_proj)$"`, rank 32, alpha 16, bf16.
+- **kagglehub vs mount**: prefer reading the model from the mounted `/kaggle/input/...` path (it's attached as a dataSource on a fork). `kagglehub.model_download` works only when the model is already attached (it re-attaches otherwise → batch-mode error). If `/kaggle/input` shows the model, point `from_pretrained` straight at it.
+- MCP creds: Kaggle MCP is registered at user scope (`~/.claude.json`, HTTP transport, KGAT bearer). 66 tools. Call via JSON-RPC `tools/call` if the harness tools aren't loaded in-session.
+
+### Old API-kernel path (DEPRECATED for Nemotron — kept for reference only)
+The `tools/kaggle_lite.py kernel-push` + `competitions/<slug>/kernels/<exp-id>/` flow below does NOT work for this competition (lands on P100, no model). Use the fork workflow above. The kernel dirs + `tools/check_kernel.py` 7-fix lint remain only as historical artifacts.
+
+## Kernel-experiment task pattern (DEPRECATED — see CANONICAL workflow above)
 For tasks where the actual GPU run happens on Kaggle:
 1. Build the kernel directory under `competitions/<slug>/kernels/<exp-id>/` (script + `kernel-metadata.json`, base model + datasets attached as placeholders per Kaggle convention).
 2. `python tools/kaggle_lite.py kernel-push -p competitions/<slug>/kernels/<exp-id>/`.
