@@ -17,6 +17,12 @@
       "patch": "V17-select2reason.json",
       "purpose": "Select2Reason: keep only top-50% longest CoTs (highest-utility curation per konbu17 community insight). Same rank=32 + V15 corpus.",
       "depends_on": "V15 submitted; ideally compare against V15 cv to validate curation hypothesis"
+    },
+    {
+      "name": "V18",
+      "patch": "V18-corpus-v2-bigger.json",
+      "purpose": "Bigger CoT corpus: 398 examples (4.4x V15) across bit_manipulation/cipher/gravity/numeral. More data = better trained adapter.",
+      "depends_on": "V15 or independent baseline; use instead of V15 for the run if not already submitted"
     }
   ],
   "apply_command": "python tools/iterate_notebook.py --slug nvidia-nemotron-submission-demo --patch-file competitions/nvidia-nemotron-model-reasoning-challenge/experiments/queued/<patch>.json",
