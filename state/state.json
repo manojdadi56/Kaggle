@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 22
+    "jules_dispatched_2026-05-30": 23
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -313,6 +313,15 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-R20-cipher-solver"
+    },
+    "7670477827188695622": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
+      "branch": "main",
+      "created_at": "2026-05-30T10:23:11.158922+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E-PRECOND-mamba-targets-smoke"
     }
   },
   "submit_counter": {},
@@ -405,6 +414,137 @@
       "story": "US-4",
       "supersedes_notes": "covered by Wave-1 R-tasks",
       "title": "Author the QLoRA training script + Kaggle kernel"
+    },
+    "TASK-E-PRECOND-mamba-targets-smoke": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
+      "branch": "main",
+      "experiment": "E-PRECOND-mamba-targets",
+      "hypothesis": "H-MAMBA-TARGETS",
+      "mode": "deep",
+      "session_id": "7670477827188695622",
+      "size_hint": "~60 min",
+      "spec": "Clone kernels/train/ to kernels/train-smoke-mamba/. Change LoRA target_modules to the EXPLICIT list ['mixer.in_proj','mixer.out_proj','q_proj','k_proj','v_proj','o_proj'] (NOT a regex). Set max_steps=10 (smoke only). Keep rank=32, alpha=64, 4-bit. Update kernel-metadata.json. The goal is to prove peft.get_peft_model() does NOT hang on the MoE expert scan on 2xT4. Offline test that asserts target_modules is a list of literal strings (no regex). Document the result expected: training loop starts within 30s of model load.",
+      "status": "IN_PROGRESS",
+      "story": "US-4",
+      "title": "Smoke-train kernel (10 steps) validating Mamba mixer LoRA targeting"
+    },
+    "TASK-E001-corpus-v1": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
+      "blocked_by": "TASK-R20-cipher-solver",
+      "experiment": "E-001-corpus-v1",
+      "hypothesis": "H-DQ",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Build data/corpus/v1/build_corpus.py that walks the 7+ landed solvers in data/solvers/<category>/, calls each to generate verified prompt+CoT+answer triples, writes corpus.jsonl in the winner's build_datum format (tokens, mask aligned per references/analysis-winner-training-internals.md): mask=1 ONLY on the CoT-reasoning + boxed-answer span, mask=0 on the prompt. Stratified 90/10 train/dev split keeping category frequencies. Emit corpus_index.jsonl listing per-row id/category/token_counts. Tests: format validation, mask correctness, stratification quality.",
+      "status": "BLOCKED",
+      "story": "US-3",
+      "title": "Assemble corpus.jsonl v1 from landed solvers (winner build_datum convention)"
+    },
+    "TASK-E002-baseline-kernel": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
+      "blocked_by": "TASK-E001-corpus-v1",
+      "experiment": "E-002-baseline-rank32",
+      "hypothesis": "H-LORA32",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Clone kernels/train/ to kernels/train-baseline-e002/. Final config: LoRA rank=32, alpha=64, 1 epoch, LinearDecayLRSchedule 2e-5 -> 1e-5 (per winner-lr_schedule.py), AdamW weight_decay=0.01, BF16 mixed precision, Mamba+attention target list from E-PRECOND, grad-accum for the largest stable micro-batch on 2xT4 4-bit, eval at end of epoch using eval/cv.py, write adapter/ + cv_score.json on success. Loss objective: maximize min log-prob over the masked CoT+answer span per winner-loss_config.py (CrossEntropyLossConfig baseline; no clipping/branch-weighting). Reject if smoke fails. Offline test that asserts rank<=32 and 1 epoch.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Finalize winner-faithful baseline training kernel (rank32/alpha64/1-epoch/LinearDecay)"
+    },
+    "TASK-E003-rank16-finalize": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "blocked_by": "TASK-E002-baseline-kernel",
+      "experiment": "E-003-rank16",
+      "hypothesis": "H-RANK16",
+      "mode": "deep",
+      "size_hint": "~45 min",
+      "spec": "Sync kernels/train-rank16/ with E-002's config (LR schedule, target list, loss, data path) but with rank=16, alpha=32. Update kernel-metadata.json. Verify rank-16 via the existing assertion test (rejects rank 64 still passes). One change vs E-002.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Align rank-16 ablation kernel (R24) with the E-002 config except rank/alpha"
+    },
+    "TASK-E004-2epoch-kernel": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-2epoch-e004",
+      "blocked_by": "TASK-E002-baseline-kernel",
+      "experiment": "E-004-2-epoch",
+      "hypothesis": "H-1EPOCH",
+      "mode": "deep",
+      "size_hint": "~30 min",
+      "spec": "Clone E-002 kernel to kernels/train-2epoch-e004/. Single change: total_epochs=2. Keep LinearDecayLRSchedule's denominator updated accordingly. Test asserts epochs=2.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Clone baseline kernel with epochs=2 (refutation test for H-1EPOCH)"
+    },
+    "TASK-E005-curriculum-wire": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-curriculum-e005",
+      "blocked_by": "TASK-E002-baseline-kernel",
+      "experiment": "E-005-curriculum",
+      "hypothesis": "H-CURRICULUM",
+      "mode": "deep",
+      "size_hint": "~45 min",
+      "spec": "Clone E-002 kernel to kernels/train-curriculum-e005/. Replace random shuffle of corpus.jsonl with the difficulty-ascending sort from data/curation/curriculum.py (R23). Offline test asserts the corpus order matches the curriculum config.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Wire R23 curriculum config into the baseline kernel (difficulty-ascending)"
+    },
+    "TASK-E006-select2reason": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-select2reason-e006",
+      "blocked_by": "TASK-E002-baseline-kernel",
+      "experiment": "E-006-select2reason",
+      "hypothesis": "H-SELECT2REASON",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Add data/curation/select2reason.py that scores each corpus row by utility (trace length / category novelty / dedup-fingerprint), keeps top ~30 percent. Then clone E-002 kernel to kernels/train-select2reason-e006/ pointing at the curated subset. Tests: dedup correctness; stratification preserved; subset size.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Select2Reason curation: keep top-utility ~30 percent of corpus, then train baseline"
+    },
+    "TASK-E007-cryptarithm-guess-integration": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
+      "blocked_by": "TASK-R28-cryptarithm-solver",
+      "experiment": "E-007-cryptarithm-guess",
+      "hypothesis": "H-CRYPTARITHM-GUESS",
+      "mode": "deep",
+      "size_hint": "~60 min",
+      "spec": "CRITICAL PRIORITY: the winner skipped cryptarithm_guess (164 train rows). Use the cryptarithm solver from TASK-R28 to add verified CoT for cryptarithm_guess to the corpus (extend data/corpus/v1/build_corpus.py with the new category). Clone E-002 kernel to kernels/train-e007-cryptarithm/ pointing at the extended corpus. Tests: cryptarithm_guess rows present + verified.",
+      "status": "BLOCKED",
+      "story": "US-3",
+      "title": "Integrate cryptarithm_guess solver into corpus (winner skipped this category) \u2014 priority"
+    },
+    "TASK-E008-logprob-filter": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
+      "blocked_by": "TASK-E002-baseline-kernel",
+      "experiment": "E-008-logprob-filter",
+      "hypothesis": "H-LOGPROB-FILTER",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Add data/curation/logprob_filter.py: inference-pass the BASE model over corpus, record per-row min token log-prob, drop rows where min_logprob > -0.05. Clone E-002 kernel to kernels/train-logprob-filter-e008/ pointing at the filtered corpus. Document the dropped-rows histogram by category in the PR.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Pre-filter corpus by base-model min log-prob (drop already-easy examples)"
+    },
+    "TASK-E009-synthesis-kernel": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
+      "blocked_by": "TASK-E008-logprob-filter",
+      "experiment": "E-009-synthesis",
+      "hypothesis": "H-DQ",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Operator runs this only after E-003..E-008 results are in. Build kernels/train-synthesis-e009/ combining the ablation choices whose CV beat E-002 (read state.json experiments collection for cv_score). Each combined choice cited in the kernel README. This is the final training run before finalize.",
+      "status": "BLOCKED",
+      "story": "US-4",
+      "title": "Synthesis: combine winning ablation choices into final config"
     },
     "TASK-K0-kaggle-access-smoke": {
       "actor": "jules",
@@ -764,5 +904,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T10:09:14.376075+00:00"
+  "updated_at": "2026-05-30T10:23:11.162787+00:00"
 }

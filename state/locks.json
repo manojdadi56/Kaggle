@@ -1,6 +1,10 @@
 {
   "cap": 15,
   "holders": {
+    "TASK-E-PRECOND-mamba-targets-smoke": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
+      "kind": "jules"
+    },
     "TASK-R20-cipher-solver": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
       "kind": "jules"

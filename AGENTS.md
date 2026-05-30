@@ -47,6 +47,9 @@ Up to 5 Jules sessions run in parallel; each is blind to the others. Before push
 - `competitions/<slug>/` — one self-contained folder per competition: `plan.md`, `tasks/`, `user-stories/`, `decisions/`, `experiments/`, `kernels/`, `submissions/`, `references/`, `data/`.
 - `state/` — orchestrator state (operator-only; never modify).
 
+## Competition data — read DATA.md first
+The raw `train.csv` / `test.csv` are NEVER committed (Kaggle ToS line 117 forbids redistribution). Fetch them with `python tools/download_competition_data.py` if you need them in your task; they land under `competitions/<slug>/data/raw/` which is gitignored. NEVER include raw data rows in your PR diff. Full rules + safe-fixture path in `DATA.md`.
+
 ## You are one worker in a pool — read COORDINATION.md
 Multiple Jules sessions on this repo are part of the same worker pool. The operator polls and auto-merges them all identically. Open `COORDINATION.md` for the pool model and conflict-avoidance rules. Stay strictly in `{{allowed_area}}`; prefer per-task subfolders so PRs auto-merge cleanly; never destroy work from another worker.
 

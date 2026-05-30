@@ -30,3 +30,8 @@ state/snapshots/
 # os
 .DS_Store
 Thumbs.db
+
+# competition data — never commit (Kaggle ToS line 117 forbids redistribution)
+competitions/*/data/raw/*
+!competitions/*/data/raw/.gitkeep
+!competitions/*/data/raw/README.md
