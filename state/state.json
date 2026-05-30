@@ -247,27 +247,9 @@
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
       "branch": "main",
       "created_at": "2026-05-30T09:57:54.630022+00:00",
-      "pr_url": null,
-      "state": "AWAITING_USER_FEEDBACK",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/28",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R28-cryptarithm-solver"
-    },
-    "2307469717703277322": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
-      "branch": "main",
-      "created_at": "2026-05-30T09:45:03.951672+00:00",
-      "pr_url": null,
-      "state": "AWAITING_USER_FEEDBACK",
-      "task_id": "TASK-R21-equation-sympy-solver"
-    },
-    "5395719602075168188": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/unit_conversion",
-      "branch": "main",
-      "created_at": "2026-05-30T09:57:52.146814+00:00",
-      "pr_url": null,
-      "state": "AWAITING_USER_FEEDBACK",
-      "task_id": "TASK-R27-unit-conversion-solver"
     },
     "7319893951607715552": {
       "account_idx": 0,
@@ -275,17 +257,8 @@
       "branch": "main",
       "created_at": "2026-05-30T10:39:20.132234+00:00",
       "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-E001-corpus-v1"
-    },
-    "7670477827188695622": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
-      "branch": "main",
-      "created_at": "2026-05-30T10:23:11.158922+00:00",
-      "pr_url": null,
       "state": "IN_PROGRESS",
-      "task_id": "TASK-E-PRECOND-mamba-targets-smoke"
+      "task_id": "TASK-E001-corpus-v1"
     }
   },
   "submit_counter": {},
@@ -389,7 +362,7 @@
       "session_id": "7670477827188695622",
       "size_hint": "~60 min",
       "spec": "Clone kernels/train/ to kernels/train-smoke-mamba/. Change LoRA target_modules to the EXPLICIT list ['mixer.in_proj','mixer.out_proj','q_proj','k_proj','v_proj','o_proj'] (NOT a regex). Set max_steps=10 (smoke only). Keep rank=32, alpha=64, 4-bit. Update kernel-metadata.json. The goal is to prove peft.get_peft_model() does NOT hang on the MoE expert scan on 2xT4. Offline test that asserts target_modules is a list of literal strings (no regex). Document the result expected: training loop starts within 30s of model load.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Smoke-train kernel (10 steps) validating Mamba mixer LoRA targeting"
     },
@@ -719,7 +692,7 @@
       "session_id": "2307469717703277322",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/equation_numeric/solve.py using SymPy: parse the equation system from prompt, solve(deduce: solve for the asked variable; guess: enumerate up to N candidates and verify). Offline tests on 50 deduce + 30 guess rows. Document failure modes.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Equation-numeric SymPy solver + verification on holdout"
     },
@@ -797,7 +770,7 @@
       "session_id": "5395719602075168188",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/unit_conversion/solve.py: parse the unit-to-unit conversion factors from the prompt into a graph, run Floyd-Warshall transitive closure for the asked source->target, apply to the asked value, return exact answer. generate.py with synthetic conversion problems. Tests on 100 train rows.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Unit-conversion deterministic solver via Floyd-Warshall conversion graph"
     },
@@ -870,5 +843,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T10:39:20.135984+00:00"
+  "updated_at": "2026-05-30T10:55:26.545817+00:00"
 }

@@ -119,21 +119,22 @@ def dispatch_ready(state_store, locks, jules: JulesClient, *,
 
 
 def promote_backlog(state_store, *, tick_id: str, max_promote: int) -> dict:
-    """Promote up to N BACKLOG tasks to READY (oldest first, blocked-by aware).
+    """Promote up to N BACKLOG-or-BLOCKED tasks to READY (oldest first, blocked-by aware).
 
-    The planner role would normally do this; we expose a deterministic helper so
-    the goal-loop can keep the ready queue topped between operator decisions.
+    Handles both BACKLOG (no parent or parent DONE) and BLOCKED (parent must now
+    be DONE — otherwise we leave it blocked). Saves a manual unblock pass each tick.
     """
     tasks = state_store.state.get("tasks", {})
     ops = []
     promoted = []
+    _DONE = ("DONE", "MERGED")
     for tid, t in tasks.items():
         if len(promoted) >= max_promote:
             break
-        if t.get("status") != "BACKLOG":
+        if t.get("status") not in ("BACKLOG", "BLOCKED"):
             continue
         parent = t.get("blocked_by")
-        if parent and tasks.get(parent, {}).get("status") not in ("DONE", "MERGED"):
+        if parent and tasks.get(parent, {}).get("status") not in _DONE:
             continue
         ops.append({"op": "set_status", "idempotency_key": f"{tick_id}:{tid}:promote",
                     "data": {"collection": "tasks", "id": tid, "status": "READY"}})

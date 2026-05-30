@@ -1,20 +1,8 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-E-PRECOND-mamba-targets-smoke": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
-      "kind": "jules"
-    },
     "TASK-E001-corpus-v1": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
-      "kind": "jules"
-    },
-    "TASK-R21-equation-sympy-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
-      "kind": "jules"
-    },
-    "TASK-R27-unit-conversion-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/unit_conversion",
       "kind": "jules"
     },
     "TASK-R28-cryptarithm-solver": {
