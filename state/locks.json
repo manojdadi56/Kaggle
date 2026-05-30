@@ -1,8 +1,44 @@
 {
   "cap": 15,
   "holders": {
+    "TASK-E003-rank16-finalize": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "kind": "jules"
+    },
+    "TASK-E004-2epoch-kernel": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-2epoch-e004",
+      "kind": "jules"
+    },
+    "TASK-E005-curriculum-wire": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-curriculum-e005",
+      "kind": "jules"
+    },
+    "TASK-E006-select2reason": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-select2reason-e006",
+      "kind": "jules"
+    },
     "TASK-E007-cryptarithm-guess-integration": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
+      "kind": "jules"
+    },
+    "TASK-E008-logprob-filter": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
+      "kind": "jules"
+    },
+    "TASK-EVAL-cv-fixture": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_build_cv_fixture.py",
+      "kind": "jules"
+    },
+    "TASK-EVAL-vllm-harness-skeleton": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/, tests/test_vllm_eval.py",
+      "kind": "jules"
+    },
+    "TASK-OPS-run-kernel-runner": {
+      "area": "tools/run_kernel.py, tests/test_run_kernel.py",
+      "kind": "jules"
+    },
+    "TASK-SUBMIT-validate-adapter": {
+      "area": "tools/validate_adapter.py, tests/test_validate_adapter.py",
       "kind": "jules"
     }
   }

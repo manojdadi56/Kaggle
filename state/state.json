@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 26
+    "jules_dispatched_2026-05-30": 35
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -280,6 +280,15 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "13013155406031425658": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/, tests/test_vllm_eval.py",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:39.319718+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-vllm-harness-skeleton"
+    },
     "13107147469450254389": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
@@ -288,6 +297,78 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-E007-cryptarithm-guess-integration"
+    },
+    "14674823960857717074": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:22.985169+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E003-rank16-finalize"
+    },
+    "14769124856858592956": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-2epoch-e004",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:25.678644+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E004-2epoch-kernel"
+    },
+    "3331869219988151080": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-select2reason-e006",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:31.070757+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E006-select2reason"
+    },
+    "5459254010184172264": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-curriculum-e005",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:28.419903+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E005-curriculum-wire"
+    },
+    "6684794983844118444": {
+      "account_idx": 0,
+      "allowed_area": "tools/run_kernel.py, tests/test_run_kernel.py",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:41.978692+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-OPS-run-kernel-runner"
+    },
+    "728421577080239025": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:33.812779+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E008-logprob-filter"
+    },
+    "8195905385648107214": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_build_cv_fixture.py",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:36.554766+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-cv-fixture"
+    },
+    "9916984275388767522": {
+      "account_idx": 0,
+      "allowed_area": "tools/validate_adapter.py, tests/test_validate_adapter.py",
+      "branch": "main",
+      "created_at": "2026-05-30T12:26:44.716423+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-SUBMIT-validate-adapter"
     }
   },
   "submit_counter": {},
@@ -429,12 +510,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
       "blocked_by": "TASK-E002-baseline-kernel",
+      "branch": "main",
       "experiment": "E-003-rank16",
       "hypothesis": "H-RANK16",
       "mode": "deep",
+      "session_id": "14674823960857717074",
       "size_hint": "~45 min",
       "spec": "Sync kernels/train-rank16/ with E-002's config (LR schedule, target list, loss, data path) but with rank=16, alpha=32. Update kernel-metadata.json. Verify rank-16 via the existing assertion test (rejects rank 64 still passes). One change vs E-002.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Align rank-16 ablation kernel (R24) with the E-002 config except rank/alpha"
     },
@@ -442,12 +525,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-2epoch-e004",
       "blocked_by": "TASK-E002-baseline-kernel",
+      "branch": "main",
       "experiment": "E-004-2-epoch",
       "hypothesis": "H-1EPOCH",
       "mode": "deep",
+      "session_id": "14769124856858592956",
       "size_hint": "~30 min",
       "spec": "Clone E-002 kernel to kernels/train-2epoch-e004/. Single change: total_epochs=2. Keep LinearDecayLRSchedule's denominator updated accordingly. Test asserts epochs=2.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Clone baseline kernel with epochs=2 (refutation test for H-1EPOCH)"
     },
@@ -455,12 +540,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-curriculum-e005",
       "blocked_by": "TASK-E002-baseline-kernel",
+      "branch": "main",
       "experiment": "E-005-curriculum",
       "hypothesis": "H-CURRICULUM",
       "mode": "deep",
+      "session_id": "5459254010184172264",
       "size_hint": "~45 min",
       "spec": "Clone E-002 kernel to kernels/train-curriculum-e005/. Replace random shuffle of corpus.jsonl with the difficulty-ascending sort from data/curation/curriculum.py (R23). Offline test asserts the corpus order matches the curriculum config.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Wire R23 curriculum config into the baseline kernel (difficulty-ascending)"
     },
@@ -468,12 +555,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-select2reason-e006",
       "blocked_by": "TASK-E002-baseline-kernel",
+      "branch": "main",
       "experiment": "E-006-select2reason",
       "hypothesis": "H-SELECT2REASON",
       "mode": "deep",
+      "session_id": "3331869219988151080",
       "size_hint": "~75 min",
       "spec": "Add data/curation/select2reason.py that scores each corpus row by utility (trace length / category novelty / dedup-fingerprint), keeps top ~30 percent. Then clone E-002 kernel to kernels/train-select2reason-e006/ pointing at the curated subset. Tests: dedup correctness; stratification preserved; subset size.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Select2Reason curation: keep top-utility ~30 percent of corpus, then train baseline"
     },
@@ -496,12 +585,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
       "blocked_by": "TASK-E002-baseline-kernel",
+      "branch": "main",
       "experiment": "E-008-logprob-filter",
       "hypothesis": "H-LOGPROB-FILTER",
       "mode": "deep",
+      "session_id": "728421577080239025",
       "size_hint": "~75 min",
       "spec": "Add data/curation/logprob_filter.py: inference-pass the BASE model over corpus, record per-row min token log-prob, drop rows where min_logprob > -0.05. Clone E-002 kernel to kernels/train-logprob-filter-e008/ pointing at the filtered corpus. Document the dropped-rows histogram by category in the PR.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Pre-filter corpus by base-model min log-prob (drop already-easy examples)"
     },
@@ -521,17 +612,19 @@
     "TASK-EVAL-cv-fixture": {
       "acceptance_criteria": "Builder script works on a 50-row synthetic stub in the test; produces jsonl with category stratification within \u00b12 rows of target; pytest -q green; real fixture file is gitignored.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_build_cv_fixture.py",
+      "branch": "main",
       "created_at": "2026-05-30T12:00:00Z",
       "definition_of_done": "One PR; tests green; README documents the 'why answers stay gitignored' rule; hypothesis_id=H-VLLM-EVAL.",
       "est_hours": 0.75,
       "hypothesis_id": "H-VLLM-EVAL",
       "priority": "P1",
+      "session_id": "8195905385648107214",
       "source_refs": [
         "DATA.md",
         "competitions/.../data/curation/classify.py (R28)"
       ],
       "spec": "Create competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture.py + produce eval/cv_fixture.jsonl. Behavior: (1) Loads train.csv from data/raw/ (fetched by tools/download_competition_data.py; if missing, the script must exit nonzero with a clear 'run download_competition_data.py first' message). (2) Classifies each row into one of the 9 host categories using the same classify.py logic that R28 merged (re-import; do NOT duplicate code). (3) Selects 200 rows stratified across categories (proportional or floor=15/cat \u2014 document choice). (4) Writes eval/cv_fixture.jsonl with {id, prompt, answer, category}. (5) The fixture itself is gitignored (it contains answers); only the builder script + a README explaining the build are committed. (6) Add tests/test_build_cv_fixture.py using a 50-row stub of train.csv (synthetic, no real data) to verify stratification + jsonl schema.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Build held-out CV fixture (200 rows stratified across 9 categories) for vllm_eval.py"
     },
     "TASK-EVAL-cv-score-ingest": {
@@ -554,16 +647,18 @@
     "TASK-EVAL-vllm-harness-skeleton": {
       "acceptance_criteria": "eval/vllm_eval.py exists; CLI works in mock mode (no vllm needed); cv_score.json schema includes aggregate + per_category + n_boxed_missing; pytest -q green.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/, tests/test_vllm_eval.py",
+      "branch": "main",
       "created_at": "2026-05-30T11:50:00Z",
       "definition_of_done": "One PR; tests green; mock-mode roundtrip documented in PR body; hypothesis_id=H-VLLM-EVAL noted.",
       "est_hours": 1.0,
       "hypothesis_id": "H-VLLM-EVAL",
       "priority": "P1",
+      "session_id": "13013155406031425658",
       "source_refs": [
         "technique-backlog.md #2"
       ],
       "spec": "Create eval/vllm_eval.py implementing: (1) CLI: --base /path/to/Nemotron-3-Nano-30B-A3B-BF16 --adapter <adapter_dir> --eval-jsonl <path> --out cv_score.json --max-samples N. (2) Inference config exactly matching host: temperature=0.0, top_p=1.0, max_tokens=7680, max_model_len=8192, max_lora_rank=32. (3) For each row: render the host-style chat template, get completion, extract last \\boxed{...} via regex, normalize numeric answers (allow +/-1e-2 for numeric; exact-string otherwise - match host scoring). (4) Emit cv_score.json with aggregate, per_category, n_total, n_correct, n_boxed_missing. (5) NO real GPU run required in this task - gate the vllm import so the harness is unit-testable without vllm installed (mock mode flag). (6) Add tests/test_vllm_eval.py covering boxed extraction + per-category aggregation on a 5-row fixture. Acceptance: pytest -q passes; mock-mode CLI roundtrip on the 5-row sample produces a valid cv_score.json schema.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Write eval/vllm_eval.py harness skeleton with host-faithful params + \\boxed{} extractor + per-category scoring"
     },
     "TASK-K0-kaggle-access-smoke": {
@@ -599,17 +694,19 @@
     "TASK-OPS-run-kernel-runner": {
       "acceptance_criteria": "CLI works in --mock mode end-to-end; exit codes correct on each branch; JSON summary contains kernel_url/terminal_state/cv_aggregate/elapsed_secs; pytest -q green.",
       "allowed_area": "tools/run_kernel.py, tests/test_run_kernel.py",
+      "branch": "main",
       "created_at": "2026-05-30T12:00:00Z",
       "definition_of_done": "One PR; tests green; PR body shows --mock CLI output sample; hypothesis_id=H-GPU-DISPATCH.",
       "est_hours": 1.0,
       "hypothesis_id": "H-GPU-DISPATCH",
       "priority": "P0",
+      "session_id": "6684794983844118444",
       "source_refs": [
         "AGENTS.md kernel-experiment pattern",
         "tools/kaggle_lite.py"
       ],
       "spec": "Create tools/run_kernel.py with CLI: --kernel-dir <path> --owner <kaggle_user> --slug <kernel-slug> --out-dir <experiments/<exp-id>/> --poll-secs 30 --timeout-mins 240 [--mock]. Behavior: (1) Call tools.kaggle_lite.kernel-push for the directory; capture returned ref. (2) Loop kaggle_lite.kernel-status every poll-secs until terminal (complete/error/cancelled) or timeout. (3) On complete: call kaggle_lite.kernel-output to download into out-dir. (4) Parse out-dir/cv_score.json if present; print a one-line summary {kernel_url, terminal_state, cv_aggregate, elapsed_secs}. (5) --mock short-circuits to a deterministic fake (returns terminal_state='complete', cv_aggregate=0.50 fixture). (6) Exit 0 on terminal-complete, 1 on terminal-error, 2 on timeout. Add tests/test_run_kernel.py covering --mock happy path + timeout simulation + JSON-output schema.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Write tools/run_kernel.py end-to-end runner (kernel-push -> poll status -> pull outputs)"
     },
     "TASK-R1": {
@@ -992,18 +1089,20 @@
     "TASK-SUBMIT-validate-adapter": {
       "acceptance_criteria": "CLI works in --mock mode; rank>32 -> nonzero CODE=RANK_TOO_HIGH; missing files -> nonzero CODE=MISSING_FILES; pytest -q green.",
       "allowed_area": "tools/validate_adapter.py, tests/test_validate_adapter.py",
+      "branch": "main",
       "created_at": "2026-05-30T11:50:00Z",
       "definition_of_done": "One PR; tests green; PR body lists every exit CODE; hypothesis_id=H-SUBMIT-GATE noted.",
       "est_hours": 1.0,
       "hypothesis_id": "H-SUBMIT-GATE",
       "priority": "P1",
+      "session_id": "9916984275388767522",
       "source_refs": [
         "AGENTS.md submission handoff"
       ],
       "spec": "Create tools/validate_adapter.py with CLI: --adapter <adapter_dir> --base <base_path> [--prompts <path_to_5_smoke_prompts.jsonl>] [--mock]. Behavior: (1) Load adapter_config.json, assert r <= 32 (else exit nonzero with reason CODE=RANK_TOO_HIGH). (2) Verify required files exist (adapter_config.json + adapter_model.{safetensors,bin}); else CODE=MISSING_FILES. (3) Optionally: in non-mock mode, peft.PeftModel.from_pretrained(base, adapter) and run 5 smoke prompts at temperature=0.0; for each completion assert \\boxed{...} regex present; else CODE=BOXED_MISSING (report which prompt). (4) Output validation_report.json {ok:bool, code:str|null, rank:int, n_smoke:int, n_boxed_ok:int}. (5) Add tests/test_validate_adapter.py covering: rank-too-high path (mock), missing-files path, mock-mode pass path. Acceptance: pytest -q passes; CLI returns 0 on a valid adapter dir (mock mode), nonzero on the failure cases.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T12:25:36.371500+00:00"
+  "updated_at": "2026-05-30T12:26:44.730251+00:00"
 }
