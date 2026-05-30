@@ -1,0 +1,117 @@
+import json
+TICK = "RUN-20260530-134333"
+TS = "2026-05-30T13:45:00Z"
+
+ops = [
+  # --- H-AUTO-RESCUE ---
+  {"op":"create_hypothesis","idempotency_key":f"{TICK}:H-AUTO-RESCUE:create",
+   "data":{"id":"H-AUTO-RESCUE",
+    "title":"Auto-rescue Jules sessions that fire sessionCompleted with a full patch but no PR (eliminates manual operator merges)",
+    "statement":("Tick RUN-20260530-131519 surfaced a real failure mode: session 290296703496810863 emitted "
+                 "sessionCompleted with a complete unidiff in its artifact (tools/package_submission.py + "
+                 "tests/test_package_submission.py) but never opened a GitHub PR. The operator had to manually "
+                 "extract the patch, apply it to a rescue branch, run pytest, and merge to main. Adding an "
+                 "operator-side auto-rescue path inside orchestrator/loop.py.poll_in_flight - when a session "
+                 "returns state=COMPLETED with pr_url=None, fetch /sessions/<sid>/activities, find the last "
+                 "sessionCompleted artifact gitPatch, apply it to a fresh branch, run pytest -q, merge to main "
+                 "via the existing R-007 force-merge path - eliminates this whole manual step."),
+    "expected_effect":("Removes one human-in-the-loop step per failure. Observed rate: 1/11 dispatches in the "
+                       "RUN-20260530-124519 fanout. At scale (50-100 sessions/day expected near deadline), "
+                       "this saves ~5-10 manual rescues/day."),
+    "how_to_test":("Mock a session-state response with state=COMPLETED + pr_url=None and an activities response "
+                   "containing a valid unidiff. Run poll_in_flight - verify (1) a rescue branch is created, "
+                   "(2) patch applies cleanly, (3) pytest is invoked, (4) merge to main happens via the same "
+                   "github_ops.merge_pr code path, (5) the session is cleared. Also test the failure case "
+                   "where pytest fails: rescue branch is left in place but main is NOT modified."),
+    "source_refs":["state/run_log.jsonl tick RUN-20260530-131519","orchestrator/loop.py poll_in_flight",
+                   "orchestrator/github_ops.py merge_pr"],
+    "status":"PROPOSED","created_at":TS}},
+
+  # --- TASK-OPS-auto-rescue (~1h) ---
+  {"op":"create_task","idempotency_key":f"{TICK}:TASK-OPS-auto-rescue:create",
+   "data":{"id":"TASK-OPS-auto-rescue",
+    "title":"Add auto-rescue path to poll_in_flight (COMPLETED-without-PR -> extract patch + pytest + merge)",
+    "spec":("Extend orchestrator/loop.py.poll_in_flight: when a session response has state=COMPLETED AND "
+            "pr_url is empty, before clearing the session: "
+            "(1) GET https://jules.googleapis.com/v1alpha/sessions/<sid>/activities (use the existing "
+            "JulesClient or jules_pool routing). "
+            "(2) Find the last activity with sessionCompleted and a non-empty artifact.changeSet.gitPatch."
+            "unidiffPatch; if none found, mark the session FAILED and skip rescue. "
+            "(3) Create a temp rescue branch off main: 'operator-rescue/<sid>-<short_ts>'. "
+            "(4) Write the patch to a temp file and run `git apply --whitespace=nowarn <patchfile>`. If apply "
+            "fails, mark FAILED and skip. "
+            "(5) Run pytest -q with subprocess.run; capture rc. If rc != 0, leave the rescue branch and mark "
+            "the session FAILED with a rescue_failed note. "
+            "(6) On rc==0: commit the staged files with message 'rescue: <task_id> from session <sid>'; "
+            "switch to main; merge --no-ff with the same -X theirs strategy used by github_ops.merge_pr; "
+            "scan diff for secrets (same regex KGAT_/AQ.Ab/sk-ant-); on secret leak, abort and mark FAILED. "
+            "(7) On success: mark the task DONE and clear the session - emit the ops via the existing "
+            "StatePatch flow, not a side effect. Add tests/test_auto_rescue.py covering: happy path "
+            "(rescue + merge + DONE), pytest-fails path (rescue branch present, main untouched, FAILED), "
+            "patch-fails path (FAILED, no branch), no-artifact path (FAILED, no branch), secret-leak path "
+            "(FAILED, no merge). Acceptance: pytest -q green; happy path produces a real merge commit in a "
+            "test git repo."),
+    "allowed_area":"orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
+    "acceptance_criteria":("auto-rescue exercises all 5 branches in unit tests; happy path produces a merge "
+                           "commit in a test fixture repo; pytest -q green."),
+    "definition_of_done":"One PR; tests green; PR body lists the 5 branches; hypothesis_id=H-AUTO-RESCUE.",
+    "hypothesis_id":"H-AUTO-RESCUE","priority":"P0","status":"BACKLOG","est_hours":1.5,
+    "source_refs":["state/run_log.jsonl","orchestrator/loop.py","orchestrator/github_ops.py"],
+    "created_at":TS}},
+
+  # --- H-CHAT-TEMPLATE ---
+  {"op":"create_hypothesis","idempotency_key":f"{TICK}:H-CHAT-TEMPLATE:create",
+   "data":{"id":"H-CHAT-TEMPLATE",
+    "title":"Chat-template parity test against the host inference prompt eliminates silent-failure submissions",
+    "statement":("Discussions repeatedly note that the host scoring runs inference with a SPECIFIC chat template "
+                 "(Nemotron-3-Nano-30B-A3B-BF16 default + reasoning_on header). If our LoRA adapter is trained or "
+                 "evaluated under a different template (e.g. our eval/vllm_eval.py uses ChatML where host uses "
+                 "Nemotron's native), every output is a few tokens off and \\boxed{} extraction may miss. "
+                 "Adding eval/test_chat_template_parity.py that loads the official tokenizer's apply_chat_template "
+                 "on a known fixture and asserts byte-equality vs the harness's rendered prompt prevents this."),
+    "expected_effect":("Catches a class of silent failures that would only manifest as 'CV looks 0.0 on a "
+                       "well-trained adapter' - very hard to debug after the fact."),
+    "how_to_test":("Create a 10-prompt fixture with known correct host rendering (captured from Nemotron's HF "
+                   "tokenizer with default chat_template + reasoning_on system message). Run vllm_eval.py in "
+                   "render-only mode against the same fixture - assert byte-equality of every rendered prompt. "
+                   "Test fails if our template diverges."),
+    "source_refs":["discussion-682208.md","discussion-690161.md","winner-train_sft.py.md (chat template usage)",
+                   "tab-rules.md (host scoring spec)"],
+    "status":"PROPOSED","created_at":TS}},
+
+  # --- TASK-EVAL-chat-template-parity (~1h) ---
+  {"op":"create_task","idempotency_key":f"{TICK}:TASK-EVAL-chat-template-parity:create",
+   "data":{"id":"TASK-EVAL-chat-template-parity",
+    "title":"Add eval/chat_template_fixture.jsonl + tests/test_chat_template_parity.py asserting byte-equality vs official tokenizer",
+    "spec":("(1) Create eval/chat_template_fixture.jsonl with 10 host-realistic prompts (mix of "
+            "equation_numeric, cryptarithm, cipher, bit_manipulation - sample from existing data/curation classifier output, NOT raw train.csv since that is gitignored). "
+            "(2) For each fixture row, write a 'expected_rendered' field containing the EXACT string the official "
+            "Nemotron tokenizer's apply_chat_template returns for a {role=user, content=<prompt>} message with "
+            "the reasoning_on system header matching the host. (Capture these offline using the HF tokenizer.) "
+            "(3) Write tests/test_chat_template_parity.py that: imports the prompt-rendering function from "
+            "competitions/.../eval/vllm_eval.py (which TASK-EVAL-vllm-harness-skeleton already provides) and "
+            "asserts the rendered output byte-equals expected_rendered for all 10 rows. "
+            "(4) If our vllm_eval.py uses a hard-coded template (current state), this task documents the gap and "
+            "the test should be marked xfail with a TODO note pointing at a follow-up task to load the official "
+            "tokenizer template. If our harness already loads the official template, the test should pass. "
+            "Acceptance: pytest -q passes (including xfail if applicable); fixture jsonl committed with prompts "
+            "but the answer column dropped (DATA.md rule)."),
+    "allowed_area":("competitions/nvidia-nemotron-model-reasoning-challenge/eval/chat_template_fixture.jsonl, "
+                    "tests/test_chat_template_parity.py"),
+    "acceptance_criteria":("Fixture has 10 rows across >=3 categories; test exercises byte-equality; "
+                           "pytest -q green (xfail allowed if harness uses hard-coded template)."),
+    "definition_of_done":"One PR; tests green; PR body documents whether harness already loads the official template; hypothesis_id=H-CHAT-TEMPLATE.",
+    "hypothesis_id":"H-CHAT-TEMPLATE","priority":"P1","status":"BACKLOG","est_hours":1.0,
+    "source_refs":["discussion-682208.md","discussion-690161.md","competitions/.../eval/vllm_eval.py (from PR #35)"],
+    "created_at":TS}},
+]
+
+decision = {
+  "tick_id":TICK,"status":"complete",
+  "summary":("planner: add H-AUTO-RESCUE (close last tick's failure mode) + H-CHAT-TEMPLATE (catch silent inference-time mismatches). "
+             "Two ~1h tasks, both unblocked."),
+  "state_patch":{"tick_id":TICK,"operations":ops},
+}
+with open("decision_planner.json","w",encoding="utf-8") as f:
+    json.dump(decision,f)
+print("wrote", len(ops), "ops")

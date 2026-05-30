@@ -237,3 +237,60 @@ Sources: this revision (execution + live run). **Confidence: Well-established.**
 ### F-047 — Integration = new project SKILL.md + INTEGRATION.md mapping, DNA kept, Excel quarantined
 Installed at `.claude/skills/sdlc/`: a rewritten **SKILL.md** (the operator-tick playbook: router→tick, state-ledger→`orchestrator.tools`, owner→Jules, no Excel, no API key), an **INTEGRATION.md** mapping table, `references/` (31 DNA files, kept), and `_legacy_excel/` (scripts+assets, do-not-run README). Operator prompts + AGENTS.md now point at it. This gives the project the SDLC orchestration discipline without a second state system.
 Sources: this revision (execution). **Confidence: Well-established** (design decision, implemented + committed).
+
+---
+
+## Cluster Z — Audit 2026-05-30 (full-system review, max rigor)
+
+### F-053 — All 7 `kernel-metadata.json` files in `kernels/` carry literal `username/` and `placeholder` values — first-submission BLOCKER
+Audit of every `competitions/.../kernels/*/kernel-metadata.json` shows the same template stamped repeatedly with no per-account substitution: `"id": "username/..."` (not `sai1881/...`), `"dataset_sources": ["username/placeholder-dataset"]` (no real corpus dataset attached), `"model_sources": ["nvidia/nemotron-3-nano-30b-a3b-bf16/placeholder-version"]` (version literal). `"is_private"`, `"enable_gpu"`, `"enable_internet"` are JSON **strings** (`"true"`/`"false"`), not booleans — Kaggle's kernel-push API rejects string booleans. `enable_internet: "false"` would also block downloading base-model weights at runtime if the model source were correctly referenced. **Net effect:** `kaggle kernels push` would fail at validation time for E-002 and every sibling kernel. The "missing GPU dispatch trigger" the user asked about is a red herring — even if the trigger fired, the push would error.
+Sources: live disk read of 7 kernel-metadata.json files; Kaggle API docs require `id: <username>/<slug>` and boolean flags. **Confidence: Well-established (live primary evidence).**
+
+### F-054 — Zero scheduled cron / Task Scheduler triggers exist — the "autonomous loop" is dormant
+`CronList` returns "No scheduled jobs." The prior conversation summary referenced a cron job `7,37 * * * *` id `88e9125b` — that job is **not present** in the active scheduler state. There is no Windows Task Scheduler entry firing `python -m orchestrator.tools dispatch|status` either (no evidence in the repo or registry). The system makes forward progress only when the user or this session manually invokes a tick. The current 4 IN_PROGRESS Jules sessions were spawned by past manual dispatch ticks and are draining toward completion with no replenishment of READY tasks. After they finish, the ledger has **0 READY, 0 BACKLOG, 0 BLOCKED** — the loop terminates.
+Sources: CronList (empty); ledger task-status count (36 DONE / 15 SUPERSEDED / 4 IN_PROGRESS / 0 elsewhere). **Confidence: Well-established (live primary evidence).**
+
+### F-055 — Ledger has NO task corresponding to "push E-002 to Kaggle GPU and ingest cv_score" — critical path is broken
+Critical-path inspection: TASK-OPS-run-kernel-runner (DONE — built `tools/run_kernel.py`), TASK-OPS-gpu-dispatch-op (DONE — wired the `gpu_dispatch` op into `loop.py`/`state.py`), TASK-EVAL-cv-score-ingest (IN_PROGRESS — authoring the ingest path). **Missing:** an explicit task that fires `gpu_dispatch` for `experiment_id=E-002-baseline-rank32` with the right `slug`/`kernel_dir`/`owner`/`out_dir`. The operator-decision schema supports the action (`operator_decision.schema.json` lines 60–71), but no task tells the operator to emit it. Result: even with cron fixed and metadata fixed, the system will never push E-002 unless a task instructs it.
+Sources: live ledger query for tasks containing "push"/"E-002"/"gpu_dispatch"/"executor" → 0 matches; operator_decision.schema.json. **Confidence: Well-established.**
+
+### F-056 — `loop.py` line 246 hard-codes POSIX path `/tmp/gpu_run_{slug}.log` — fails on Windows host
+The `apply_decision` path for `gpu_dispatch` opens a log file at `/tmp/gpu_run_{slug}.log`. On Windows (this host), `/tmp/` does not exist by default, so `open(...)` raises `FileNotFoundError`. Any operator decision carrying `gpu_dispatch` (the new-code-path branch keyed on `"slug" in g`) will crash mid-tick before the kernel push command launches. Compounds F-055: not only is no task firing `gpu_dispatch`, but the dispatcher would also crash if one did.
+Sources: live disk read of `orchestrator/loop.py:246`. **Confidence: Well-established (static analysis).**
+
+### F-057 — E-007 Jules session 13107147469450254389 stuck in out-of-scope edit retry loop, idle ~35 min
+Live `list_activities` for session `13107147469450254389`: 30 activities. Plan generated 11:32, approved 11:33; classifier fix landed 11:35 (100% coverage); operator-steer userMessaged 11:48 asked Jules to ship steps 2–4 + PR. From 11:56 through 12:00:47 Jules emitted **26 identical `progressUpdated` artifacts** all containing the same diff for `competitions/.../data/solvers/cryptarithm/solve.py` — a path **outside** the task's `allowed_area` (`competitions/.../kernels/train-e007-cryptarithm`). Jules's write tool keeps rejecting the out-of-scope edit; Jules keeps retrying. No new activity since 12:00:47. The session consumes 1 lock slot for ~35+ minutes with zero forward progress. Root cause: task spec ("extend `data/corpus/v1/build_corpus.py`", "patch the cryptarithm solver") contradicts the locked `allowed_area`.
+Sources: live `jules.list_activities` + session JSON read. **Confidence: Well-established (live primary evidence).**
+
+### F-058 — Hypothesis-status casing inconsistency (`proposed` vs `PROPOSED`) — schema drift
+Live count: 17 hypotheses with `status: "proposed"`, 3 with `status: "PROPOSED"`, 1 `supported`. Selector code (`selector.py`) and downstream queries that filter on `status == "PROPOSED"` will silently miss 17/21 hypotheses. The drift comes from two code paths (one in `state.py`'s `create_hypothesis`, one in a planner-emitted patch) using different casing. Effect on plan: the role-selector likely under-weights `innovator` because most hypotheses look "absent" from its PROPOSED filter.
+Sources: live ledger query: `Counter(h.get('status') for h in state['hypotheses'].values())` → `{'proposed': 17, 'PROPOSED': 3, 'supported': 1}`. **Confidence: Well-established.**
+
+### F-059 — Backlog promotion bottleneck: `cursors.jules_dispatched_2026-05-30 = 40` already at near-saturation vs `DAILY_JULES_BUDGET=200`
+The daily-budget cursor shows 40 sessions dispatched today against a 200-cap — comfortable margin. But the in-flight count is only 4. Inference: 36 sessions ran and finished today; the lock manager and Jules pool are healthy. The bottleneck is NOT compute or quota — it's the **empty BACKLOG** (F-054) plus the **missing critical-path task** (F-055). When the planner / innovator role runs, it has no new hypotheses to seed because most of the 21 hypotheses are already attached to experiments — so it doesn't generate new BACKLOG either. The system is in a converged "all designed, nothing executes" state.
+Sources: live ledger `cursors` + session count + task-status count. **Confidence: Well-established.**
+
+### F-060 — Two in-flight Jules sessions for IN_PROGRESS tasks remain `QUEUED` (account_idx=0) — likely cold start, not failure
+Sessions for TASK-E009-synthesis-kernel and TASK-SUBMIT-gate-decision and TASK-EVAL-cv-score-ingest are all `state: QUEUED` with `created_at` in the last few minutes. No PR URLs yet. Account_idx=0 only — the second Jules account hasn't been routed to. JulesPool round-robin may be account-skewed (need to verify it actually alternates). Not a defect today, but in a sustained run the 100/day cap of one account could clip.
+Sources: live ledger sessions table. **Confidence: Supported (would need to inspect `jules_pool.py` round-robin and run-history to be Well-established).**
+
+### F-061 — `state.py` schema is missing migration handling — old `data.experiment_id` vs new `data.slug` mismatch in `update_gpu_run`
+`loop.py`'s new-path GPU polling (line 131) emits `update_gpu_run` with `data: {"slug": eid, ...}`, but `state.py` `_apply_op` for `update_gpu_run` keys the state dict by `data["experiment_id"]` (line 100). The two names disagree, so a `gpu_dispatch`-completed kernel's terminal state would be recorded under `state['gpu_runs'][None]` (the `.get("experiment_id")` default) instead of the intended slug. Silent data loss for GPU-run tracking.
+Sources: live disk read of `loop.py:131` + `state.py:99-103`. **Confidence: Well-established (static analysis).**
+
+### F-062 — `state.py` OPS set includes `"gpu_dispatch"` but no projection branch handles it in `_apply_op`
+`OPS` contains `"gpu_dispatch"`, so `apply_patch` accepts the op without raising "unknown op". But `_apply_op` has no `elif op == "gpu_dispatch"` arm — it falls through to `raise ValueError(f"unknown op: {op}")`. So a `gpu_dispatch` op crashes mid-apply with a misleading error. (Confirms why no GPU run has been recorded yet.)
+Sources: live disk read of `state.py:24-156`. **Confidence: Well-established (static analysis).**
+
+### F-063 — The 4 "IN_PROGRESS" tasks ARE the entire pending queue; nothing follows them
+Ledger snapshot 2026-05-30T13:00Z:
+- TASK-E007-cryptarithm-guess-integration — stuck (F-057)
+- TASK-E009-synthesis-kernel — Jules QUEUED, dependency-bound on E-002..E-008 GPU results that don't exist
+- TASK-EVAL-cv-score-ingest — Jules QUEUED, no blocker
+- TASK-SUBMIT-gate-decision — Jules QUEUED, no blocker
+After all four merge, the BACKLOG is empty. With no planner/innovator run scheduled and no cron firing the dispatch loop, the system halts.
+Sources: live ledger task-status count + session table. **Confidence: Well-established.**
+
+### F-064 — `package_submission`/`validate_adapter` are coded but never invoked in the live path — first-submission integration untested
+`tools/package_submission.py` (4165 bytes) and `tools/validate_adapter.py` (4239 bytes) exist and have tests, but no end-to-end run has chained `kernel-output → adapter/ → validate → package → submission.zip → competition-submit`. There is no `submissions/pending/*.zip` artifact on disk — only `.gitkeep` placeholders. The first time the chain runs will be the first time it's tested live.
+Sources: disk read of `competitions/.../submissions/{pending,submitted}/` (only `.gitkeep`); no `submitted/*.json` audit trail. **Confidence: Well-established.**
