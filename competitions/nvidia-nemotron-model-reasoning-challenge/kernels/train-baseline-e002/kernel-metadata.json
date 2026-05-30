@@ -1,6 +1,6 @@
 {
-  "id": "sai1881/nemotron-model-reasoning-train-e002",
-  "title": "Nemotron E-002 Baseline LoRA Train",
+  "id": "sai1881/nemotron-e-002-baseline-lora-train",
+  "title": "Nemotron E 002 Baseline LoRA Train",
   "code_file": "train.py",
   "language": "python",
   "kernel_type": "script",

@@ -1,0 +1,35 @@
+[{"stream_name":"stdout","time":24.966666467,"data":"Loading model: /kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
+,{"stream_name":"stdout","time":24.966878109,"data":"No training data provided or path does not exist.\n"}
+,{"stream_name":"stderr","time":24.966632347,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":24.966897951,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py\", line 419, in cached_files\n"}
+,{"stream_name":"stderr","time":24.966955478,"data":"    hf_hub_download(\n"}
+,{"stream_name":"stderr","time":24.966959333,"data":"  File \"/usr/local/lib/python3.12/dist-packages/huggingface_hub/utils/_validators.py\", line 84, in _inner_fn\n"}
+,{"stream_name":"stderr","time":24.967016678,"data":"    validate_repo_id(arg_value)\n"}
+,{"stream_name":"stderr","time":24.967049949,"data":"  File \"/usr/local/lib/python3.12/dist-packages/huggingface_hub/utils/_validators.py\", line 132, in validate_repo_id\n"}
+,{"stream_name":"stderr","time":24.967262374,"data":"    raise HFValidationError(\n"}
+,{"stream_name":"stderr","time":24.967272464,"data":"huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/default/1'. Use `repo_type` argument if needed.\n"}
+,{"stream_name":"stderr","time":24.967278408,"data":"\n"}
+,{"stream_name":"stderr","time":24.967282231,"data":"The above exception was the direct cause of the following exception:\n"}
+,{"stream_name":"stderr","time":24.967285969,"data":"\n"}
+,{"stream_name":"stderr","time":24.967289153,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":24.967292549,"data":"  File \"/kaggle/src/script.py\", line 275, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":24.967442449,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
+,{"stream_name":"stderr","time":24.968039745,"data":"  File \"/kaggle/src/script.py\", line 77, in run_training\n"}
+,{"stream_name":"stderr","time":24.968053456,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
+,{"stream_name":"stderr","time":24.968057332,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":24.968061285,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 275, in from_pretrained\n"}
+,{"stream_name":"stderr","time":24.968065588,"data":"    resolved_config_file = cached_file(\n"}
+,{"stream_name":"stderr","time":24.968069326,"data":"                           ^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":24.968073103000002,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py\", line 276, in cached_file\n"}
+,{"stream_name":"stderr","time":24.968077582,"data":"    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)\n"}
+,{"stream_name":"stderr","time":24.968256425,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":24.968338537,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/utils/hub.py\", line 468, in cached_files\n"}
+,{"stream_name":"stderr","time":24.968512289,"data":"    raise OSError(f\"{e}\") from e\n"}
+,{"stream_name":"stderr","time":24.968583659,"data":"OSError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/default/1'. Use `repo_type` argument if needed.\n"}
+,{"stream_name":"stderr","time":29.415765596,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":29.415843767,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":29.635079192,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":29.635118564,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":30.322494636,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":31.62815959,"data":"[NbConvertApp] Writing 341887 bytes to __results__.html\n"}
+]

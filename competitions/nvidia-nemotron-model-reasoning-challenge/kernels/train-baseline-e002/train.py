@@ -3,10 +3,18 @@ import json
 import os
 import sys
 
-# Ensure evaluating modules can be found (cv.py + score.py copied alongside this script)
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-import cv
-import score
+# === INLINED cv + score modules (script-type kernels upload only one file) ===
+import types as _types
+_score_mod = _types.ModuleType('score')
+exec(compile('def extract_boxed(text: str) -> str | None:\n    if not text:\n        return None\n    idx = text.rfind(r"\\boxed{")\n    if idx == -1:\n        return None\n    start = idx + len(r"\\boxed{")\n    brace_count = 1\n    for i in range(start, len(text)):\n        if text[i] == "{":\n            brace_count += 1\n        elif text[i] == "}":\n            brace_count -= 1\n        if brace_count == 0:\n            return text[start:i]\n    return None\n\n\ndef score_item(prediction: str, gold: str) -> bool:\n    p_val = extract_boxed(prediction)\n    if p_val is None:\n        # Missing \\boxed{} -> wrong\n        return False\n\n    g_val = extract_boxed(gold)\n    if g_val is None:\n        # Gold doesn\'t have \\boxed{} formatting? We\'ll assume the string is the value\n        g_val = str(gold).strip()\n    else:\n        g_val = g_val.strip()\n\n    p_val = p_val.strip()\n\n    # Exact string match\n    if p_val == g_val:\n        return True\n\n    # Numeric match within 1e-2 tolerance\n    try:\n        if abs(float(p_val) - float(g_val)) <= 1e-2:\n            return True\n    except ValueError:\n        pass\n\n    return False\n\n\ndef score(predictions: list[str], gold: list[str]) -> float:\n    if len(predictions) != len(gold):\n        raise ValueError("Length mismatch between predictions and gold")\n    if not predictions or not gold:\n        return 0.0\n\n    correct = sum(1 for p, g in zip(predictions, gold) if score_item(p, g))\n    return correct / len(predictions)\n', 'score.py', 'exec'), _score_mod.__dict__)
+sys.modules['score'] = _score_mod
+score = _score_mod
+
+_cv_mod = _types.ModuleType('cv')
+exec(compile('import json\nimport csv\nimport argparse\nimport random\nfrom typing import Any, Dict, List\nfrom collections import defaultdict\n\nfrom score import score_item\n\n\ndef get_category(item: Dict[str, Any]) -> str:\n    """Extracts or infers the category of an item."""\n    if "category" in item and item["category"]:\n        return item["category"]\n\n    text = item.get("problem", item.get("question", item.get("text", ""))).lower()\n    if not text:\n        return "unknown"\n\n    if any(k in text for k in ["math", "equation", "calculate", "number", "integral", "derivative", "theorem", "algebra", "geometry", "probability"]):\n        return "math"\n    if any(k in text for k in ["code", "python", "programming", "function", "algorithm", "c++", "java", "script"]):\n        return "code"\n    if any(k in text for k in ["physics", "force", "velocity", "mass", "energy", "momentum", "acceleration"]):\n        return "physics"\n    if any(k in text for k in ["logic", "puzzle", "deduce", "reasoning", "if and only if", "knights and knaves", "syllogism"]):\n        return "logic"\n\n    return "general"\n\ndef create_holdout(data: List[Dict[str, Any]], test_size: float = 0.2, seed: int = 42) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:\n    """Splits data into train and holdout sets using stratified splitting by category."""\n    random.seed(seed)\n\n    # Group data by category\n    by_category = defaultdict(list)\n    for item in data:\n        cat = get_category(item)\n        by_category[cat].append(item)\n\n    train_data = []\n    holdout_data = []\n\n    # Split each category proportionally\n    for cat, items in by_category.items():\n        shuffled_items = items.copy()\n        random.shuffle(shuffled_items)\n        split_idx = int(len(shuffled_items) * (1 - test_size))\n        train_data.extend(shuffled_items[:split_idx])\n        holdout_data.extend(shuffled_items[split_idx:])\n\n    # Shuffle the final datasets so categories aren\'t grouped together\n    random.shuffle(train_data)\n    random.shuffle(holdout_data)\n\n    return train_data, holdout_data\n\n\ndef evaluate_cv(predictions: List[Dict[str, Any]], gold_data: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:\n    """\n    Evaluates predictions against gold data.\n    Assumes predictions have \'id\' and \'prediction\' keys.\n    Assumes gold_data maps \'id\' to a dict containing \'answer\' and optionally \'category\'.\n    """\n    if not predictions:\n        return {"overall_accuracy": 0.0, "category_accuracy": {}, "category_stats": {}}\n\n    correct_total = 0\n    total = 0\n\n    category_stats = defaultdict(lambda: {"correct": 0, "total": 0})\n\n    for pred_item in predictions:\n        item_id = str(pred_item.get("id"))\n        prediction_text = pred_item.get("prediction", "")\n\n        if item_id not in gold_data:\n            print(f"Warning: ID {item_id} found in predictions but not in gold data. Skipping.")\n            continue\n\n        gold_item = gold_data[item_id]\n        gold_text = gold_item.get("answer", "")\n        category = get_category(gold_item)\n\n        is_correct = score_item(prediction_text, gold_text)\n\n        if is_correct:\n            correct_total += 1\n            category_stats[category]["correct"] += 1\n\n        total += 1\n        category_stats[category]["total"] += 1\n\n    overall_accuracy = correct_total / total if total > 0 else 0.0\n\n    category_accuracy = {\n        cat: stats["correct"] / stats["total"] if stats["total"] > 0 else 0.0\n        for cat, stats in category_stats.items()\n    }\n\n    return {\n        "overall_accuracy": overall_accuracy,\n        "category_accuracy": category_accuracy,\n        "category_stats": dict(category_stats),\n        "total_evaluated": total\n    }\n\ndef generate_markdown_report(results: Dict[str, Any], output_path: str):\n    """Generates a Markdown report with per-category accuracy."""\n    with open(output_path, "w", encoding="utf-8") as f:\n        f.write("# Evaluation Report\\n\\n")\n        f.write(f"**Overall Accuracy:** {results.get(\'overall_accuracy\', 0.0):.4f} ({results.get(\'total_evaluated\', 0)} samples)\\n\\n")\n\n        category_stats = results.get("category_stats", {})\n        if category_stats:\n            f.write("## Category Breakdown\\n\\n")\n            f.write("| Category | Accuracy | Correct / Total |\\n")\n            f.write("|----------|----------|-----------------|\\n")\n\n            # Sort categories alphabetically\n            for cat in sorted(category_stats.keys()):\n                stats = category_stats[cat]\n                acc = stats["correct"] / stats["total"] if stats["total"] > 0 else 0.0\n                f.write(f"| {cat} | {acc:.4f} | {stats[\'correct\']} / {stats[\'total\']} |\\n")\n\ndef _load_data(filepath: str, key_field: str = None) -> Any:\n    """Loads JSONL or CSV data."""\n    if filepath.endswith(\'.csv\'):\n        data = []\n        with open(filepath, \'r\', encoding=\'utf-8\') as f:\n            reader = csv.DictReader(f)\n            for row in reader:\n                data.append(row)\n        if key_field:\n            return {str(item[key_field]): item for item in data if key_field in item}\n        return data\n\n    elif filepath.endswith(\'.jsonl\') or filepath.endswith(\'.json\'):\n        # simple jsonl support for flexibility\n        data = []\n        with open(filepath, \'r\', encoding=\'utf-8\') as f:\n            for line in f:\n                line = line.strip()\n                if line:\n                    data.append(json.loads(line))\n        if key_field:\n             return {str(item[key_field]): item for item in data if key_field in item}\n        return data\n    else:\n        raise ValueError(f"Unsupported file format for {filepath}")\n\ndef main():\n    parser = argparse.ArgumentParser(description="Evaluate model predictions against gold data.")\n    parser.add_argument("--predictions", type=str, required=True, help="Path to predictions file (CSV or JSONL). Must have \'id\' and \'prediction\' columns/keys.")\n    parser.add_argument("--gold", type=str, required=True, help="Path to gold data file (CSV or JSONL). Must have \'id\', \'answer\', and optionally \'category\'.")\n    parser.add_argument("--output", type=str, default="cv_score.json", help="Path to output the scores (JSON).")\n    parser.add_argument("--report", type=str, default=None, help="Path to output a Markdown report with per-category accuracies.")\n\n    args = parser.parse_args()\n\n    predictions = _load_data(args.predictions)\n    gold_data = _load_data(args.gold, key_field="id")\n\n    results = evaluate_cv(predictions, gold_data)\n\n    print(f"Overall Accuracy: {results[\'overall_accuracy\']:.4f} ({results[\'total_evaluated\']} samples)")\n    print("Category Accuracy:")\n    for cat, acc in results[\'category_accuracy\'].items():\n        print(f"  {cat}: {acc:.4f}")\n\n    with open(args.output, \'w\', encoding=\'utf-8\') as f:\n        json.dump(results, f, indent=2)\n    print(f"Results saved to {args.output}")\n\n    if args.report:\n        generate_markdown_report(results, args.report)\n        print(f"Report saved to {args.report}")\n\nif __name__ == "__main__":\n    main()\n', 'cv.py', 'exec'), _cv_mod.__dict__)
+sys.modules['cv'] = _cv_mod
+cv = _cv_mod
+# === END INLINED ===
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -57,8 +65,11 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     else:
         print("No training data provided or path does not exist.")
 
+    # Kaggle Models mount is offline-only; tell transformers to skip HF hub lookup
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")
     if smoke:
-        model = AutoModelForCausalLM.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name, local_files_only=True)
     else:
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=LOAD_IN_4BIT,
@@ -70,7 +81,8 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
             model_name,
             quantization_config=bnb_config,
             device_map="auto",
-            torch_dtype=torch.bfloat16
+            torch_dtype=torch.bfloat16,
+            local_files_only=True,
         )
         model = prepare_model_for_kbit_training(model)
 
@@ -87,7 +99,7 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
