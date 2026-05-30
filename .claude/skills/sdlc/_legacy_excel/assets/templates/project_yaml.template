@@ -1,0 +1,33 @@
+# SDLC project configuration
+project_id: PROJECT-PLACEHOLDER
+project_name: "Human-readable project name"
+created_at: "2026-05-08T00:00:00Z"
+status: ACTIVE
+cadence: "90m"
+
+phases:
+  - id: PHASE-001
+    title: "Initial setup"
+    goal: "Establish baseline and ship first vertical slice."
+
+metrics_policy:
+  collect:
+    - flow.cycle_time
+    - quality.review_findings_per_task
+    - test.coverage_delta
+    - cognitive_load.diff_size_p95
+
+validation_policy:
+  default_change_size: small
+  override_to:
+    security: large
+    breaking_api: large
+
+router:
+  schedule_cadence: "90m"
+  max_lock_ttl_minutes: 90
+
+git:
+  default_branch: main
+  branch_prefix: sdlc/
+  commit_audit_tag: "[sdlc-owner]"

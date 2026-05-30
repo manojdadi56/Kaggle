@@ -21,6 +21,8 @@ The **operator is the Claude Code session on the user's subscription** (no API k
 |------|--------------|
 | **[REPORT.md](REPORT.md)** | **The implementation plan** — architecture, contracts, state machine, trigger prompts, roadmap, decisions |
 | **[initial_backlog.md](initial_backlog.md)** | **The starting user stories** — US-1 analyze solutions → US-2 validation → US-3 synthetic data → US-4 training → US-5 debug/improve; dependency + parallelism map |
+| **[CONTINUOUS_OPS_PLAN.md](CONTINUOUS_OPS_PLAN.md)** | **The continuous engine (R-002)** — Python tracker + Claude operator; hypotheses/experiments ledgers; deep parallel Jules; Wave-1 backlog |
+| **`.claude/skills/sdlc/`** | **SDLC skill integrated (R-003)** — operator-tick playbook (SKILL.md) + role DNA (references/) + INTEGRATION.md mapping; Excel machinery quarantined in `_legacy_excel/` |
 | [00_research_plan](00_research_plan.md) | Question, scope, methodology, gates |
 | [01_pre_registration](01_pre_registration.md) | Expectations vs reality (4/7 disconfirmed — the surprises) |
 | [02_findings_log](02_findings_log.md) | All 36 findings (F-001..F-036) with sources + confidence |

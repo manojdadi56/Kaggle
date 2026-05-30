@@ -1,0 +1,27 @@
+{
+  "patch_id": "PATCH-RUN-YYYYMMDD-HHMMSS",
+  "run_id": "RUN-YYYYMMDD-HHMMSS",
+  "project_id": "PROJECT_ID",
+  "operations": [
+    {
+      "op": "start_attendance",
+      "idempotency_key": "RUN-YYYYMMDD-HHMMSS:attendance:start",
+      "data": {
+        "role_selected": "ROLE",
+        "role_selection_reason": "...",
+        "roles_feasible": "...",
+        "roles_rejected": "..."
+      }
+    },
+    {
+      "op": "close_attendance",
+      "idempotency_key": "RUN-YYYYMMDD-HHMMSS:attendance:close",
+      "data": {
+        "status": "CLOSED",
+        "high_level_completed": "...",
+        "next_recommended_role": "...",
+        "saturation_status": "complete | saturated"
+      }
+    }
+  ]
+}

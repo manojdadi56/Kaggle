@@ -1,0 +1,24 @@
+{
+  "run_id": "RUN-YYYYMMDD-HHMMSS",
+  "role": "ROLE",
+  "status": "complete",
+  "saturation": {
+    "saturated": false,
+    "completed": [],
+    "remaining": [],
+    "resume_cursor": null
+  },
+  "high_level_completed": "One-line summary safe for non-technical audiences",
+  "rationale": {
+    "facts": "Observed facts as bullets",
+    "decision": "Decision made",
+    "evidence": "Evidence used",
+    "risks": "Known risks",
+    "next": "Next action"
+  },
+  "state_patch_ref": "patch.json",
+  "artifacts": [],
+  "next_recommended_role": "owner",
+  "memory_candidates": [],
+  "errors": []
+}

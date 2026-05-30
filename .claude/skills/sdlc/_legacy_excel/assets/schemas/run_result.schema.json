@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunResult",
+  "type": "object",
+  "required": ["run_id", "role", "status", "rationale", "next_recommended_role"],
+  "properties": {
+    "run_id": {"type": "string", "pattern": "^RUN-\\d{8}-\\d{6}$"},
+    "role": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["complete", "blocked", "saturated", "needs_info", "failed"]
+    },
+    "saturation": {
+      "type": "object",
+      "properties": {
+        "saturated": {"type": "boolean"},
+        "completed": {"type": "array", "items": {"type": "string"}},
+        "remaining": {"type": "array", "items": {"type": "string"}},
+        "resume_cursor": {"type": ["string", "null"]}
+      }
+    },
+    "high_level_completed": {"type": "string"},
+    "rationale": {
+      "type": "object",
+      "required": ["facts", "decision", "evidence", "risks", "next"],
+      "properties": {
+        "facts": {"type": "string"},
+        "decision": {"type": "string"},
+        "evidence": {"type": "string"},
+        "risks": {"type": "string"},
+        "next": {"type": "string"}
+      }
+    },
+    "state_patch_ref": {"type": ["string", "null"]},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {"type": "string"},
+          "type": {"type": "string"},
+          "sha256": {"type": "string"}
+        }
+      }
+    },
+    "next_recommended_role": {
+      "type": "string",
+      "enum": ["planner", "owner", "reviewer", "tester", "maintainer", "innovator", "validator", "reporter", "none"]
+    },
+    "memory_candidates": {"type": "array"},
+    "errors": {"type": "array"}
+  }
+}

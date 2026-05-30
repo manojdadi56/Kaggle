@@ -1,0 +1,27 @@
+{
+  "run_id": "RUN-YYYYMMDD-HHMMSS",
+  "project_id": "PROJECT_ID",
+  "triggered_at": "ISO_8601_UTC",
+  "cadence": "90m",
+  "previous_role": null,
+  "selected_role": "ROLE",
+  "role_selection_reason": "Reason from score_roles.py",
+  "work_item_id": null,
+  "task_id": null,
+  "phase_id": null,
+  "story_id": null,
+  "locks_required": ["workbook_write_lock"],
+  "permissions": {
+    "can_edit_code": false,
+    "can_write_excel_directly": false,
+    "can_create_state_patch": true,
+    "can_commit": false,
+    "can_browse": false
+  },
+  "definition_of_done": [
+    "Stage SOP from references/role_<ROLE>.md is followed",
+    "RunResult emitted with audit-safe rationale",
+    "StatePatch emitted; passes schema validation; passes policy gate",
+    "Artifacts registered if any are produced"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StatePatch",
+  "type": "object",
+  "required": ["patch_id", "run_id", "project_id", "operations"],
+  "properties": {
+    "patch_id": {"type": "string"},
+    "run_id": {"type": "string", "pattern": "^RUN-\\d{8}-\\d{6}$"},
+    "project_id": {"type": "string"},
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["op", "idempotency_key"],
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "append_event", "append_row",
+              "update_row_by_id", "update_status",
+              "create_task", "create_support_work", "create_suggestion",
+              "create_validation", "create_decision",
+              "register_artifact", "add_metric", "add_memory_candidate",
+              "start_attendance", "close_attendance"
+            ]
+          },
+          "idempotency_key": {"type": "string", "minLength": 1},
+          "sheet": {"type": "string"},
+          "entity_id": {"type": ["string", "number"]},
+          "entity_id_field": {"type": "string"},
+          "from_status": {"type": "string"},
+          "to_status": {"type": "string"},
+          "expected_version": {"type": ["integer", "null"]},
+          "data": {"type": "object"},
+          "summary": {"type": "string"}
+        }
+      }
+    }
+  }
+}

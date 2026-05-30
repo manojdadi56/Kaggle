@@ -17,6 +17,9 @@ Free Jules slots: {{free_slots}} · Auto-submits left today: {{submit_budget_lef
 3. **Parallel fan-out (optional):** if backlog tasks are independent of the primary move and of each other (disjoint `allowed_area`) and `free_slots > 0`, also dispatch them as concurrent Jules sessions. Certify independence in your rationale; if unsure, do not parallelize.
 4. **Emit** the decision per `operator_decision.schema.json`: `state_patch` ops (each with a deterministic idempotency_key `{{tick_id}}:<entity>:<action>`), any `jules_dispatch` (task_id + rendered prompt + allowed_area + starting_branch), any `gpu_dispatch` (experiment_id + backend), and `submit_action`.
 
+## Orchestration playbook
+This tick follows the **`/sdlc` project skill** (`.claude/skills/sdlc/SKILL.md` + `references/` role contracts; mapping in `.claude/skills/sdlc/INTEGRATION.md`). Roles = planner / innovator / owner(=Jules) / reviewer / validator / reporter — pick ONE primary per tick. State goes through `orchestrator.tools` (git-JSON), never Excel.
+
 ## How you run this tick (you ARE the operator — Claude Code on the subscription)
 You are not called via an API key. You drive the Python toolkit with your normal tools:
 1. `python -m orchestrator.tools context --tick <tick_id>` → read the decision-context JSON (state, feedback, open PRs, in-flight, plan, todo).

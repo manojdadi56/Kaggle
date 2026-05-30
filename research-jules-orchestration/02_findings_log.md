@@ -201,3 +201,19 @@ Sources: S-032, S-013/S-014 (headless flags), design. **Confidence: Well-establi
 ### F-044 — Billing note: from 2026-06-15, subscription `claude -p` / Agent SDK draws from a separate monthly Agent-SDK credit pool
 Unattended operator usage on the subscription will consume a distinct monthly credit allotment (separate from interactive limits). Cadence should be budgeted accordingly (favors the 1-hour routine over very frequent ticks).
 Sources: S-032, S-017. **Confidence: Supported.**
+
+---
+
+## Cluster G — SDLC skill integration (R-003)
+
+### F-045 — The SDLC skill cleanly splits into reusable DNA vs Excel machinery; only the DNA fits this project
+The skill (55 files) = (a) **role/contract DNA**: `operating_contract.md`, 8 `role_*.md`, 9 `cap_*.md`, `infra_*.md`, `schemas.md`, `validation_policy.md`, `role_permissions.md`, `workbook_schema.md` — domain-agnostic orchestration guidance; and (b) **Excel state machinery**: `scripts/state_ledger.py`/`workbook_*`/`role_selector`/`score_roles`/`lock_manager` + `assets/schemas|templates` — tied to `state.xlsx`. Our project already has git-JSON event-sourced state (F-028/F-043), so importing (b) would create a conflicting second source of truth. **Decision: import (a) as guidance, quarantine (b) as `_legacy_excel/` reference-only.**
+Sources: S-030 (the skill, read directly). **Confidence: Well-established.**
+
+### F-046 — Project skills live at `.claude/skills/<name>/SKILL.md` (valid YAML frontmatter) and are committable
+Claude Code discovers project skills under `.claude/skills/`; `name` + `description` frontmatter make `/sdlc` invokable. `.gitignore` only excludes `.claude/*.local.md` + `settings.local.json`, so `.claude/skills/**` commits normally. The skill is discovered at session start → `/sdlc` becomes available to the operator in a **new** session (not retroactively in the current one).
+Sources: S-032 (Claude Code skills docs), live `.gitignore`. **Confidence: Supported.**
+
+### F-047 — Integration = new project SKILL.md + INTEGRATION.md mapping, DNA kept, Excel quarantined
+Installed at `.claude/skills/sdlc/`: a rewritten **SKILL.md** (the operator-tick playbook: router→tick, state-ledger→`orchestrator.tools`, owner→Jules, no Excel, no API key), an **INTEGRATION.md** mapping table, `references/` (31 DNA files, kept), and `_legacy_excel/` (scripts+assets, do-not-run README). Operator prompts + AGENTS.md now point at it. This gives the project the SDLC orchestration discipline without a second state system.
+Sources: this revision (execution). **Confidence: Well-established** (design decision, implemented + committed).

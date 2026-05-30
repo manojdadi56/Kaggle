@@ -1,0 +1,33 @@
+# AGENTS.md
+
+This project is managed by the `sdlc` Claude Code skill (`~/.claude/skills/sdlc/`).
+
+## How a cycle is invoked
+
+The user invokes `/sdlc cycle <project-id>` (or describes the work in natural language). The skill:
+
+1. Loads the project's `state.xlsx` workbook.
+2. Selects exactly one feasible non-repeating role.
+3. Dispatches that role's bounded work using the matching reference file.
+4. Validates the StatePatch through the policy gate.
+5. Applies it via the only Excel writer (`scripts/state_ledger.py`).
+6. Records attendance, releases locks, and recommends the next role.
+
+## Authority
+
+- Only the **owner** role may edit project code.
+- Only the **state-ledger** stage writes Excel.
+- All other roles produce findings, suggestions, votes, or decisions.
+
+## State
+
+- `state.xlsx` — central project state (Events append-only, projections derived).
+- `locks/` — file-based locks per work item.
+- `snapshots/` — pre-mutation backups of the workbook.
+- `exports/` — human-readable digests (Reporter output).
+- `archive/` — completed-project archives.
+- `memory/` — durable project facts curated by Memory-Curator.
+
+## Editing
+
+If a human edits this AGENTS.md, the change is picked up by Context-Loader on the next cycle. Avoid editing `state.xlsx` directly — use `UserFeedback_Inbox` or `UserContext` sheets instead, both of which are user-editable inputs the planner consumes.

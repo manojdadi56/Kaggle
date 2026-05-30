@@ -21,6 +21,9 @@ This repo runs an **autonomous Kaggle-competition loop**. You (Jules) are the **
 3. Run what the no-GPU VM allows: `pip install -r requirements.txt`, `pytest -q`, lints, tiny-sample dry-runs.
 4. Open ONE PR. PR body must have: `## Summary`, `## Evidence` (tests run), `## Risks`, `## Definition-of-done check`, and `NEEDS_INFO:` (if blocked — state the exact question, do not guess).
 
+## Orchestration model (context)
+This repo is run by an SDLC-style mesh: the **operator** (a Claude Code session) plays one role per tick using the `/sdlc` project skill (`.claude/skills/sdlc/`), and **you (Jules) are the `owner` role — the only code writer**. The operator dispatches you one task, reviews your PR against acceptance criteria + the invariants below, and merges it. State is git-JSON (`state/`, `orchestrator.tools`) — never edit it.
+
 ## Conventions
 - Python ≥ 3.10. Keep diffs scoped; no unrelated refactors. Audit-safe rationale only in PRs (what/why/evidence/risks) — no hidden chain-of-thought.
 - Tests must be offline (mock external services). Never make live network calls in tests.

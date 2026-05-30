@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RunEnvelope",
+  "type": "object",
+  "required": ["run_id", "project_id", "selected_role", "permissions", "definition_of_done"],
+  "properties": {
+    "run_id": {"type": "string", "pattern": "^RUN-\\d{8}-\\d{6}$"},
+    "project_id": {"type": "string", "minLength": 1},
+    "triggered_at": {"type": "string"},
+    "cadence": {"type": "string"},
+    "previous_role": {"type": ["string", "null"]},
+    "selected_role": {
+      "type": "string",
+      "enum": ["planner", "owner", "reviewer", "tester", "maintainer", "innovator", "validator", "reporter"]
+    },
+    "role_selection_reason": {"type": "string"},
+    "work_item_id": {"type": ["string", "null"]},
+    "task_id": {"type": ["string", "null"]},
+    "phase_id": {"type": ["string", "null"]},
+    "story_id": {"type": ["string", "null"]},
+    "locks_required": {"type": "array", "items": {"type": "string"}},
+    "permissions": {
+      "type": "object",
+      "required": ["can_edit_code", "can_write_excel_directly", "can_create_state_patch", "can_commit", "can_browse"],
+      "properties": {
+        "can_edit_code": {"type": "boolean"},
+        "can_write_excel_directly": {"type": "boolean"},
+        "can_create_state_patch": {"type": "boolean"},
+        "can_commit": {"type": "boolean"},
+        "can_browse": {"type": "boolean"}
+      }
+    },
+    "definition_of_done": {"type": "array", "items": {"type": "string"}}
+  }
+}
