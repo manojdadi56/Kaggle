@@ -1,11 +1,17 @@
 import json
-TICK = "RUN-20260530-141526"
-COMPLETED = ["11091484301140930622","11172407645040114728","5860122008944918375"]
-ops = [{"op":"clear_session","idempotency_key":f"{TICK}:{sid}:clear","data":{"session_id":sid}} for sid in COMPLETED]
+TICK = "RUN-20260530-141526b"
+ops = [
+  # E-007 was operator-rescued earlier today (tick RUN-20260530-135009, commit bb6f8d3/ea848dd)
+  {"op":"set_status","idempotency_key":f"{TICK}:TASK-E007-RESCOPE:done",
+   "data":{"collection":"tasks","id":"TASK-E007-RESCOPE","status":"DONE"}},
+  # Defer cron-trigger back to BACKLOG (user controls trigger cadence manually per the goal-loop pattern)
+  {"op":"set_status","idempotency_key":f"{TICK}:TASK-OPS-cron-trigger:defer",
+   "data":{"collection":"tasks","id":"TASK-OPS-cron-trigger","status":"BACKLOG"}},
+]
 decision = {
   "tick_id":TICK,"status":"complete",
-  "summary":"clear 3 COMPLETED sessions (PRs #44/#45/#46 auto-merged)",
+  "summary":"close E007-RESCOPE (already rescued); defer cron-trigger (user controls cadence)",
   "state_patch":{"tick_id":TICK,"operations":ops},
 }
-with open("decision_clear.json","w",encoding="utf-8") as f: json.dump(decision,f)
+with open("decision_status.json","w",encoding="utf-8") as f: json.dump(decision,f)
 print("wrote", len(ops), "ops")

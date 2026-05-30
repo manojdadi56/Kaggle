@@ -551,7 +551,7 @@
       "mode": "deep",
       "size_hint": "~15 min",
       "spec": "Session 13107147469450254389 stuck in out-of-scope edit retry loop (~35min idle, 26 identical refused patches). See F-057. Decision: (a) sendmessage steer to ship kernel-only + NEEDS_SPLIT, or (b) kill + re-dispatch with widened area. User decision needed.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "story": "US-3",
       "title": "Rescope or abort stuck E-007 cryptarithm-guess Jules session"
     },
@@ -682,7 +682,7 @@
       "mode": "deep",
       "size_hint": "~30 min",
       "spec": "Each kernel-metadata.json has dataset_sources=['TODO/REPLACE-WITH-CORPUS-DATASET-SLUG'] and model_sources=['TODO/REPLACE-WITH-REAL-MODEL-VERSION-FROM-KAGGLE']. Replace with the real Kaggle dataset slug owned by sai1881 holding corpus.jsonl v1 (built by TASK-E001), and the real model-version slug for Nemotron-3-Nano-30B-A3B-BF16. Validate with kaggle_lite kernel-push dry-run. Blocked on Q-018/Q-019.",
-      "status": "BLOCKED",
+      "status": "READY",
       "story": "US-4",
       "title": "Replace TODO dataset_sources + model_sources in 8 kernel-metadata.json files"
     },
@@ -1166,5 +1166,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T14:16:58.293389+00:00"
+  "updated_at": "2026-05-30T14:18:06.415235+00:00"
 }
