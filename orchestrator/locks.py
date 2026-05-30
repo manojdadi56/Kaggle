@@ -57,6 +57,7 @@ def _atomic_write(path: Path, text: str) -> None:
 class LockManager:
     def __init__(self, locks_file: Path | None = None, cap: int = 3):
         self.locks_file = Path(locks_file) if locks_file else config.LOCKS_FILE
+        self._explicit_cap = cap
         self.cap = cap
         self.data = {"cap": cap, "holders": {}}
         self.load()
@@ -65,7 +66,10 @@ class LockManager:
         if self.locks_file.exists():
             self.data = json.loads(self.locks_file.read_text(encoding="utf-8"))
             self.data.setdefault("holders", {})
-            self.cap = self.data.get("cap", self.cap)
+            # Honor an explicitly-passed cap (from current Settings) over the
+            # stale disk value — otherwise a config bump silently has no effect.
+            self.cap = self._explicit_cap if self._explicit_cap is not None else self.data.get("cap", self.cap)
+            self.data["cap"] = self.cap
         else:
             self.data = {"cap": self.cap, "holders": {}}
         return self.data

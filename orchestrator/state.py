@@ -79,6 +79,7 @@ def _apply_op(state: dict, op: str, data: dict) -> None:
             "allowed_area": data.get("allowed_area"),
             "pr_url": data.get("pr_url"),
             "created_at": data.get("created_at"),
+            "account_idx": data.get("account_idx", 0),
         }
     elif op == "update_session":
         sid = data["session_id"]

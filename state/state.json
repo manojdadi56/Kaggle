@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 12
+    "jules_dispatched_2026-05-30": 17
   },
   "decisions": {},
   "experiments": {},
@@ -94,45 +94,50 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
-    "15297474666584217295": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
+    "12448053351024138122": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
       "branch": "main",
-      "created_at": "2026-05-30T08:49:23.124374+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-R10b-kernel-metadata-readme"
-    },
-    "17312665199062602490": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
-      "branch": "main",
-      "created_at": "2026-05-30T08:49:31.859812+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-R1b-category-classifier"
-    },
-    "3615961847482794211": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
-      "branch": "main",
-      "created_at": "2026-05-30T09:04:14.224055+00:00",
+      "created_at": "2026-05-30T09:45:06.679887+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R9"
+      "task_id": "TASK-R22-bit-manipulation-solver"
     },
-    "8303277900745917951": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+    "15031698388707699362": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
       "branch": "main",
-      "created_at": "2026-05-30T09:04:11.209533+00:00",
+      "created_at": "2026-05-30T09:45:08.180538+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R8"
+      "task_id": "TASK-R23-curriculum-config"
     },
-    "9538569035955801003": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
+    "2307469717703277322": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
       "branch": "main",
-      "created_at": "2026-05-30T08:49:20.438538+00:00",
+      "created_at": "2026-05-30T09:45:03.951672+00:00",
       "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-K0-kaggle-access-smoke"
+      "state": "QUEUED",
+      "task_id": "TASK-R21-equation-sympy-solver"
+    },
+    "602625774702868507": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
+      "branch": "main",
+      "created_at": "2026-05-30T09:45:01.410205+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R20-cipher-solver"
+    },
+    "7541274270049586049": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "branch": "main",
+      "created_at": "2026-05-30T09:45:09.999462+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R24-rank16-ablation-kernel"
     }
   },
   "submit_counter": {},
@@ -235,7 +240,7 @@
       "session_id": "9538569035955801003",
       "size_hint": "~20 min",
       "spec": "Verify Jules has Kaggle access wired via the VM env vars. Run (capturing stdout):\n  python tools/kaggle_lite.py whoami\n  python tools/kaggle_lite.py submissions nvidia-nemotron-model-reasoning-challenge\n  python tools/kaggle_lite.py leaderboard nvidia-nemotron-model-reasoning-challenge\nWrite the THREE results (status + first 30 lines of body each) into competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md. Then in the PR Summary state whether kaggle_user is correct, today/cap (5), and our current LB position. NEVER print or commit KAGGLE_API_TOKEN / KAGGLE_USERNAME values themselves.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-OPS",
       "title": "Kaggle access smoke test from the Jules VM"
     },
@@ -296,7 +301,7 @@
       "session_id": "15297474666584217295",
       "size_hint": "~45 min",
       "spec": "kernel-metadata.json: GPU enabled, base model + dataset attached as placeholders; README documents the push->poll->pull workflow for the kaggle_gpu backend.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Kaggle kernel-metadata.json + README for the training kernel"
     },
@@ -394,7 +399,7 @@
       "session_id": "17312665199062602490",
       "size_hint": "~60 min",
       "spec": "Implement classify(prompt)->category + offline tests; report classification coverage on train. Depends on R1a's taxonomy.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-1",
       "title": "Rule classifier + tests for the taxonomy"
     },
@@ -414,55 +419,65 @@
     "TASK-R20-cipher-solver": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
+      "branch": "main",
       "hypothesis": "H-CIPHER-100",
       "mode": "deep",
+      "session_id": "602625774702868507",
       "size_hint": "~60 min",
       "spec": "Implement data/solvers/cipher/solve.py (substitution+offset detection from prompt, exact answer) and generate.py (fresh cipher problems with known answers). Offline tests: report accuracy on 100 cipher rows from train; document any sub-types not yet handled. Goal: 100% solve rate on solvable instances.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Cipher-category deterministic solver + 100-sample holdout validation"
     },
     "TASK-R21-equation-sympy-solver": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
+      "branch": "main",
       "hypothesis": "H-EQ-SYMPY",
       "mode": "deep",
+      "session_id": "2307469717703277322",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/equation_numeric/solve.py using SymPy: parse the equation system from prompt, solve(deduce: solve for the asked variable; guess: enumerate up to N candidates and verify). Offline tests on 50 deduce + 30 guess rows. Document failure modes.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Equation-numeric SymPy solver + verification on holdout"
     },
     "TASK-R22-bit-manipulation-solver": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
+      "branch": "main",
       "hypothesis": "H-BIT-NICKNAME",
       "mode": "deep",
+      "session_id": "12448053351024138122",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/bit_manipulation/solve.py: detect bit nicknames (32/64-bit byte-form descriptions), reconstruct the integer, apply the requested operation, return exact answer. Test on 100 rows from train. Goal: 100% on solvable.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Bit-manipulation deterministic solver via nickname regex extraction"
     },
     "TASK-R23-curriculum-config": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
+      "branch": "main",
       "hypothesis": "H-CURRICULUM",
       "mode": "deep",
+      "session_id": "15031698388707699362",
       "size_hint": "~60 min",
       "spec": "Add data/curation/curriculum.py: per-row difficulty score (length, category fingerprint, solver-confidence), sort training data easy->hard, expose as a config option the training kernel can opt into. Offline tests on a small synthetic batch.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Difficulty estimator + curriculum-shuffle SFT config"
     },
     "TASK-R24-rank16-ablation-kernel": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "branch": "main",
       "hypothesis": "H-RANK16",
       "mode": "deep",
+      "session_id": "7541274270049586049",
       "size_hint": "~45 min",
       "spec": "Clone kernels/train/ to kernels/train-rank16/, change config to LoRA rank=16/alpha=32, update kernel-metadata.json. Verify --smoke path runs; existing rank<=32 assertion still passes (16<=32).",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Rank-16 LoRA ablation: kernel-metadata variant + smoke test"
     },
@@ -490,7 +505,7 @@
       "mode": "deep",
       "session_id": "8303277900745917951",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R8-cv-harness.md",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-2",
       "title": "Local CV eval harness mirroring host scoring"
     },
@@ -504,10 +519,10 @@
       "mode": "deep",
       "session_id": "3615961847482794211",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R9-corpus-curation.md",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T09:05:52.079556+00:00"
+  "updated_at": "2026-05-30T09:47:16.460483+00:00"
 }

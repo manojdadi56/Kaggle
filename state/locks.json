@@ -1,24 +1,24 @@
 {
-  "cap": 5,
+  "cap": 15,
   "holders": {
-    "TASK-K0-kaggle-access-smoke": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
+    "TASK-R20-cipher-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
       "kind": "jules"
     },
-    "TASK-R10b-kernel-metadata-readme": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
+    "TASK-R21-equation-sympy-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
       "kind": "jules"
     },
-    "TASK-R1b-category-classifier": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
+    "TASK-R22-bit-manipulation-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
       "kind": "jules"
     },
-    "TASK-R8": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+    "TASK-R23-curriculum-config": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
       "kind": "jules"
     },
-    "TASK-R9": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
+    "TASK-R24-rank16-ablation-kernel": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
       "kind": "jules"
     }
   }
