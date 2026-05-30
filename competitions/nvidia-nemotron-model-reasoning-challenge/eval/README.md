@@ -1,0 +1,45 @@
+# Evaluation Harness
+
+This directory contains the tools necessary to evaluate model predictions locally, in a way that faithfully mirrors the Kaggle host scoring parameters.
+
+## Scoring Logic
+The evaluation handles answer extraction and comparison:
+1. **Extraction**: The harness expects model outputs to be enclosed in `\boxed{...}` tags, similar to the competition rules. It finds the last occurrence of `\boxed{` and extracts the inner text, correctly parsing nested braces.
+2. **Matching**:
+   - **Exact string match**: The extracted string is compared with the gold answer after stripping whitespace.
+   - **Numeric match**: If both the prediction and gold answer are numbers, they are considered correct if the difference is within a tolerance of ±1e-2 (`abs(predicted - actual) <= 1e-2`).
+
+## Host Parameters
+To reproduce the host evaluation accurately offline, you MUST generate your predictions using vLLM (or an equivalent engine) with the following fixed parameters:
+- `temperature`: 0.0
+- `top_p`: 1.0
+- `max_tokens`: 7680
+- `max_model_len`: 8192
+- `max_lora_rank`: 32
+- `gpu_memory_utilization`: 0.85
+- `max_num_seqs`: 64
+
+*Note: Generating predictions with a LoRA rank > 32 will immediately fail the host environment. Although this evaluation script doesn't parse your adapter config, you should ensure your training parameters respect the `r <= 32` constraint.*
+
+## Usage
+The main evaluation script is `cv.py`. It accepts prediction and gold data files in either JSON/JSONL or CSV formats.
+
+### Example
+Suppose you have your evaluation dataset (`gold.jsonl`) with fields `id`, `answer`, and `category`, and your generated predictions (`preds.jsonl`) with fields `id` and `prediction`.
+
+```bash
+python3 -m cv --predictions preds.jsonl --gold gold.jsonl --output cv_score.json
+```
+
+This command will score the predictions, compute the overall accuracy, the accuracy per category, and save the result into `cv_score.json`.
+
+```json
+{
+  "overall_accuracy": 0.85,
+  "category_accuracy": {
+    "math": 0.90,
+    "logic": 0.80
+  },
+  "total_evaluated": 100
+}
+```
