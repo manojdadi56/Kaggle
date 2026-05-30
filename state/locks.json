@@ -9,16 +9,16 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
       "kind": "jules"
     },
-    "TASK-R11b-deltas-and-new-hypotheses": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-deltas.md",
-      "kind": "jules"
-    },
     "TASK-R1b-category-classifier": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
       "kind": "jules"
     },
-    "TASK-R7": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
+    "TASK-R8": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "kind": "jules"
+    },
+    "TASK-R9": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
       "kind": "jules"
     }
   }

@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 10
+    "jules_dispatched_2026-05-30": 12
   },
   "decisions": {},
   "experiments": {},
@@ -17,6 +17,33 @@
       "statement": "1-epoch SFT is sufficient given high-quality CoT; more epochs over-fit on synthetic patterns.",
       "status": "proposed"
     },
+    "H-BIT-NICKNAME": {
+      "expected_effect": "+0.17 LB on bit_manipulation category",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "discussion-689915.md"
+      ],
+      "statement": "Bit-manipulation problems use nickname encodings (e.g. \"the integer formed by bytes\u2026\"); a robust regex extractor across all 1602 bit_manipulation rows yields 100% solver coverage.",
+      "status": "proposed"
+    },
+    "H-CIPHER-100": {
+      "expected_effect": "+0.16 LB from solving all 1576 cipher rows in train + matching test distribution",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "discussion-689915.md"
+      ],
+      "statement": "Cipher-category problems reduce to substitution+offset and admit a 100% deterministic solver.",
+      "status": "proposed"
+    },
+    "H-CURRICULUM": {
+      "expected_effect": "+0.01-0.03 LB vs random ordering, free improvement",
+      "source_refs": [
+        "discussion-688360.md",
+        "DIGEST-community.md"
+      ],
+      "statement": "Difficulty-ordered curriculum SFT (easy\u2192hard within each category) generalizes better than random shuffle on the hidden test set.",
+      "status": "proposed"
+    },
     "H-DQ": {
       "expected_effect": "+0.20 LB (matches winner 0.85 vs naive baselines ~0.65)",
       "source_refs": [
@@ -26,6 +53,15 @@
         "winner-reasoning.py.md"
       ],
       "statement": "DATA QUALITY is the dominant lever: per-category deterministic solvers + verified \boxed{} CoT corpora beat fancier training regimes.",
+      "status": "proposed"
+    },
+    "H-EQ-SYMPY": {
+      "expected_effect": "+0.07 LB on equation_numeric_deduce(596)+_guess(136) categories",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "technique-backlog.md"
+      ],
+      "statement": "Equation-numeric problems are solvable with SymPy linear/quadratic solvers; algebraic CoT is reproducible.",
       "status": "proposed"
     },
     "H-LORA32": {
@@ -44,25 +80,26 @@
       ],
       "statement": "RL / distillation are NOT needed; pure SFT on verified CoT reaches top-LB.",
       "status": "proposed"
+    },
+    "H-RANK16": {
+      "expected_effect": "~equal LB, 2x cheaper experiments",
+      "source_refs": [
+        "winner-train_sft.py.md",
+        "technique-backlog.md"
+      ],
+      "statement": "LoRA rank 16 (half the cap) reaches within 0.005 of rank-32 with half the parameters; ablation worth running for compute efficiency.",
+      "status": "proposed"
     }
   },
   "metrics": [],
   "schema_version": 1,
   "sessions": {
-    "14163923906156693592": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-deltas.md",
-      "branch": "main",
-      "created_at": "2026-05-30T08:49:27.522222+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-R11b-deltas-and-new-hypotheses"
-    },
     "15297474666584217295": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
       "branch": "main",
       "created_at": "2026-05-30T08:49:23.124374+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R10b-kernel-metadata-readme"
     },
     "17312665199062602490": {
@@ -70,63 +107,31 @@
       "branch": "main",
       "created_at": "2026-05-30T08:49:31.859812+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R1b-category-classifier"
     },
-    "18046708952198334024": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-do-avoid.md",
+    "3615961847482794211": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
       "branch": "main",
-      "created_at": "2026-05-30T08:02:12.669822+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/10",
-      "state": "COMPLETED",
-      "task_id": "TASK-R11a-discussion-do-avoid"
-    },
-    "18401029609494141683": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
-      "branch": "main",
-      "created_at": "2026-05-30T08:49:34.736003+00:00",
+      "created_at": "2026-05-30T09:04:14.224055+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R7"
+      "task_id": "TASK-R9"
     },
-    "3224516737148809732": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/train.py",
+    "8303277900745917951": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
       "branch": "main",
-      "created_at": "2026-05-30T08:02:09.636762+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/11",
-      "state": "COMPLETED",
-      "task_id": "TASK-R10a-train-script-and-smoke"
-    },
-    "7801873606779501347": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/writeup",
-      "branch": "main",
-      "created_at": "2026-05-30T08:02:15.875875+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/9",
-      "state": "COMPLETED",
-      "task_id": "TASK-R12"
-    },
-    "9044919978019878599": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-winner-training-internals.md",
-      "branch": "main",
-      "created_at": "2026-05-30T08:02:18.880194+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/7",
-      "state": "COMPLETED",
-      "task_id": "TASK-R13-winner-trio-digest"
-    },
-    "9152147452051460438": {
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/taxonomy.md",
-      "branch": "main",
-      "created_at": "2026-05-30T08:02:21.827572+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/8",
-      "state": "COMPLETED",
-      "task_id": "TASK-R1a-category-taxonomy-doc"
+      "created_at": "2026-05-30T09:04:11.209533+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R8"
     },
     "9538569035955801003": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
       "branch": "main",
       "created_at": "2026-05-30T08:49:20.438538+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-K0-kaggle-access-smoke"
     }
   },
@@ -335,7 +340,7 @@
       "session_id": "14163923906156693592",
       "size_hint": "~60 min",
       "spec": "Using R11a + winner files, write a short deltas section and \u22655 concrete candidate hypotheses (statement, expected effect, how to test) ready for the operator to create_hypothesis.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-1",
       "title": "Deltas vs winner + \u22655 new hypotheses for the ledger"
     },
@@ -406,6 +411,61 @@
       "supersedes_notes": "legacy stub; replaced by R*a children (done) and per-category template R2.<cat>",
       "title": "Per-category deterministic solver  (TEMPLATE \u2014 operator clones one per category)"
     },
+    "TASK-R20-cipher-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
+      "hypothesis": "H-CIPHER-100",
+      "mode": "deep",
+      "size_hint": "~60 min",
+      "spec": "Implement data/solvers/cipher/solve.py (substitution+offset detection from prompt, exact answer) and generate.py (fresh cipher problems with known answers). Offline tests: report accuracy on 100 cipher rows from train; document any sub-types not yet handled. Goal: 100% solve rate on solvable instances.",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Cipher-category deterministic solver + 100-sample holdout validation"
+    },
+    "TASK-R21-equation-sympy-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
+      "hypothesis": "H-EQ-SYMPY",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/equation_numeric/solve.py using SymPy: parse the equation system from prompt, solve(deduce: solve for the asked variable; guess: enumerate up to N candidates and verify). Offline tests on 50 deduce + 30 guess rows. Document failure modes.",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Equation-numeric SymPy solver + verification on holdout"
+    },
+    "TASK-R22-bit-manipulation-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
+      "hypothesis": "H-BIT-NICKNAME",
+      "mode": "deep",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/bit_manipulation/solve.py: detect bit nicknames (32/64-bit byte-form descriptions), reconstruct the integer, apply the requested operation, return exact answer. Test on 100 rows from train. Goal: 100% on solvable.",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Bit-manipulation deterministic solver via nickname regex extraction"
+    },
+    "TASK-R23-curriculum-config": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
+      "hypothesis": "H-CURRICULUM",
+      "mode": "deep",
+      "size_hint": "~60 min",
+      "spec": "Add data/curation/curriculum.py: per-row difficulty score (length, category fingerprint, solver-confidence), sort training data easy->hard, expose as a config option the training kernel can opt into. Offline tests on a small synthetic batch.",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Difficulty estimator + curriculum-shuffle SFT config"
+    },
+    "TASK-R24-rank16-ablation-kernel": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+      "hypothesis": "H-RANK16",
+      "mode": "deep",
+      "size_hint": "~45 min",
+      "spec": "Clone kernels/train/ to kernels/train-rank16/, change config to LoRA rank=16/alpha=32, update kernel-metadata.json. Verify --smoke path runs; existing rank<=32 assertion still passes (16<=32).",
+      "status": "BACKLOG",
+      "story": "US-4",
+      "title": "Rank-16 LoRA ablation: kernel-metadata variant + smoke test"
+    },
     "TASK-R7": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
@@ -416,34 +476,38 @@
       "mode": "deep",
       "session_id": "18401029609494141683",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R7-cot-generator.md",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Verified `\\boxed{}` chain-of-thought generator"
     },
     "TASK-R8": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "branch": "main",
       "dependencies": "none",
       "gpu": "no",
       "hypothesis": "H-DQ",
       "mode": "deep",
+      "session_id": "8303277900745917951",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R8-cv-harness.md",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "story": "US-2",
       "title": "Local CV eval harness mirroring host scoring"
     },
     "TASK-R9": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
+      "branch": "main",
       "dependencies": "TASK-R7 (CoT format)  [design now]",
       "gpu": "no",
       "hypothesis": "H-DQ",
       "mode": "deep",
+      "session_id": "3615961847482794211",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R9-corpus-curation.md",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T08:50:44.175219+00:00"
+  "updated_at": "2026-05-30T09:05:52.079556+00:00"
 }
