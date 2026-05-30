@@ -4,6 +4,18 @@
     "TASK-E007-cryptarithm-guess-integration": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "kind": "jules"
+    },
+    "TASK-E009-synthesis-kernel": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
+      "kind": "jules"
+    },
+    "TASK-EVAL-cv-score-ingest": {
+      "area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
+      "kind": "jules"
+    },
+    "TASK-SUBMIT-gate-decision": {
+      "area": "orchestrator/submit_gate.py, orchestrator/loop.py, tests/test_submit_gate.py",
+      "kind": "jules"
     }
   }
 }

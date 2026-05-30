@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 37
+    "jules_dispatched_2026-05-30": 40
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -280,6 +280,15 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "11172407645040114728": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
+      "branch": "main",
+      "created_at": "2026-05-30T13:21:24.649025+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E009-synthesis-kernel"
+    },
     "13107147469450254389": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
@@ -288,6 +297,24 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-E007-cryptarithm-guess-integration"
+    },
+    "15996892913727706506": {
+      "account_idx": 0,
+      "allowed_area": "orchestrator/submit_gate.py, orchestrator/loop.py, tests/test_submit_gate.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:21:30.018173+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-SUBMIT-gate-decision"
+    },
+    "5860122008944918375": {
+      "account_idx": 0,
+      "allowed_area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:21:27.285114+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-cv-score-ingest"
     }
   },
   "submit_counter": {},
@@ -519,12 +546,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
       "blocked_by": "TASK-E008-logprob-filter",
+      "branch": "main",
       "experiment": "E-009-synthesis",
       "hypothesis": "H-DQ",
       "mode": "deep",
+      "session_id": "11172407645040114728",
       "size_hint": "~75 min",
       "spec": "Operator runs this only after E-003..E-008 results are in. Build kernels/train-synthesis-e009/ combining the ablation choices whose CV beat E-002 (read state.json experiments collection for cv_score). Each combined choice cited in the kernel README. This is the final training run before finalize.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Synthesis: combine winning ablation choices into final config"
     },
@@ -550,17 +579,19 @@
       "acceptance_criteria": "record_cv_score op accepted; best_cv auto-updates only when strictly better; tests cover both branches; pytest -q green.",
       "allowed_area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
       "blocked_by": "TASK-OPS-gpu-dispatch-op",
+      "branch": "main",
       "created_at": "2026-05-30T12:00:00Z",
       "definition_of_done": "One PR; tests green; PR body shows status snapshot before/after mock; hypothesis_id=H-VLLM-EVAL.",
       "est_hours": 1.0,
       "hypothesis_id": "H-VLLM-EVAL",
       "priority": "P1",
+      "session_id": "5860122008944918375",
       "source_refs": [
         "orchestrator/state.py ALLOWED_OPS",
         "orchestrator/loop.py"
       ],
       "spec": "(1) orchestrator/state.py: add op 'record_cv_score' with data={experiment_id, cv_aggregate, per_category, n_total, n_correct, n_boxed_missing, source_kernel:str|None}. Appends to state['metrics'][f'cv:{experiment_id}'] = data; if cv_aggregate > state.get('best_cv', -inf), set state['best_cv'] = cv_aggregate AND state['best_cv_source'] = experiment_id. (2) orchestrator/loop.py.apply_decision: after a gpu_dispatch completes successfully, automatically read out_dir/cv_score.json and emit a record_cv_score op into the patch. (3) tools/status.py: update the snapshot to show best_cv + best_cv_source. (4) Add tests/test_record_cv_score.py covering: new best_cv -> updates; lower cv -> recorded but best_cv unchanged; per_category serialized. Acceptance: pytest -q green; status snapshot shows best_cv after a mock gpu_dispatch run.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "title": "Add record_cv_score state op + auto best_cv update + apply_decision pickup from kernel-output"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
@@ -978,17 +1009,19 @@
       "acceptance_criteria": "decide_submit covers all 4 skip branches and 1 happy path; loop.py integration calls competition_submit only on happy path; pytest -q green.",
       "allowed_area": "orchestrator/submit_gate.py, orchestrator/loop.py, tests/test_submit_gate.py",
       "blocked_by": "TASK-SUBMIT-package-zip",
+      "branch": "main",
       "created_at": "2026-05-30T12:00:00Z",
       "definition_of_done": "One PR; tests green; PR body lists all skip reasons; hypothesis_id=H-SUBMIT-GATE.",
       "est_hours": 1.5,
       "hypothesis_id": "H-SUBMIT-GATE",
       "priority": "P1",
+      "session_id": "15996892913727706506",
       "source_refs": [
         "AGENTS.md submission gate",
         "tools/kaggle_lite.py competition-submit"
       ],
       "spec": "Add orchestrator/submit_gate.py module with function decide_submit(state, kaggle_lite) -> {action:'submit'|'skip', reason:str, candidate:{experiment_id, blob_token, cv_score} | None}. Behavior: (1) Find candidate experiments with status=READY_FOR_SUBMIT + recorded cv_score + blob_token. (2) Skip unless cv_score > state['best_cv'] by at least a configurable margin (default 0.0). (3) Skip unless today's auto-submit count < MAX_AUTO_SUBMITS_PER_DAY (env, default 3). (4) Skip unless live kaggle_lite.submissions(comp) cap-remaining >= 1 + 2 (reserve 2 finals). (5) Wire orchestrator/loop.py.apply_decision: when decide_submit returns submit, call tools.kaggle_lite.competition_submit and emit record_submission op + bump submits_by_day. (6) Add tests/test_submit_gate.py covering each skip branch + the happy submit path (mock kaggle_lite). Acceptance: pytest -q green; happy path emits submit decision + records; all 4 skip branches return correct reason strings.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "title": "Add submit_decision step to orchestrator/loop.py (cv-beats-best + cap-headroom + \u22643/day gating)"
     },
     "TASK-SUBMIT-package-zip": {
@@ -1027,5 +1060,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T13:21:00.241779+00:00"
+  "updated_at": "2026-05-30T13:21:30.026016+00:00"
 }
