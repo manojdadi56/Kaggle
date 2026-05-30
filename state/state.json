@@ -1168,5 +1168,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T15:13:04.159766+00:00"
+  "updated_at": "2026-05-30T15:13:55.362085+00:00"
 }
