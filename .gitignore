@@ -19,9 +19,17 @@ venv/
 # selenium scraper local data (chrome profile + raw html) — never commit
 .scrape/
 
-# large / generated artifacts
-competitions/*/data/*
-!competitions/*/data/.gitkeep
+# Raw competition data — Kaggle ToS line 117 forbids redistribution.
+competitions/*/data/raw/*
+!competitions/*/data/raw/.gitkeep
+!competitions/*/data/raw/README.md
+
+# Heavy generated DATA payloads (jsonl/parquet/etc). Track the scripts, ignore outputs.
+competitions/*/data/synthetic/cache/
+competitions/*/data/corpus/*/corpus.jsonl
+competitions/*/data/corpus/*/dev_split.jsonl
+
+# Other large/generated artifacts
 competitions/*/references/*/
 competitions/*/experiments/*/adapter/
 competitions/*/submissions/**/*.zip
@@ -30,8 +38,3 @@ state/snapshots/
 # os
 .DS_Store
 Thumbs.db
-
-# competition data — never commit (Kaggle ToS line 117 forbids redistribution)
-competitions/*/data/raw/*
-!competitions/*/data/raw/.gitkeep
-!competitions/*/data/raw/README.md
