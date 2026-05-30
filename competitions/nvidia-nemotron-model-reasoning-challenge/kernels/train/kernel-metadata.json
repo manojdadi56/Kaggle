@@ -1,5 +1,5 @@
 {
-  "id": "username/nvidia-nemotron-model-reasoning-challenge-train",
+  "id": "username/nemotron-model-reasoning-train",
   "title": "Nvidia Nemotron Model Reasoning Challenge Train",
   "code_file": "train.py",
   "language": "python",
