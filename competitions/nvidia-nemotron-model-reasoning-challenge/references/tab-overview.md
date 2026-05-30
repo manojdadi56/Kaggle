@@ -2,7 +2,7 @@
 
 - **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/overview
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 9287
+- **chars:** 9221
 
 ---
 
@@ -29,14 +29,14 @@ expand_less
 Viewed
 expand_less
 NVIDIA Nemotron Model Reasoning Challenge
+Save order db V1
 Kitesdata
-Kaggle CLI — Develop Locally and Run on RTX Pro 6000 GPU
-Mainstream LLM Performance Comparison：Gemini-3.1-Pro delivers the best performance, while DeepSeek-V3.2 is also highly impressive.
-Strategy to solve 85% of bit manipulation
+97.2% Gold-Conditioned Symbolic Solver Exposing Digit Mappings and Operators
+[Dataset Hallucination?] How did you resolve these problems by human?
 Edited
 expand_less
-Kitesdata
 Save order db V1
+Kitesdata
 History inferencing V3
 History inferencing
 Fork of inferencing
@@ -163,10 +163,10 @@ $106,388
 info
 Awards Points & Medals
 Participation
-16,342 Entrants
-4,344 Participants
-3,656 Teams
-49,783 Submissions
+16,343 Entrants
+4,347 Participants
+3,659 Teams
+49,797 Submissions
 Tags
 Reasoning
 Deep Learning

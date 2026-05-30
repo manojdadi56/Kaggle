@@ -51,33 +51,73 @@ def _main_text(d) -> str:
             return ""
 
 
-def get_rendered(d, url: str, min_len: int = 400, timeout: int = 35) -> str:
-    """Navigate and wait until the main content region renders and stabilizes."""
-    d.get(url)
-    last, stable, waited = -1, 0, 0.0
-    while waited < timeout:
-        # scroll to trigger lazy content / comments
+EXPAND_TEXTS = ("show more", "see more", "load more", "view more", "show replies",
+                "more comment", "more repl", "read more", "show 1 more", "expand",
+                "show all", "show full")
+
+
+def _expand_all(d, max_rounds: int = 30):
+    """Click every 'show more / see more / N replies' control and lazy-scroll
+    until the page stops growing — so collapsed comments/cells are captured."""
+    last_h = 0
+    for _ in range(max_rounds):
+        clicked = 0
+        try:
+            btns = d.find_elements(By.XPATH,
+                "//button | //a[@role='button'] | //span[@role='button'] | //div[@role='button']")
+        except Exception:
+            btns = []
+        for b in btns:
+            try:
+                t = (b.text or "").strip().lower()
+            except Exception:
+                continue
+            if not t or len(t) > 45:
+                continue
+            if any(k in t for k in EXPAND_TEXTS) or re.match(r"^\d+\s+(more|repl)", t):
+                try:
+                    d.execute_script("arguments[0].scrollIntoView({block:'center'});", b)
+                    d.execute_script("arguments[0].click();", b)
+                    clicked += 1
+                    time.sleep(0.35)
+                except Exception:
+                    pass
         try:
             d.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         except Exception:
             pass
+        time.sleep(0.9)
+        try:
+            h = d.execute_script("return document.body.scrollHeight")
+        except Exception:
+            h = last_h
+        if h == last_h and clicked == 0:
+            break
+        last_h = h
+
+
+def get_rendered(d, url: str, min_len: int = 400, timeout: int = 35, expand: bool = True) -> str:
+    """Navigate, wait for initial render, expand all collapsed content, capture text."""
+    d.get(url)
+    last, stable, waited = -1, 0, 0.0
+    while waited < timeout:                     # wait for client-side render to settle
         time.sleep(1.2)
         waited += 1.2
-        txt = _main_text(d)
-        n = len(txt)
+        n = len(_main_text(d))
         if n >= min_len and n == last:
             stable += 1
-            if stable >= 2:        # length unchanged twice => settled
+            if stable >= 2:
                 break
         else:
             stable = 0
         last = n
-    # scroll back up + one more settle for any top content
+    if expand:
+        _expand_all(d)                          # click see-more / load lazy content
     try:
         d.execute_script("window.scrollTo(0, 0);")
     except Exception:
         pass
-    time.sleep(0.6)
+    time.sleep(0.5)
     return _main_text(d)
 
 
@@ -100,7 +140,7 @@ def write_md(out: Path, name: str, title: str, url: str, body: str):
 def enumerate_links(d, list_url_tmpl: str, pattern: str, pages: int):
     found, seen = [], set()
     for p in range(1, pages + 1):
-        get_rendered(d, list_url_tmpl.format(page=p), min_len=200, timeout=20)
+        get_rendered(d, list_url_tmpl.format(page=p), min_len=200, timeout=20, expand=False)
         try:                                  # scope to main content (exclude left nav / "Your Work")
             root = d.find_element(By.TAG_NAME, "main")
         except Exception:
@@ -109,7 +149,7 @@ def enumerate_links(d, list_url_tmpl: str, pattern: str, pages: int):
             href = a.get_attribute("href") or ""
             m = re.search(pattern, href)
             if m:
-                key = href.split("?")[0]
+                key = href.split("?")[0].split("#")[0].rstrip("/")  # ignore query + anchor
                 if key not in seen:
                     seen.add(key); found.append((m.group(1), key))
     return found
@@ -137,6 +177,8 @@ def main() -> int:
             "rules": f"{BASE}/competitions/{a.slug}/rules",
             "leaderboard": f"{BASE}/competitions/{a.slug}/leaderboard",
             "models": f"{BASE}/competitions/{a.slug}/models",
+            "code": f"{BASE}/competitions/{a.slug}/code?sortBy=voteCount",
+            "discussion-list": f"{BASE}/competitions/{a.slug}/discussion?sort=votes",
         }
         for name, url in tabs.items():
             try:

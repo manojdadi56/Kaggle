@@ -2,7 +2,7 @@
 
 - **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/leaderboard
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 4198
+- **chars:** 2839
 
 ---
 
@@ -29,14 +29,14 @@ expand_less
 Viewed
 expand_less
 NVIDIA Nemotron Model Reasoning Challenge
+Save order db V1
 Kitesdata
-Kaggle CLI — Develop Locally and Run on RTX Pro 6000 GPU
-Mainstream LLM Performance Comparison：Gemini-3.1-Pro delivers the best performance, while DeepSeek-V3.2 is also highly impressive.
-Strategy to solve 85% of bit manipulation
+97.2% Gold-Conditioned Symbolic Solver Exposing Digit Mappings and Operators
+[Dataset Hallucination?] How did you resolve these problems by human?
 Edited
 expand_less
-Kitesdata
 Save order db V1
+Kitesdata
 History inferencing V3
 History inferencing
 Fork of inferencing
@@ -56,11 +56,10 @@ Kaggle uses cookies from Google to deliver and enhance the quality of its servic
 Learn more
 OK, Got it.
 NVIDIA · FEATURED PREDICTION COMPETITION · 17 DAYS TO GO
-NVIDIA Nemotron Model Reasoning Challenge
-Advance reasoning techniques using NVIDIA Nemotron open models on a novel benchmark
-NVIDIA Nemotron Model Reasoning Challenge
 Submit Prediction
 more_horiz
+NVIDIA Nemotron Model Reasoning Challenge
+Advance reasoning techniques using NVIDIA Nemotron open models on a novel benchmark
 Overview
 Data
 Code
@@ -95,8 +94,8 @@ Y | M | F
 2
 Researcher 7919
 0.87
-85
-12h
+88
+1h
 3
 Alehandreus & Yurnero
 0.87
@@ -106,7 +105,7 @@ Alehandreus & Yurnero
 Team
 0.87
 45
-2h
+3h
 5
 Lora is all you need
 0.87
@@ -126,27 +125,27 @@ fate
 JK-Piece
 0.87
 169
-4h
+5h
 9
 Surya milenial
 0.87
 190
-1h
+2h
 10
 Yoshinari Kawashima
 0.87
 67
-7h
+8h
 11
 Michał Gromadzki
 0.87
 24
-6h
+7h
 12
 Diptyajit Das
 0.86
-85
-6d
+87
+1h
 13
 Mattpelor
 0.86
@@ -172,7 +171,7 @@ Shivam Shinde
 Yusaku Muroya
 0.86
 93
-13h
+14h
 18
 vli
 0.86
@@ -192,7 +191,7 @@ toxu
 Vedrin Jeliazkov
 0.86
 163
-10h
+11h
 22
 Co-Authored-By Claude
 0.86
@@ -202,7 +201,7 @@ Co-Authored-By Claude
 Reasoning Rockets
 0.86
 126
-18h
+19h
 24
 Aymane Ait Dads
 0.86
@@ -262,12 +261,12 @@ A night is worth 16x16 tasks
 Hello World
 0.86
 36
-10h
+11h
 36
 Abdulsamad
 0.86
 105
-12h
+13h
 37
 Xin Wang
 0.86
@@ -276,8 +275,8 @@ Xin Wang
 38
 kanto-kaggler
 0.86
-37
-11h
+38
+1h
 39
 Haraguchi-T
 0.86
@@ -287,7 +286,7 @@ Haraguchi-T
 Giovanny Rodríguez
 0.86
 177
-14h
+15h
 41
 Why is this working？
 0.86
@@ -312,7 +311,7 @@ FLcl_yx
 sleter
 0.86
 64
-8h
+9h
 46
 Kirderf
 0.86
@@ -331,256 +330,8 @@ YS-L
 49
 eikichi
 0.86
-30
-1d
-50
-EQV UK
-0.86
-135
+31
 1h
-51
-theredbluepill
-0.86
-39
-5h
-52
-Blue Blue
-0.86
-40
-1d
-53
-CH
-0.86
-49
-13h
-54
-Phi
-0.86
-66
-1mo
-55
-hongan
-0.86
-42
-20h
-56
-bloodmoon
-0.86
-179
-3d
-57
-J.L. An
-0.86
-5
-1mo
-58
-chieken
-0.86
-58
-18d
-59
-Smilyai Boning Cui
-0.86
-32
-4d
-60
-Jules
-0.86
-15
-14d
-61
-Lee
-0.86
-40
-8d
-62
-vishnuvardhan33
-0.86
-93
-1mo
-63
-today
-0.86
-91
-1mo
-64
-Prabhpreet_Singh5
-0.86
-43
-5h
-65
-fam_tron
-0.86
-15
-16d
-66
-Untitled Team
-0.86
-2
-1mo
-67
-sigmaborov
-0.86
-10
-1mo
-68
-newgate
-0.86
-1
-1mo
-69
-TAHAKOM
-0.86
-121
-7d
-70
-Artificial Idiocy Lab(인공저능연구소)
-0.86
-51
-7h
-71
-Sung Heo
-0.86
-25
-23d
-72
-sap123
-0.86
-69
-4h
-73
-gameotron masters
-0.86
-32
-8d
-74
-Penguin
-0.86
-165
-3h
-75
-Abdulmuiz Abdullateef
-0.86
-122
-5d
-76
-Kujaomega
-0.86
-41
-3h
-77
-NamVIDIA
-0.86
-15
-1mo
-78
-Van Dong Tran
-0.86
-40
-1mo
-79
-MuChat007
-0.86
-9
-13d
-80
-a14iiiii
-0.86
-68
-7h
-81
-Brandonioti
-0.86
-46
-12d
-82
-Chew Kok Wah
-0.86
-25
-17d
-83
-Xufeng He
-0.86
-6
-1mo
-84
-yukiZ
-0.86
-55
-7d
-85
-Pratham Jain
-0.86
-9
-18d
-86
-The Restarters
-0.86
-5
-24d
-87
-kglctf
-0.86
-143
-2d
-88
-Alpha
-0.86
-135
-4d
-89
-takumina
-0.86
-172
-1d
-90
-Kevin Arvai
-0.86
-128
-1d
-91
-HongyuChen123321
-0.86
-8
-1mo
-92
-shilehaoduomingzile
-0.86
-46
-1d
-93
-Ernie
-0.86
-50
-2d
-94
-datnt114
-0.86
-126
-1d
-95
-rz cao
-0.86
-64
-1mo
-96
-forever young
-0.86
-97
-2d
-emoji_people
-97
-Casualty
-0.86
-62
-2d
-98
-HineMusk
-0.86
-1
-1mo
-99
-Mahdi Ravaghi
-0.86
-205
-4d
+50 - 3660
+unfold_more
+See 3611 More
