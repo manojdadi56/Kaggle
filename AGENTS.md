@@ -49,8 +49,25 @@ The first GPU dispatch iterated 7 versions before passing setup. Every Nemotron 
 6. **`trust_remote_code=True`**: Nemotron has custom Mamba-hybrid modeling code that transformers doesn't ship. Required on BOTH `from_pretrained` calls. Without it: `ValueError: The repository ... contains custom code which must be executed`.
 7. **Auto-detect mount path with `os.walk`**: the actual Kaggle Models mount path is `/kaggle/input/models/<owner>/<slug>/<framework>/<variation>/<version>/` (note the `models/<owner>/` prefix). A hardcoded path WILL be wrong. Walk `/kaggle/input` looking for a dir with both `config.json` and `tokenizer.json`; that's the model. See `train-baseline-e002/train.py` lines 78-101.
 
-### Hardware constraint: T4×2 only
-**Do NOT push without setting `enable_gpu: true`** — but Kaggle's API has NO field to request a specific GPU type. The web UI's Settings → Accelerator dropdown is the only way to force `GPU T4 x2`. If Kaggle assigns a P100 (sm_60), the PyTorch wheel in Kaggle's base image errors out (`Tesla P100 with CUDA capability sm_60 is not compatible`). The Mamba kernels MUST run on T4×2 — meaning kernel pushes via API may need to be re-run via the web UI to pick the accelerator type. Manual notebook upload (see `notebook_e002_manual.ipynb`) is the workaround.
+### Hardware + attachment — CORRECTED (from official demo `ryanholbrook/nvidia-nemotron-submission-demo`)
+The earlier "T4×2 only / 7 fixes" notes were based on the WRONG assumption that we run on Kaggle's standard GPU pool. **This competition provides a dedicated accelerator: NVIDIA RTX Pro 6000 (96 GB, sm_120).** Inspecting the official demo's notebook metadata settled every open question:
+
+- **Accelerator**: set `metadata.kaggle.accelerator = "nvidiaRtxPro6000"` INSIDE the notebook JSON. This is the only way to get the big GPU. The MCP/API `machineShape`/`enableGpu` params resolve to a generic P100 (sm_60, 16 GB) which is BOTH arch-incompatible with the PyTorch wheel AND too small. `get_notebook_info` always reports `machine_shape: "Gpu"` regardless — trust the embedded `accelerator` field, not the readback.
+- **96 GB means NO quantization**: load the 30B in full bf16 (`dtype=torch.bfloat16`, `device_map="auto"`). Drop bitsandbytes/4-bit entirely — fix #4's bitsandbytes and the whole 4-bit path are unnecessary on RTX Pro 6000.
+- **Data sources attach via `metadata.kaggle.dataSources`, NOT API params.** The MCP `save_notebook` `competitionDataSources`/`modelDataSources` params are silently ignored (verified: `/kaggle/input` came back empty). The working form is embedded in the notebook JSON:
+  ```json
+  "dataSources":[
+    {"sourceType":"competition","sourceId":129716},
+    {"sourceType":"modelInstanceVersion","sourceId":784907,"modelInstanceId":598905,"modelId":611168}
+  ]
+  ```
+- **Model load via kagglehub** (demo pattern, most robust — no mount-path guessing):
+  `MODEL_PATH = kagglehub.model_download("metric/nemotron-3-nano-30b-a3b-bf16/transformers/default")`
+- **Docker image**: `metadata.kaggle.dockerImageVersionId = 31287` (the `kaggle-private-byod` image for the RTX Pro 6000 environment).
+- **Demo LoRA targeting**: `target_modules=r".*\.(in_proj|out_proj|up_proj|down_proj)$"`, rank 32, alpha 16. Anchored-suffix regex avoids the MoE expert scan-hang.
+- **Reference notebook**: `notebook_e002_rtxpro.ipynb` (repo root) is the corrected, demo-faithful build. `save_notebook` with `kernelExecutionType: "SaveAndRunAll"` actually attaches settings + runs (QuickSave only persists source).
+
+The old "T4×2 / 7 fixes" subsection above is retained for history but is SUPERSEDED by this block for any RTX-Pro-6000 run.
 
 ### Orphan PRs to ignore
 - **PR #42** (`tools/package_submission.py`): superseded by operator-rescue merge `868481f`. Functionally identical.
