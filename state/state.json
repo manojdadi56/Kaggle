@@ -216,6 +216,19 @@
       "statement": "Equation-numeric problems are solvable with SymPy linear/quadratic solvers; algebraic CoT is reproducible.",
       "status": "PROPOSED"
     },
+    "H-FINAL-PREP-PARALLEL": {
+      "created_at": "2026-05-31T03:30:00Z",
+      "expected_effect": "From 'pipeline-validation' state to 'final-quality-runnable' state within 24h.",
+      "how_to_test": "All 4 Jules ship within ~3h Jules wall-clock; v23 produces first real CV on next browser run; ablation_configs.py exposes 6 dicts.",
+      "source_refs": [
+        "readiness audit (10 gaps)",
+        "ROADMAP.md",
+        "references/analysis-winner-training-internals.md"
+      ],
+      "statement": "4 Jules workers (corpus-scale 9cat, cv-fixture 9cat, host-template-parity, ablation-configs) + operator-side notebook v23 (chat template + reasoning_on + full corpus) + corpus-uploader tool close all 10 gaps from the readiness audit in parallel; once landed, the operator can run baseline + 5 ablations within 3 days.",
+      "status": "PROPOSED",
+      "title": "Parallel close of all 10 gaps unblocks final-quality training within 24h"
+    },
     "H-GPU-DISPATCH": {
       "created_at": "2026-05-30T12:00:00Z",
       "expected_effect": "Removes the only manual hand-off in the loop; enables the operator's 30-min cron to also drive Kaggle GPU runs autonomously; unlocks the full E-002 -> E-003..E-009 ablation fanout to run end-to-end.",
@@ -356,8 +369,8 @@
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/master_roadmap.xlsx, tests/test_master_roadmap.py",
       "branch": "main",
       "created_at": "2026-05-30T21:48:48.475064+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/54",
+      "state": "COMPLETED",
       "task_id": "TASK-XLSX-master-roadmap"
     },
     "3423175478610363796": {
@@ -366,7 +379,7 @@
       "branch": "main",
       "created_at": "2026-05-30T21:02:47.830874+00:00",
       "pr_url": null,
-      "state": "AWAITING_USER_FEEDBACK",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-DATA-cot-corpus-v1"
     },
     "3959759277942667967": {
@@ -514,6 +527,26 @@
       "story": "US-4",
       "supersedes_notes": "covered by Wave-1 R-tasks",
       "title": "Author the QLoRA training script + Kaggle kernel"
+    },
+    "TASK-ABLATION-configs": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
+      "created_at": "2026-05-31T03:30:00Z",
+      "est_hours": 0.75,
+      "hypothesis_id": "H-FINAL-PREP-PARALLEL",
+      "priority": "P1",
+      "spec": "Create a single Python module that yields 5 ablation configs as dicts (one per knob), each one compatible with our notebook's tunables (LORA_RANK, MAX_TRAIN, REASONING_ON, EPOCHS, etc). Place at competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py exposing CONFIGS = {'baseline':..., 'rank16':..., '2epoch':..., 'curriculum':..., 'select2reason':..., 'logprob_filter':...}}. For each, include: (a) the parameter delta from baseline (e.g. rank=16 instead of 32), (b) one-line hypothesis, (c) source citation (winner repo file:line or discussion id). Also write experiments/README.md explaining how the operator applies one config to the notebook via save_notebook (search/replace the tunable block). Add tests/test_ablation_configs.py asserting all 6 keys exist and each has the required fields. Acceptance: 6 configs total (baseline + 5); each has rank, alpha, epochs, lr, target_modules, hypothesis, source; pytest -q green.",
+      "status": "BACKLOG",
+      "title": "Pre-build 5 ablation config JSONs (rank16, 2epoch, curriculum, select2reason, logprob_filter)"
+    },
+    "TASK-CORPUS-scale-9cat": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
+      "created_at": "2026-05-31T03:30:00Z",
+      "est_hours": 2.0,
+      "hypothesis_id": "H-FINAL-PREP-PARALLEL",
+      "priority": "P0",
+      "spec": "Read existing data/corpus/v2/corpus.jsonl (398 rows, 4 cats) and references/analysis-winner.md + winner-reasoning.py.md + winner-augmentation.py.md + winner-corpus.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/corpus.jsonl with: (a) 9 categories covered: bit_manipulation, cipher, gravity, numeral, cryptarithm, cryptarithm_guess, equation_numeric, unit_conversion, select2reason. (b) >= 300 rows per category (3000+ total). (c) Use per-category deterministic Python solvers (NO LLM/API), mirror winner's reasoning.py logic. (d) Apply the 5 winner augmenters (paraphrase, perturbation, etc) per augmentation.py. (e) HARD verification: each row's completion must end with \\boxed{X} where X exactly equals or numerically matches the original answer; reject mismatched rows; do NOT mark verified=True falsely. (f) Write data/corpus/v4/quality_report.json with per-category {generated, verified, rejected, samples}. (g) Add tests/test_corpus_v4_quality.py asserting >= 3000 rows, >= 95% verified, all 9 cats present. Acceptance: pytest -q green; quality report shows >= 95% verified for every category.",
+      "status": "BACKLOG",
+      "title": "Scale CoT corpus to 3K+ rows across ALL 9 host categories (winner-grade volume)"
     },
     "TASK-DATA-cot-corpus-v1": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
@@ -751,6 +784,16 @@
       "status": "DONE",
       "title": "Build held-out CV fixture (200 rows stratified across 9 categories) for vllm_eval.py"
     },
+    "TASK-EVAL-cv-fixture-9cat": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
+      "created_at": "2026-05-31T03:30:00Z",
+      "est_hours": 1.0,
+      "hypothesis_id": "H-FINAL-PREP-PARALLEL",
+      "priority": "P0",
+      "spec": "Read data/raw/train.csv (run tools/download_competition_data.py if missing) and data/curation/classify.py (the 9-category classifier from R28). Build competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2.jsonl with: (a) 300 rows total, stratified across 9 categories with floor(33/cat). (b) Schema per line: {id, category, prompt, answer}. (c) HARD requirement: rows MUST NOT appear in data/corpus/v4/corpus.jsonl (no train/eval leakage). (d) The fixture file itself is gitignored (contains answers); commit the builder script + README +   per-category count manifest at eval/cv_fixture_v2_manifest.json. (e) Add eval/build_cv_fixture_v2.py + tests/test_cv_fixture_v2.py asserting 300 rows, 9 cats, no overlap with corpus, schema valid. Acceptance: pytest -q green; manifest committed with counts.",
+      "status": "BACKLOG",
+      "title": "Build held-out CV fixture (300 rows stratified across all 9 host categories)"
+    },
     "TASK-EVAL-cv-score-ingest": {
       "acceptance_criteria": "record_cv_score op accepted; best_cv auto-updates only when strictly better; tests cover both branches; pytest -q green.",
       "allowed_area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
@@ -769,6 +812,16 @@
       "spec": "(1) orchestrator/state.py: add op 'record_cv_score' with data={experiment_id, cv_aggregate, per_category, n_total, n_correct, n_boxed_missing, source_kernel:str|None}. Appends to state['metrics'][f'cv:{experiment_id}'] = data; if cv_aggregate > state.get('best_cv', -inf), set state['best_cv'] = cv_aggregate AND state['best_cv_source'] = experiment_id. (2) orchestrator/loop.py.apply_decision: after a gpu_dispatch completes successfully, automatically read out_dir/cv_score.json and emit a record_cv_score op into the patch. (3) tools/status.py: update the snapshot to show best_cv + best_cv_source. (4) Add tests/test_record_cv_score.py covering: new best_cv -> updates; lower cv -> recorded but best_cv unchanged; per_category serialized. Acceptance: pytest -q green; status snapshot shows best_cv after a mock gpu_dispatch run.",
       "status": "DONE",
       "title": "Add record_cv_score state op + auto best_cv update + apply_decision pickup from kernel-output"
+    },
+    "TASK-EVAL-host-chat-template": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
+      "created_at": "2026-05-31T03:30:00Z",
+      "est_hours": 0.75,
+      "hypothesis_id": "H-FINAL-PREP-PARALLEL",
+      "priority": "P0",
+      "spec": "Per references/analysis-winner-training-internals.md + the winner repo's notebook_tinker.py, the host uses a SPECIFIC chat template + reasoning_on system header. Our v23 notebook now calls tokenizer.apply_chat_template \u2014 but we need parity tests. Build: (a) competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md documenting the exact template, system prompt text,   max_new_tokens, temperature, top_p, max_model_len that the host uses (extract from analyses +   any official references). (b) competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py: load tokenizer from a local fake or skip if not   available; render 5 fixed prompts via apply_chat_template + reasoning_on;   assert byte-equality vs expected strings in host_template_spec.md. Acceptance: spec.md exists with concrete strings; parity test runs (xfail allowed if local tokenizer isn't accessible). Cite source line numbers in analyses + winner repo.",
+      "status": "BACKLOG",
+      "title": "Capture exact Nemotron host chat template + reasoning_on system prompt for parity testing"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
       "acceptance_criteria": "eval/vllm_eval.py exists; CLI works in mock mode (no vllm needed); cv_score.json schema includes aggregate + per_category + n_boxed_missing; pytest -q green.",
@@ -1351,7 +1404,7 @@
       "priority": "P0",
       "session_id": "2464321044829184839",
       "spec": "This task RUNS AFTER the other 3 xlsx tasks land. Read the 3 workbooks: competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx, competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx, competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx. Synthesize them into ONE master workbook at competitions/nvidia-nemotron-model-reasoning-challenge/analysis/master_roadmap.xlsx with these sheets: (1) 'RankedExperiments' \u2014 every experiment we should run, ranked by (expected_cv_delta / effort): rank | name | hypothesis | source_evidence | expected_delta | effort_hours | depends_on | code_change_summary. (2) 'NextWeekPlan' \u2014 exactly which experiments to run in days 1-7 toward 0.85 LB; include a Gantt-style sheet: day | experiment | who (operator / Jules / GPU) | expected_outcome. (3) 'CurrentNotebookGaps' \u2014 line-by-line diff: what notebook_fork_working.ipynb does vs what winner does, with the exact change. (4) 'SubmissionStrategy' \u2014 when to submit, what cv-thresholds to gate on, how to use the 5/day cap intelligently across 15 days. Use openpyxl, read the input xlsx with openpyxl.load_workbook. BLOCKED until the other 3 xlsx tasks are DONE. Acceptance: xlsx with all 4 sheets; >=15 ranked experiments; 7-day plan; >=10 gap rows.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Excel: master roadmap consolidating findings from the 3 other workbooks into a single shippable plan"
     },
     "TASK-XLSX-winner-code-analysis": {
@@ -1367,5 +1420,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T21:48:48.482688+00:00"
+  "updated_at": "2026-05-30T22:40:12.442254+00:00"
 }

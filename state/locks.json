@@ -8,10 +8,6 @@
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "kind": "jules"
-    },
-    "TASK-XLSX-master-roadmap": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/master_roadmap.xlsx, tests/test_master_roadmap.py",
-      "kind": "jules"
     }
   }
 }
