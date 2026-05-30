@@ -17,8 +17,9 @@ def meta(p):
 
 
 lines = ["# Scraped competition references — master index", "",
-         "Authenticated full-text capture (logged-in browser), 2026-05-30. "
-         "Re-runnable via `tools/scrape_full.py` / `tools/scrape_tabs.py`.", ""]
+         "Authenticated full-text capture (logged-in browser) + winner repo clone, "
+         "2026-05-30. Re-runnable via tools/scrape_full.py, scrape_tabs.py, "
+         "flatten_winner.py, pull_notebooks.py.", ""]
 
 tabs = sorted(R.glob("tab-*.md"))
 lines.append(f"## Competition tabs ({len(tabs)})")
@@ -26,8 +27,17 @@ for p in tabs:
     _, _, b = meta(p)
     lines.append(f"- [{p.name}]({p.name}) — {b} chars")
 
+winner = [p for p in sorted(R.glob("winner-*.md"), key=lambda x: -meta(x)[2]) if p.name != "winner-INDEX.md"]
+lines.append(f"\n## Winner solution source — tonghuikang/nemotron LB 0.85 ({len(winner)})")
+lines.append("Pipeline map in winner-INDEX.md. Key: winner-train_sft.py.md (LORA_RANK=32), winner-reasoning.py.md (data engine).")
+for p in winner:
+    _, _, b = meta(p)
+    lines.append(f"- [{p.name}]({p.name}) — {b} chars")
+
 nb = sorted(R.glob("notebook-*.md"), key=lambda x: -meta(x)[2])
-lines.append(f"\n## Notebooks — source code ({len(nb)})")
+lines.append(f"\n## Community notebook source ({len(nb)})")
+if not nb:
+    lines.append("_None — Kaggle's Monaco viewer isn't browser-readable and the kernels API needs creds. Run tools/pull_notebooks.py after adding KAGGLE creds to .env. Notebook techniques are synthesized in community-sources.md / technique-backlog.md._")
 for p in nb:
     t, u, b = meta(p)
     lines.append(f"- [{t[:64]}]({p.name}) — {u} ({b} chars)")
@@ -40,10 +50,10 @@ for p in disc:
 
 synth = [p for p in sorted(R.glob("*.md")) if p.name in
          ("DIGEST-community.md", "community-sources.md", "technique-backlog.md",
-          "analysis-community.md", "analysis-data-and-scoring.md", "INDEX.md")]
+          "analysis-community.md", "analysis-data-and-scoring.md", "INDEX.md", "winner-INDEX.md")]
 lines.append(f"\n## Synthesis / analysis ({len(synth)})")
 for p in synth:
     lines.append(f"- [{p.name}]({p.name})")
 
 (R / "scraped-index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-print(f"index: {len(tabs)} tabs, {len(nb)} notebooks, {len(disc)} discussions, {len(synth)} synthesis")
+print(f"index: {len(tabs)} tabs, {len(winner)} winner-src, {len(nb)} notebooks, {len(disc)} discussions, {len(synth)} synthesis")

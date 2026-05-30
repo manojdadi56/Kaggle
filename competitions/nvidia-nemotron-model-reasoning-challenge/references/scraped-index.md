@@ -1,6 +1,6 @@
 # Scraped competition references — master index
 
-Authenticated full-text capture (logged-in browser), 2026-05-30. Re-runnable via `tools/scrape_full.py` / `tools/scrape_tabs.py`.
+Authenticated full-text capture (logged-in browser) + winner repo clone, 2026-05-30. Re-runnable via tools/scrape_full.py, scrape_tabs.py, flatten_winner.py, pull_notebooks.py.
 
 ## Competition tabs (7)
 - [tab-code.md](tab-code.md) — 5026 chars
@@ -11,7 +11,27 @@ Authenticated full-text capture (logged-in browser), 2026-05-30. Re-runnable via
 - [tab-overview.md](tab-overview.md) — 9287 chars
 - [tab-rules.md](tab-rules.md) — 37065 chars
 
-## Notebooks — source code (0)
+## Winner solution source — tonghuikang/nemotron LB 0.85 (16)
+Pipeline map in winner-INDEX.md. Key: winner-train_sft.py.md (LORA_RANK=32), winner-reasoning.py.md (data engine).
+- [winner-notebook_tinker.py.md](winner-notebook_tinker.py.md) — 55516 chars
+- [winner-train_sft.py.md](winner-train_sft.py.md) — 20234 chars
+- [winner-loss_config.py.md](winner-loss_config.py.md) — 13492 chars
+- [winner-corpus.py.md](winner-corpus.py.md) — 9725 chars
+- [winner-reasoning.py.md](winner-reasoning.py.md) — 8703 chars
+- [winner-upload_adapter.py.md](winner-upload_adapter.py.md) — 6649 chars
+- [winner-generate_csv.py.md](winner-generate_csv.py.md) — 4381 chars
+- [winner-train_common.py.md](winner-train_common.py.md) — 3619 chars
+- [winner-README.md.md](winner-README.md.md) — 2212 chars
+- [winner-delete-tinker-checkpoint.sh.md](winner-delete-tinker-checkpoint.sh.md) — 1393 chars
+- [winner-augmentation.py.md](winner-augmentation.py.md) — 1374 chars
+- [winner-lr_schedule.py.md](winner-lr_schedule.py.md) — 1023 chars
+- [winner-CLAUDE.md.md](winner-CLAUDE.md.md) — 580 chars
+- [winner-pyproject.toml.md](winner-pyproject.toml.md) — 468 chars
+- [winner-serve.sh.md](winner-serve.sh.md) — 397 chars
+- [winner-.mcp.json.md](winner-.mcp.json.md) — 333 chars
+
+## Community notebook source (0)
+_None — Kaggle's Monaco viewer isn't browser-readable and the kernels API needs creds. Run tools/pull_notebooks.py after adding KAGGLE creds to .env. Notebook techniques are synthesized in community-sources.md / technique-backlog.md._
 
 ## Discussion threads (217)
 - [FINAL RESULTS](discussion-688461.md) — 60421 chars
@@ -232,10 +252,11 @@ Authenticated full-text capture (logged-in browser), 2026-05-30. Re-runnable via
 - [NVIDIA Nemotron Model Reasoning Challenge](discussion-682440.md) — 1512 chars
 - [0 Comments](discussion-703083.md) — 940 chars
 
-## Synthesis / analysis (6)
+## Synthesis / analysis (7)
 - [analysis-community.md](analysis-community.md)
 - [analysis-data-and-scoring.md](analysis-data-and-scoring.md)
 - [community-sources.md](community-sources.md)
 - [DIGEST-community.md](DIGEST-community.md)
 - [INDEX.md](INDEX.md)
 - [technique-backlog.md](technique-backlog.md)
+- [winner-INDEX.md](winner-INDEX.md)
