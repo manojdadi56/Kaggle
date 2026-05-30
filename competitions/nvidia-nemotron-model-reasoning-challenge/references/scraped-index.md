@@ -1,0 +1,241 @@
+# Scraped competition references — master index
+
+Authenticated full-text capture (logged-in browser), 2026-05-30. Re-runnable via `tools/scrape_full.py` / `tools/scrape_tabs.py`.
+
+## Competition tabs (7)
+- [tab-code.md](tab-code.md) — 5026 chars
+- [tab-data.md](tab-data.md) — 3029 chars
+- [tab-discussion-list.md](tab-discussion-list.md) — 4839 chars
+- [tab-leaderboard.md](tab-leaderboard.md) — 4198 chars
+- [tab-models.md](tab-models.md) — 5702 chars
+- [tab-overview.md](tab-overview.md) — 9287 chars
+- [tab-rules.md](tab-rules.md) — 37065 chars
+
+## Notebooks — source code (0)
+
+## Discussion threads (217)
+- [FINAL RESULTS](discussion-688461.md) — 60421 chars
+- [Quick links](discussion-689915.md) — 39429 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681820.md) — 27256 chars
+- [symbol_transformation would benefit from a stated rule class: fi](discussion-694556.md) — 24258 chars
+- [Why This Workflow?](discussion-683172.md) — 19446 chars
+- [Information for First-Timers](discussion-681745.md) — 16197 chars
+- [Example 1 — id 02902eb3](discussion-702304.md) — 15660 chars
+- [Insight](discussion-690307.md) — 14123 chars
+- [SYSTEM ROLE:](discussion-685886.md) — 12857 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689792.md) — 12458 chars
+- [Match the LAST \boxed{…}, allowing nested braces](discussion-687798.md) — 12393 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688360.md) — 12213 chars
+- [Step 1:](discussion-685380.md) — 11709 chars
+- [Wonderland Math Puzzle Solution](discussion-684192.md) — 10937 chars
+- [SFT vs GRPO: Why One Works Fine and the Other Doesn't](discussion-690161.md) — 10704 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694975.md) — 10658 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-697491.md) — 10609 chars
+- [Nemotron Inference Improvement Plan](discussion-686444.md) — 10476 chars
+- [LoRA parameters](discussion-687961.md) — 9749 chars
+- [Appreciation (2)](discussion-684212.md) — 8546 chars
+- [2 Comments](discussion-701981.md) — 8368 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684283.md) — 8279 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694710.md) — 8238 chars
+- [Appreciation (1)](discussion-698106.md) — 8192 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-693260.md) — 8154 chars
+- [Kaggle Competition Integrity: The Nemotron "Wall of Shame"](discussion-697139.md) — 8052 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692092.md) — 7532 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684602.md) — 7392 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683067.md) — 7133 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-698293.md) — 6639 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-696059.md) — 6448 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-691380.md) — 6446 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686069.md) — 6421 chars
+- [Two-Stage Training as the Default Recipe](discussion-682313.md) — 6370 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692879.md) — 6288 chars
+- [discord.gg/kaggle](discussion-681714.md) — 6242 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-690756.md) — 6216 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-691641.md) — 6181 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686865.md) — 5954 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-693251.md) — 5735 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689877.md) — 5718 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-703240.md) — 5671 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-690689.md) — 5549 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-690891.md) — 5545 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683820.md) — 5438 chars
+- [Step 1:](discussion-683711.md) — 5385 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685920.md) — 5380 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681793.md) — 5294 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687142.md) — 5193 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683573.md) — 5121 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692950.md) — 5120 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686036.md) — 5101 chars
+- [Step 1:](discussion-702267.md) — 5030 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684654.md) — 4814 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682428.md) — 4743 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688482.md) — 4719 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694859.md) — 4530 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684432.md) — 4526 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-701761.md) — 4525 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682878.md) — 4506 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688120.md) — 4467 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-699812.md) — 4432 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-693270.md) — 4409 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687063.md) — 4277 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686419.md) — 4258 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682521.md) — 4254 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-699811.md) — 4202 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683401.md) — 4181 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686185.md) — 4169 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702447.md) — 4138 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682355.md) — 4121 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689284.md) — 4079 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681968.md) — 4029 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683866.md) — 3978 chars
+- [`Then restart the runtime/kernel(very important).](discussion-692815.md) — 3939 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-691125.md) — 3907 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-691318.md) — 3878 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682200.md) — 3820 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686794.md) — 3813 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685031.md) — 3805 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685710.md) — 3804 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689383.md) — 3789 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687119.md) — 3786 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681821.md) — 3779 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682167.md) — 3716 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689840.md) — 3716 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683910.md) — 3598 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682799.md) — 3563 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687740.md) — 3544 chars
+- [Appreciation (2)](discussion-684385.md) — 3513 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684251.md) — 3503 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687117.md) — 3451 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683545.md) — 3371 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683394.md) — 3325 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685971.md) — 3319 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-700197.md) — 3312 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689257.md) — 3294 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694446.md) — 3277 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682877.md) — 3274 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694074.md) — 3193 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685817.md) — 3175 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-697746.md) — 3165 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684619.md) — 3129 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-701924.md) — 3116 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-703214.md) — 3095 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-698857.md) — 3088 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684508.md) — 3075 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682542.md) — 3013 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684748.md) — 3004 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682197.md) — 2993 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685922.md) — 2982 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685020.md) — 2977 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-698649.md) — 2972 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702473.md) — 2939 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-696854.md) — 2923 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686995.md) — 2911 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686431.md) — 2908 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684490.md) — 2847 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685247.md) — 2827 chars
+- [Wishing you the best of luck in this competition!](discussion-702483.md) — 2826 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-699829.md) — 2766 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686691.md) — 2760 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694358.md) — 2738 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-703127.md) — 2735 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-698277.md) — 2733 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-696993.md) — 2730 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684459.md) — 2723 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686615.md) — 2715 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687789.md) — 2702 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687101.md) — 2671 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684244.md) — 2658 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684336.md) — 2640 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687547.md) — 2640 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684515.md) — 2615 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688052.md) — 2607 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682058.md) — 2593 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682926.md) — 2581 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682208.md) — 2576 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683853.md) — 2538 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702687.md) — 2532 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681773.md) — 2493 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681853.md) — 2489 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684271.md) — 2468 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694041.md) — 2466 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682732.md) — 2453 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684510.md) — 2452 chars
+- [Appreciation (1)](discussion-696734.md) — 2431 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685910.md) — 2413 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692877.md) — 2413 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685421.md) — 2355 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688277.md) — 2338 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681824.md) — 2327 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686839.md) — 2307 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684138.md) — 2299 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682375.md) — 2292 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685434.md) — 2283 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682991.md) — 2276 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686591.md) — 2274 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684289.md) — 2263 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682998.md) — 2261 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684641.md) — 2260 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684420.md) — 2257 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-701907.md) — 2238 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688454.md) — 2220 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682561.md) — 2215 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-698203.md) — 2211 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694350.md) — 2198 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683311.md) — 2167 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683021.md) — 2155 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682784.md) — 2152 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692667.md) — 2140 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683523.md) — 2101 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692813.md) — 2095 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-686800.md) — 2087 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-681854.md) — 2084 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683792.md) — 2068 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683484.md) — 2063 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-689580.md) — 2044 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683171.md) — 2025 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-692397.md) — 2007 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685462.md) — 2003 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-697333.md) — 2002 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682064.md) — 2001 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-687870.md) — 1985 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683066.md) — 1982 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683870.md) — 1982 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683832.md) — 1947 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688626.md) — 1947 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684469.md) — 1945 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685905.md) — 1925 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702431.md) — 1923 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684434.md) — 1908 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684470.md) — 1908 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702384.md) — 1882 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-694213.md) — 1880 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684643.md) — 1866 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683798.md) — 1863 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-697100.md) — 1835 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688278.md) — 1830 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-684867.md) — 1829 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-702040.md) — 1828 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-700030.md) — 1825 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683368.md) — 1806 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-697578.md) — 1804 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-696735.md) — 1768 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683913.md) — 1760 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-703184.md) — 1739 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683973.md) — 1728 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688158.md) — 1685 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-691978.md) — 1681 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-688335.md) — 1672 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682526.md) — 1659 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683486.md) — 1659 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-685973.md) — 1655 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-683608.md) — 1554 chars
+- [NVIDIA Nemotron Model Reasoning Challenge](discussion-682440.md) — 1512 chars
+- [0 Comments](discussion-703083.md) — 940 chars
+
+## Synthesis / analysis (6)
+- [analysis-community.md](analysis-community.md)
+- [analysis-data-and-scoring.md](analysis-data-and-scoring.md)
+- [community-sources.md](community-sources.md)
+- [DIGEST-community.md](DIGEST-community.md)
+- [INDEX.md](INDEX.md)
+- [technique-backlog.md](technique-backlog.md)
