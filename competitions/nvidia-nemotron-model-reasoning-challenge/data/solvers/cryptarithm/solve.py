@@ -10,12 +10,20 @@ def solve(prompt: str) -> Optional[str]:
     # Look for the "Now, determine the result for: " string concatenation variant
     match = re.search(r'Now,\s*determine the result for:\s*(\S+)', prompt)
     if match:
+        from cryptarithm_reasoning import reasoning_cryptarithm
+        from dataclasses import dataclass
+        from collections import namedtuple
+        
+        @dataclass
+        class Problem:
+            question: str
+            examples: list
+            
+        # We need a mock Example class since reasoners.store_types.Problem expects examples
+        Example = namedtuple("Example", ["input_value", "output_value"])
+
         q = match.group(1).strip()
         if len(q) == 5:
-            q_a = q[0:2]
-            q_op = q[2]
-            q_b = q[3:5]
-
             examples = []
             for line in prompt.split('\n'):
                 if ' = ' in line and len(line.split(' = ')[0].strip()) == 5:
@@ -23,11 +31,22 @@ def solve(prompt: str) -> Optional[str]:
                     inp = inp.strip()
                     out = out.strip()
                     if len(inp) == 5:
-                        examples.append((inp, out))
+                        examples.append(Example(input_value=inp, output_value=out))
 
-            # check concat type for this specific operator in examples
+            problem = Problem(question=q, examples=examples)
+            cot = reasoning_cryptarithm(problem)
+            if cot:
+                return cot
+            
+            # fallback to simple string concat logic if CoT fails
+            q_a = q[0:2]
+            q_op = q[2]
+            q_b = q[3:5]
+
             op_type = 'fwd'
-            for inp, out in examples:
+            for ex in examples:
+                inp = ex.input_value
+                out = ex.output_value
                 if inp[2] == q_op:
                     a, b = inp[0:2], inp[3:5]
                     if out == a + b:
@@ -35,10 +54,8 @@ def solve(prompt: str) -> Optional[str]:
                     elif out == b + a:
                         op_type = 'rev'
 
-            if op_type == 'fwd':
-                return q_a + q_b
-            else:
-                return q_b + q_a
+            ans = q_a + q_b if op_type == 'fwd' else q_b + q_a
+            return f"The answer is \\boxed{{{ans}}}"
 
     # Look for classic verbal arithmetic (SEND + MORE = MONEY)
     match_classic = re.search(r'([A-Za-z]+)\s*\+\s*([A-Za-z]+)\s*=\s*([A-Za-z]+)', prompt)
