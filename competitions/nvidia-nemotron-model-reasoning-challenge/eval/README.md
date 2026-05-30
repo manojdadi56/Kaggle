@@ -21,6 +21,15 @@ To reproduce the host evaluation accurately offline, you MUST generate your pred
 
 *Note: Generating predictions with a LoRA rank > 32 will immediately fail the host environment. Although this evaluation script doesn't parse your adapter config, you should ensure your training parameters respect the `r <= 32` constraint.*
 
+## Building the CV Fixture
+You can build a stratified CV fixture from the training data using the `build_cv_fixture.py` script. The script selects a 200-row representative slice of `train.csv` covering all 9 taxonomy categories.
+
+```bash
+python3 competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture.py
+```
+
+*Note: The generated `cv_fixture.jsonl` contains the ground-truth `answer` column for these held-out validation rows. To prevent data leakage and ensure fair offline evaluation, this file is intentionally excluded from version control via `.gitignore`.*
+
 ## Usage
 The main evaluation script is `cv.py`. It accepts prediction and gold data files in either JSON/JSONL or CSV formats.
 
