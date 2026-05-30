@@ -17,8 +17,8 @@ cp .env.example .env
 ```
 Fill in `.env`. **Rotate the keys that were pasted into chat first** (Jules + Kaggle):
 - `JULES_API_KEY` — from jules.google settings (rotate the old one).
-- `KAGGLE_USERNAME` / `KAGGLE_KEY` — from kaggle.com account (rotate).
-- `KGAT` — only if you use the Kaggle MCP for agentic browsing (optional).
+- `KAGGLE_USERNAME` — your Kaggle username.
+- `KAGGLE_API_TOKEN` (=KGAT, format `KGAT_…`) — the **single** Kaggle bearer the orchestrator uses for everything: MCP, web API, kernel push/poll/pull, submission upload (no separate `kaggle.json` `key` needed). Live-verified against `https://www.kaggle.com/mcp`.
 
 **The operator is the Claude Code session on your subscription — there is NO `ANTHROPIC_API_KEY`.**
 - Do NOT set `ANTHROPIC_API_KEY` (if set, it overrides the subscription). Run `unset ANTHROPIC_API_KEY` / clear it in `/config`.
