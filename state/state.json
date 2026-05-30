@@ -728,7 +728,7 @@
       "mode": "deep",
       "size_hint": "~10 min",
       "spec": "No cron exists (F-054). Pick: (a) /schedule @hourly running tools dispatch+status, (b) Windows Task Scheduler + claude -p (CLAUDE_CODE_OAUTH_TOKEN), (c) accept manual-tick mode. User decision.",
-      "status": "BACKLOG",
+      "status": "SUPERSEDED",
       "story": "US-meta",
       "title": "Schedule the autonomous operator tick (cron / Task Scheduler) - user approval"
     },
@@ -1168,5 +1168,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T15:13:55.362085+00:00"
+  "updated_at": "2026-05-30T15:18:10.643686+00:00"
 }
