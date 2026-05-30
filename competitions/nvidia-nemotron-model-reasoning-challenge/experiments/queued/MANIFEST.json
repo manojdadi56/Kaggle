@@ -1,0 +1,24 @@
+{
+  "queue": [
+    {
+      "name": "V15",
+      "patch": "V15-cot-corpus.json",
+      "purpose": "BIG LEVER: train on 91 inline CoT examples (pre-tokenized) instead of raw train.csv rows. Expected LB delta per technique-backlog: 0.65 -> 0.85.",
+      "depends_on": "v13/v16 baseline submission landing first to anchor best_cv"
+    },
+    {
+      "name": "V16",
+      "patch": "V16-rank16-ablation.json",
+      "purpose": "Ablation: rank=16 LoRA (half the params, ~2x faster training). Tests speed/quality tradeoff. Same corpus as V15.",
+      "depends_on": "V15 submitted"
+    },
+    {
+      "name": "V17",
+      "patch": "V17-select2reason.json",
+      "purpose": "Select2Reason: keep only top-50% longest CoTs (highest-utility curation per konbu17 community insight). Same rank=32 + V15 corpus.",
+      "depends_on": "V15 submitted; ideally compare against V15 cv to validate curation hypothesis"
+    }
+  ],
+  "apply_command": "python tools/iterate_notebook.py --slug nvidia-nemotron-submission-demo --patch-file competitions/nvidia-nemotron-model-reasoning-challenge/experiments/queued/<patch>.json",
+  "post_iteration": "user clicks browser Save & Run All; operator runs python tools/auto_submit.py --slug nvidia-nemotron-submission-demo --force when COMPLETE"
+}
