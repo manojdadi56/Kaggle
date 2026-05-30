@@ -52,16 +52,38 @@ class Orchestrator:
 
     # ---------- 1. poll ----------
     def poll_in_flight(self, tick_id: str) -> dict:
-        changed = {"sessions_terminal": [], "gpu_terminal": []}
+        changed = {"sessions_terminal": [], "gpu_terminal": [], "auto_merged": []}
+        auto_merge_force = (getattr(self.settings, "operator_auto_merge", "force") == "force")
         for sid, sess in list(self.state.in_flight_sessions().items()):
             remote = self.jules.get_session(sid)
             st = JulesClient.state_of(remote)
+            pr_url = JulesClient.pr_url(remote)
             ops = [{"op": "update_session", "idempotency_key": f"{tick_id}:{sid}:state:{st}",
-                    "data": {"session_id": sid, "state": st, "pr_url": JulesClient.pr_url(remote)}}]
+                    "data": {"session_id": sid, "state": st, "pr_url": pr_url}}]
             self.state.apply_patch({"tick_id": tick_id, "operations": ops})
             if JulesClient.is_terminal(remote):
                 self.locks.release(sess.get("task_id") or sid)
                 changed["sessions_terminal"].append(sid)
+                # R-007 unsupervised: COMPLETED + PR open → auto-merge to main now.
+                if (st == "COMPLETED" and pr_url and auto_merge_force and self.github is not None):
+                    try:
+                        number = int(pr_url.rstrip("/").rsplit("/", 1)[-1])
+                    except ValueError:
+                        number = None
+                    if number is not None:
+                        rc, mout = self.github.merge_pr(number, message=f"auto-merge {sid}", force=True)
+                        ok = rc == 0
+                        tid = sess.get("task_id")
+                        post = [{"op": "append_event", "idempotency_key": f"{tick_id}:pr{number}:auto",
+                                 "data": {"pr": number, "ok": ok, "reason": "unsupervised auto-merge",
+                                          "detail": (mout or "")[:200]},
+                                 "summary": f"auto-merge PR #{number}: {'ok' if ok else 'refused/failed'}"}]
+                        if ok and tid:
+                            post.append({"op": "set_status",
+                                         "idempotency_key": f"{tick_id}:{tid}:DONE",
+                                         "data": {"collection": "tasks", "id": tid, "status": "DONE"}})
+                        self.state.apply_patch({"tick_id": tick_id, "operations": post})
+                        changed["auto_merged"].append({"pr": number, "session": sid, "ok": ok})
         for eid, run in list(self.state.in_flight_gpu_runs().items()):
             handle = self._gpu_handles.get(eid)
             if handle is None:

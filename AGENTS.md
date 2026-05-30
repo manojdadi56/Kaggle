@@ -47,11 +47,21 @@ Up to 5 Jules sessions run in parallel; each is blind to the others. Before push
 - `competitions/<slug>/` — one self-contained folder per competition: `plan.md`, `tasks/`, `user-stories/`, `decisions/`, `experiments/`, `kernels/`, `submissions/`, `references/`, `data/`.
 - `state/` — orchestrator state (operator-only; never modify).
 
+## Workflow: UNSUPERVISED — your PR auto-merges to main on COMPLETED
+This is an unsupervised loop. The operator does **not review** your PR for quality, scope, or acceptance criteria. The moment your Jules session reports COMPLETED, the operator's poll picks up the PR URL and **auto-merges it to main** with a "theirs wins on conflicts" strategy. There is no human or LLM gate between you and `main`. Practical consequences:
+
+- **Ship complete, tested work or don't ship.** If `pytest -q` would not pass, fix it before opening the PR — don't open a half-done PR expecting feedback.
+- **Stay strictly inside `{{allowed_area}}`.** Nothing reverts you if you accidentally touch other files; you'll just permanently pollute main.
+- **Self-review is the only review.** Re-read your diff before completing. Run the project tests if you changed code. Validate generated data correctness.
+- **Tests must remain offline.** Any test that calls the live network may break for other Jules sessions.
+- **No secrets in commits, ever.** The one mechanical check we keep is a regex scan of your diff for literal credential tokens (`KGAT_…`, `AQ.Ab…`, `sk-ant-…`). If we detect one, the merge is **refused** (the credential never reaches public main). Don't print env-var values to logs or PR bodies.
+
 ## How to work a task
 1. Read the task file (under `competitions/<slug>/tasks/...`) and its `allowed_area`, acceptance criteria, and definition-of-done.
 2. Make the smallest correct change; add/adjust tests or a runnable validation.
 3. Run what the no-GPU VM allows: `pip install -r requirements.txt`, `pytest -q`, lints, tiny-sample dry-runs.
-4. Open ONE PR. PR body must have: `## Summary`, `## Evidence` (tests run), `## Risks`, `## Definition-of-done check`, and `NEEDS_INFO:` (if blocked — state the exact question, do not guess).
+4. Open ONE PR. PR body is recommended (Summary / Evidence / Risks / DoD) for audit, but is **not required** for merge — the operator merges on COMPLETED regardless of body content.
+5. If you genuinely can't complete the task (info missing, scope too big), open the PR with a `NEEDS_INFO:` or `NEEDS_SPLIT:` block as the first line of the body and stop. The auto-merge will still happen; the operator's next tick will read the marker and spawn a follow-up task.
 
 ## Orchestration model (context)
 This repo is run by an SDLC-style mesh: the **operator** (a Claude Code session) plays one role per tick using the `/sdlc` project skill (`.claude/skills/sdlc/`), and **you (Jules) are the `owner` role — the only code writer**. The operator dispatches you one task, reviews your PR against acceptance criteria + the invariants below, and merges it. State is git-JSON (`state/`, `orchestrator.tools`) — never edit it.

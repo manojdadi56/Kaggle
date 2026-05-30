@@ -28,8 +28,8 @@ If the task as written can't be completed in ~1 hour, do NOT silently truncate o
 ## Reasoning discipline
 Audit-safe rationale only in the PR/artifacts (what you did, why, evidence, risks, how to verify) — no raw chain-of-thought dumps. Show your *plan, decisions, and evidence*, not your scratchpad.
 
-## Output contract
-Open exactly ONE PR (AUTO_CREATE_PR). PR body:
+## Output contract — UNSUPERVISED auto-merge to main
+Open exactly ONE PR (AUTO_CREATE_PR). **The operator will auto-merge your PR to `main` the moment your session reports COMPLETED — no review, no acceptance-criteria gate.** Ship work you'd be willing to commit straight to main. The PR body below is recommended for audit only; the merge does NOT require it. The single mechanical safety check that remains is a regex scan of your diff for literal credential tokens (`KGAT_…`, `AQ.Ab…`, `sk-ant-…`) — if any appears, the merge is refused. PR body:
 ```
 ## Summary            (what you built, the approach)
 ## Plan & steps       (the sub-goals you executed)

@@ -64,6 +64,28 @@ def test_merge_pr_reports_conflict():
     assert rc != 0 and "conflict" in out.lower()
 
 
+def test_merge_pr_force_uses_theirs_strategy():
+    cmds = []
+    def runner(cmd, cwd):
+        cmds.append(cmd); return 0, "ok"
+    gh = GitHubOps(repo="o/r", git=GitOps(".", runner=runner), http=lambda *a, **k: _Resp(text="diff --git a/x b/x\n+hello"))
+    rc, out = gh.merge_pr(11, force=True)
+    assert rc == 0
+    joined = [" ".join(c) for c in cmds]
+    assert any("merge -X theirs --no-edit pr-11" in j for j in joined)
+
+
+def test_merge_pr_refuses_when_diff_contains_secret_token():
+    def runner(cmd, cwd):
+        return 0, "ok"
+    # diff carries a literal KGAT-looking token
+    leaky_diff = "diff --git a/.env b/.env\n+KAGGLE_API_TOKEN=KGAT_abcdef1234567890"
+    gh = GitHubOps(repo="o/r", git=GitOps(".", runner=runner),
+                   http=lambda *a, **k: _Resp(text=leaky_diff))
+    rc, out = gh.merge_pr(12, force=True)
+    assert rc != 0 and "SECRET_LEAK_DETECTED" in out
+
+
 def test_loop_executes_pr_merges():
     # minimal orchestrator wiring with a fake github
     from orchestrator.config import Settings

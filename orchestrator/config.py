@@ -56,6 +56,9 @@ class Settings:
     operator_model: str = "opus"
     operator_max_turns: int = 60
     starting_branch: str = "main"
+    # R-007: unsupervised mode — every COMPLETED Jules PR auto-merges to main.
+    # Set to "review" to restore acceptance-criteria review before merging.
+    operator_auto_merge: str = "force"
 
     @classmethod
     def load(cls) -> "Settings":
@@ -70,6 +73,7 @@ class Settings:
             max_auto_submits_per_day=_int_env("MAX_AUTO_SUBMITS_PER_DAY", cls.max_auto_submits_per_day),
             operator_model=os.environ.get("OPERATOR_MODEL", cls.operator_model),
             starting_branch=os.environ.get("STARTING_BRANCH", cls.starting_branch),
+            operator_auto_merge=os.environ.get("OPERATOR_AUTO_MERGE", cls.operator_auto_merge),
         )
 
     def competition_dir(self, slug: str | None = None) -> Path:

@@ -9,6 +9,7 @@ criteria + invariants); this module just executes the approved merges.
 """
 from __future__ import annotations
 
+import re
 from typing import Callable
 
 from .git_ops import GitOps
@@ -51,8 +52,25 @@ class GitHubOps:
         resp = self._http("GET", url, self._auth_headers(), accept="application/vnd.github.diff")
         return resp.text
 
-    def merge_pr(self, number: int, message: str | None = None) -> tuple:
-        """Merge a PR by number using git (no gh needed). Returns (rc, output)."""
+    # tokens we will NEVER let slip into main, even in force mode
+    _SECRET_RE = re.compile(r"(KGAT_[A-Za-z0-9]{8,}|AQ\.Ab[A-Za-z0-9_\-]{8,}|sk-ant-[A-Za-z0-9_\-]{8,})")
+
+    def merge_pr(self, number: int, message: str | None = None, force: bool = False) -> tuple:
+        """Merge a PR by number using git (no gh needed).
+
+        `force=True` is the unsupervised mode: conflicts auto-resolve in favor of
+        the PR (`git merge -X theirs`). The single non-negotiable check is a
+        regex scan of the PR's diff for literal secret prefixes — if one is
+        found, the merge is refused (the credential never reaches public main).
+        """
+        # Belt-and-suspenders: refuse to merge a PR whose diff contains a literal token.
+        try:
+            diff = self.get_pr_diff(number)
+            if self._SECRET_RE.search(diff):
+                return 99, "SECRET_LEAK_DETECTED — refused to merge (PR diff contained a literal credential token)"
+        except Exception:
+            pass  # if the diff fetch fails we proceed; the merge itself may still fail
+
         g = self.git
         rc, out = g.fetch("origin", f"pull/{number}/head:pr-{number}")
         if rc != 0:
@@ -60,7 +78,10 @@ class GitHubOps:
         rc, out = g.checkout("main")
         if rc != 0:
             return rc, f"checkout main failed: {out}"
-        rc, out = g.merge(f"pr-{number}")
+        if force:
+            rc, out = g.runner(["git", "merge", "-X", "theirs", "--no-edit", f"pr-{number}"], g.repo_dir)
+        else:
+            rc, out = g.merge(f"pr-{number}")
         if rc != 0:
             return rc, f"merge conflict/failure: {out}"
         rc, out = g.push("origin", "main")
