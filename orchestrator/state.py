@@ -25,6 +25,7 @@ OPS = {
     "append_event",
     "record_session", "update_session", "clear_session",
     "record_gpu_run", "update_gpu_run", "clear_gpu_run",
+    "gpu_dispatch",
     "set_task_status",
     "increment_submit_counter", "set_best_cv", "set_cursor",
     # --- ledger ops (R-004): planning/innovation auto-append work into ONE store ---
@@ -97,12 +98,20 @@ def _apply_op(state: dict, op: str, data: dict) -> None:
             "created_at": data.get("created_at"),
         }
     elif op == "update_gpu_run":
-        eid = data["experiment_id"]
+        eid = data.get("slug") or data.get("experiment_id")
         state["gpu_runs"].setdefault(eid, {}).update(
-            {k: v for k, v in data.items() if k != "experiment_id"}
+            {k: v for k, v in data.items() if k not in ("experiment_id", "slug")}
         )
     elif op == "clear_gpu_run":
         state["gpu_runs"].pop(data["experiment_id"], None)
+    elif op == "gpu_dispatch":
+        slug = data["slug"]
+        state["gpu_runs"][slug] = {
+            "state": "QUEUED",
+            "experiment_id": data.get("experiment_id"),
+            "started_at": data.get("started_at"),
+            "kernel_url": None,
+        }
     elif op == "set_task_status":
         tid = data["task_id"]
         entry = state["tasks"].setdefault(tid, {})
