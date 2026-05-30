@@ -1,48 +1,45 @@
-[{"stream_name":"stdout","time":24.828252712,"data":"=== /kaggle/input contents ===\n"}
-,{"stream_name":"stdout","time":24.828297656,"data":"  /kaggle/input: dirs=['competitions', 'models'] files=[]\n"}
-,{"stream_name":"stdout","time":24.828342951,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
-,{"stream_name":"stdout","time":24.828950226,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
-,{"stream_name":"stdout","time":24.828990829,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
-,{"stream_name":"stdout","time":24.829065957,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
-,{"stream_name":"stdout","time":24.829073077,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
-,{"stream_name":"stdout","time":24.829077646000002,"data":"=== end mount listing ===\n"}
-,{"stream_name":"stdout","time":24.831385703,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
-,{"stream_name":"stdout","time":24.83140359,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
-,{"stream_name":"stdout","time":24.831410543,"data":"No training data provided or path does not exist.\n"}
-,{"stream_name":"stdout","time":24.836058878,"data":"The repository /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 contains custom code which must be executed to correctly load the model. You can inspect the repository content at /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 .\n"}
-,{"stream_name":"stdout","time":24.836078507,"data":" You can inspect the repository content at https://hf.co//kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1.\n"}
-,{"stream_name":"stdout","time":24.836084118,"data":"You can avoid this prompt in future by passing the argument `trust_remote_code=True`.\n"}
-,{"stream_name":"stdout","time":24.836088509,"data":"\n"}
-,{"stream_name":"stderr","time":24.83622721,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":24.83623371,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 724, in resolve_trust_remote_code\n"}
-,{"stream_name":"stderr","time":24.836582616,"data":"    answer = input(\n"}
-,{"stream_name":"stderr","time":24.836589388,"data":"             ^^^^^^\n"}
-,{"stream_name":"stderr","time":24.836592967,"data":"EOFError: EOF when reading a line\n"}
-,{"stream_name":"stderr","time":24.836611697,"data":"\n"}
-,{"stream_name":"stderr","time":24.836614431,"data":"During handling of the above exception, another exception occurred:\n"}
-,{"stream_name":"stderr","time":24.836616922,"data":"\n"}
-,{"stream_name":"stderr","time":24.83661902,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":24.836641508,"data":"  File \"/kaggle/src/script.py\", line 301, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":24.836869271,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
-,{"stream_name":"stderr","time":24.836884577,"data":"  File \"/kaggle/src/script.py\", line 102, in run_training\n"}
-,{"stream_name":"stderr","time":24.8370669,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
-,{"stream_name":"stderr","time":24.837126243,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":24.837140987,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 317, in from_pretrained\n"}
-,{"stream_name":"stderr","time":24.837378582,"data":"    config, kwargs = AutoConfig.from_pretrained(\n"}
-,{"stream_name":"stderr","time":24.83742729,"data":"                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":24.837439838999998,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/configuration_auto.py\", line 1365, in from_pretrained\n"}
-,{"stream_name":"stderr","time":24.837836901,"data":"    trust_remote_code = resolve_trust_remote_code(\n"}
-,{"stream_name":"stderr","time":24.837925739,"data":"                        ^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":24.838018531,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 736, in resolve_trust_remote_code\n"}
-,{"stream_name":"stderr","time":24.838277731,"data":"    raise ValueError(\n"}
-,{"stream_name":"stderr","time":24.838285523,"data":"ValueError: The repository /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 contains custom code which must be executed to correctly load the model. You can inspect the repository content at /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 .\n"}
-,{"stream_name":"stderr","time":24.838290462,"data":" You can inspect the repository content at https://hf.co//kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1.\n"}
-,{"stream_name":"stderr","time":24.838294604,"data":"Please pass the argument `trust_remote_code=True` to allow custom code to be run.\n"}
-,{"stream_name":"stderr","time":29.094099068,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
-,{"stream_name":"stderr","time":29.094140818,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
-,{"stream_name":"stderr","time":29.299100195,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
-,{"stream_name":"stderr","time":29.299131687,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
-,{"stream_name":"stderr","time":29.947486347,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
-,{"stream_name":"stderr","time":31.106560979,"data":"[NbConvertApp] Writing 348297 bytes to __results__.html\n"}
-,{"stream_name":"stdout","time":31.68390986,"data":"Do you wish to run the custom code? [y/N] "}
+[{"stream_name":"stdout","time":25.459999873,"data":"=== /kaggle/input contents ===\n"}
+,{"stream_name":"stdout","time":25.460071461,"data":"  /kaggle/input: dirs=['models', 'competitions'] files=[]\n"}
+,{"stream_name":"stdout","time":25.460243851,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
+,{"stream_name":"stdout","time":25.460260129,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
+,{"stream_name":"stdout","time":25.460265179,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
+,{"stream_name":"stdout","time":25.460269429,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
+,{"stream_name":"stdout","time":25.460938378,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
+,{"stream_name":"stdout","time":25.460958174,"data":"=== end mount listing ===\n"}
+,{"stream_name":"stdout","time":25.462367889,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
+,{"stream_name":"stdout","time":25.462396007,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
+,{"stream_name":"stdout","time":25.462400818,"data":"No training data provided or path does not exist.\n"}
+,{"stream_name":"stderr","time":25.485162207,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
+,{"stream_name":"stderr","time":25.549139442,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":25.549165906,"data":"  File \"/root/.cache/huggingface/modules/transformers_modules/_1/modeling_nemotron_h.py\", line 64, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":25.549334087,"data":"    from mamba_ssm.ops.triton.layernorm_gated import rmsnorm_fn\n"}
+,{"stream_name":"stderr","time":25.549341978,"data":"ModuleNotFoundError: No module named 'mamba_ssm'\n"}
+,{"stream_name":"stderr","time":25.549346162,"data":"\n"}
+,{"stream_name":"stderr","time":25.549350388,"data":"During handling of the above exception, another exception occurred:\n"}
+,{"stream_name":"stderr","time":25.549366566,"data":"\n"}
+,{"stream_name":"stderr","time":25.549371196,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":25.549375734,"data":"  File \"/kaggle/src/script.py\", line 302, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":25.54964737,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
+,{"stream_name":"stderr","time":25.549663916,"data":"  File \"/kaggle/src/script.py\", line 102, in run_training\n"}
+,{"stream_name":"stderr","time":25.549833464,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
+,{"stream_name":"stderr","time":25.549933012,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":25.549944572,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 354, in from_pretrained\n"}
+,{"stream_name":"stderr","time":25.550175073,"data":"    model_class = get_class_from_dynamic_module(\n"}
+,{"stream_name":"stderr","time":25.550229132,"data":"                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":25.550242617,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 583, in get_class_from_dynamic_module\n"}
+,{"stream_name":"stderr","time":25.550548838,"data":"    return get_class_in_module(class_name, final_module, force_reload=force_download)\n"}
+,{"stream_name":"stderr","time":25.550830727,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":25.550882485,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 309, in get_class_in_module\n"}
+,{"stream_name":"stderr","time":25.551032587999998,"data":"    module_spec.loader.exec_module(module)\n"}
+,{"stream_name":"stderr","time":25.551045631,"data":"  File \"\u003cfrozen importlib._bootstrap_external\u003e\", line 999, in exec_module\n"}
+,{"stream_name":"stderr","time":25.551050553,"data":"  File \"\u003cfrozen importlib._bootstrap\u003e\", line 488, in _call_with_frames_removed\n"}
+,{"stream_name":"stderr","time":25.551054857,"data":"  File \"/root/.cache/huggingface/modules/transformers_modules/_1/modeling_nemotron_h.py\", line 66, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":25.551187001,"data":"    raise ImportError(\"mamba-ssm is required by the Mamba model but cannot be imported\")\n"}
+,{"stream_name":"stderr","time":25.55119403,"data":"ImportError: mamba-ssm is required by the Mamba model but cannot be imported\n"}
+,{"stream_name":"stderr","time":30.044694397,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":30.044737557,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":30.265835631,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":30.265878078,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":30.959348752,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":32.264153686,"data":"[NbConvertApp] Writing 348660 bytes to __results__.html\n"}
 ]

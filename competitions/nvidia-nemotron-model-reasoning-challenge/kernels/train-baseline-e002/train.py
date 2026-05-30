@@ -1,14 +1,26 @@
 import sys
 import subprocess
-try:
-    subprocess.run([sys.executable, "../../data/corpus/v1/build_corpus.py"], check=True)
-except Exception as e:
-    print(f"Error building corpus: {e}")
-
 import argparse
 import json
 import os
-import sys
+
+# === Install mamba-ssm + causal-conv1d (Nemotron Mamba-hybrid; not in Kaggle base image) ===
+# Requires kernel-metadata.json: "enable_internet": true
+def _ensure_deps():
+    for pkg in ["causal-conv1d", "mamba-ssm"]:
+        mod = pkg.replace("-", "_")
+        try:
+            __import__(mod)
+            print(f"  {pkg}: already installed", flush=True)
+        except ImportError:
+            print(f"  installing {pkg}...", flush=True)
+            r = subprocess.run(
+                [sys.executable, "-m", "pip", "install", "--quiet", "--no-build-isolation", pkg],
+                capture_output=True, text=True,
+            )
+            if r.returncode != 0:
+                print(f"  {pkg} install rc={r.returncode}\n  stderr: {r.stderr[-1500:]}", flush=True)
+_ensure_deps()
 
 # === INLINED cv + score modules (script-type kernels upload only one file) ===
 import types as _types
