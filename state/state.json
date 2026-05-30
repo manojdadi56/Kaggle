@@ -84,10 +84,11 @@
       "created_at": null,
       "cv_score": null,
       "fix": "bnb_version+max_memory",
+      "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
       "machine": "NvidiaTeslaT4",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 9,
-      "state": "AWAITING_USER_RUN"
+      "notebook_version": 12,
+      "state": "RUNNING"
     }
   },
   "hypotheses": {
@@ -1169,5 +1170,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T20:37:21.228511+00:00"
+  "updated_at": "2026-05-30T20:45:26.956597+00:00"
 }
