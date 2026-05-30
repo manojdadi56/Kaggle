@@ -7,15 +7,51 @@ from collections import defaultdict
 
 from score import score_item
 
-def create_holdout(data: List[Dict[str, Any]], test_size: float = 0.2, seed: int = 42) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Splits data into train and holdout sets."""
-    random.seed(seed)
-    shuffled_data = data.copy()
-    random.shuffle(shuffled_data)
 
-    split_idx = int(len(shuffled_data) * (1 - test_size))
-    train_data = shuffled_data[:split_idx]
-    holdout_data = shuffled_data[split_idx:]
+def get_category(item: Dict[str, Any]) -> str:
+    """Extracts or infers the category of an item."""
+    if "category" in item and item["category"]:
+        return item["category"]
+
+    text = item.get("problem", item.get("question", item.get("text", ""))).lower()
+    if not text:
+        return "unknown"
+
+    if any(k in text for k in ["math", "equation", "calculate", "number", "integral", "derivative", "theorem", "algebra", "geometry", "probability"]):
+        return "math"
+    if any(k in text for k in ["code", "python", "programming", "function", "algorithm", "c++", "java", "script"]):
+        return "code"
+    if any(k in text for k in ["physics", "force", "velocity", "mass", "energy", "momentum", "acceleration"]):
+        return "physics"
+    if any(k in text for k in ["logic", "puzzle", "deduce", "reasoning", "if and only if", "knights and knaves", "syllogism"]):
+        return "logic"
+
+    return "general"
+
+def create_holdout(data: List[Dict[str, Any]], test_size: float = 0.2, seed: int = 42) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Splits data into train and holdout sets using stratified splitting by category."""
+    random.seed(seed)
+
+    # Group data by category
+    by_category = defaultdict(list)
+    for item in data:
+        cat = get_category(item)
+        by_category[cat].append(item)
+
+    train_data = []
+    holdout_data = []
+
+    # Split each category proportionally
+    for cat, items in by_category.items():
+        shuffled_items = items.copy()
+        random.shuffle(shuffled_items)
+        split_idx = int(len(shuffled_items) * (1 - test_size))
+        train_data.extend(shuffled_items[:split_idx])
+        holdout_data.extend(shuffled_items[split_idx:])
+
+    # Shuffle the final datasets so categories aren't grouped together
+    random.shuffle(train_data)
+    random.shuffle(holdout_data)
 
     return train_data, holdout_data
 
@@ -27,7 +63,7 @@ def evaluate_cv(predictions: List[Dict[str, Any]], gold_data: Dict[str, Dict[str
     Assumes gold_data maps 'id' to a dict containing 'answer' and optionally 'category'.
     """
     if not predictions:
-        return {"overall_accuracy": 0.0, "category_accuracy": {}}
+        return {"overall_accuracy": 0.0, "category_accuracy": {}, "category_stats": {}}
 
     correct_total = 0
     total = 0
@@ -44,7 +80,7 @@ def evaluate_cv(predictions: List[Dict[str, Any]], gold_data: Dict[str, Dict[str
 
         gold_item = gold_data[item_id]
         gold_text = gold_item.get("answer", "")
-        category = gold_item.get("category", "unknown")
+        category = get_category(gold_item)
 
         is_correct = score_item(prediction_text, gold_text)
 
@@ -65,8 +101,27 @@ def evaluate_cv(predictions: List[Dict[str, Any]], gold_data: Dict[str, Dict[str
     return {
         "overall_accuracy": overall_accuracy,
         "category_accuracy": category_accuracy,
+        "category_stats": dict(category_stats),
         "total_evaluated": total
     }
+
+def generate_markdown_report(results: Dict[str, Any], output_path: str):
+    """Generates a Markdown report with per-category accuracy."""
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write("# Evaluation Report\n\n")
+        f.write(f"**Overall Accuracy:** {results.get('overall_accuracy', 0.0):.4f} ({results.get('total_evaluated', 0)} samples)\n\n")
+
+        category_stats = results.get("category_stats", {})
+        if category_stats:
+            f.write("## Category Breakdown\n\n")
+            f.write("| Category | Accuracy | Correct / Total |\n")
+            f.write("|----------|----------|-----------------|\n")
+
+            # Sort categories alphabetically
+            for cat in sorted(category_stats.keys()):
+                stats = category_stats[cat]
+                acc = stats["correct"] / stats["total"] if stats["total"] > 0 else 0.0
+                f.write(f"| {cat} | {acc:.4f} | {stats['correct']} / {stats['total']} |\n")
 
 def _load_data(filepath: str, key_field: str = None) -> Any:
     """Loads JSONL or CSV data."""
@@ -99,6 +154,7 @@ def main():
     parser.add_argument("--predictions", type=str, required=True, help="Path to predictions file (CSV or JSONL). Must have 'id' and 'prediction' columns/keys.")
     parser.add_argument("--gold", type=str, required=True, help="Path to gold data file (CSV or JSONL). Must have 'id', 'answer', and optionally 'category'.")
     parser.add_argument("--output", type=str, default="cv_score.json", help="Path to output the scores (JSON).")
+    parser.add_argument("--report", type=str, default=None, help="Path to output a Markdown report with per-category accuracies.")
 
     args = parser.parse_args()
 
@@ -115,6 +171,10 @@ def main():
     with open(args.output, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2)
     print(f"Results saved to {args.output}")
+
+    if args.report:
+        generate_markdown_report(results, args.report)
+        print(f"Report saved to {args.report}")
 
 if __name__ == "__main__":
     main()
