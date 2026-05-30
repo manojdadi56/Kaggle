@@ -1,8 +1,24 @@
 {
   "cap": 15,
   "holders": {
+    "TASK-DATA-cot-corpus-v1": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
+      "kind": "jules"
+    },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
+      "kind": "jules"
+    },
+    "TASK-RESEARCH-mine-discussions": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_insights_v1.md",
+      "kind": "jules"
+    },
+    "TASK-RESEARCH-mine-top-notebooks": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/top_notebooks_v1.md",
+      "kind": "jules"
+    },
+    "TASK-RESEARCH-winner-vs-ours": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_vs_current_v1.md",
       "kind": "jules"
     }
   }
