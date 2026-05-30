@@ -19,6 +19,8 @@ import os
 import sys
 import json
 import sys
+import re
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
@@ -93,6 +95,75 @@ class Orchestrator:
                                          "data": {"collection": "tasks", "id": tid, "status": "DONE"}})
                         self.state.apply_patch({"tick_id": tick_id, "operations": post})
                         changed["auto_merged"].append({"pr": number, "session": sid, "ok": ok})
+                
+                # Auto-rescue: COMPLETED but no PR open
+                if st == "COMPLETED" and not pr_url:
+                    tid = sess.get("task_id")
+                    activities = self.jules.list_activities(sid)
+                    patch = None
+                    for act in activities:
+                        p = act.get("sessionCompleted", {}).get("artifact", {}).get("changeSet", {}).get("gitPatch", {}).get("unidiffPatch")
+                        if p:
+                            patch = p
+                    if not patch:
+                        post = [{"op": "update_session", "idempotency_key": f"{tick_id}:{sid}:rescue_failed",
+                                 "data": {"session_id": sid, "state": "FAILED"}}]
+                        self.state.apply_patch({"tick_id": tick_id, "operations": post})
+                        continue
+
+                    short_ts = int(time.time())
+                    branch = f"operator-rescue/{sid}-{short_ts}"
+                    self.git.runner(["git", "checkout", "main"], self.git.repo_dir)
+                    rc, out = self.git.runner(["git", "checkout", "-b", branch], self.git.repo_dir)
+                    if rc != 0:
+                        continue
+
+                    with tempfile.NamedTemporaryFile("w", delete=False) as f:
+                        f.write(patch)
+                        patchfile = f.name
+                    
+                    rc, out = self.git.runner(["git", "apply", "--whitespace=nowarn", patchfile], self.git.repo_dir)
+                    os.unlink(patchfile)
+                    if rc != 0:
+                        self.git.runner(["git", "checkout", "main"], self.git.repo_dir)
+                        self.git.runner(["git", "branch", "-D", branch], self.git.repo_dir)
+                        post = [{"op": "update_session", "idempotency_key": f"{tick_id}:{sid}:rescue_failed",
+                                 "data": {"session_id": sid, "state": "FAILED"}}]
+                        self.state.apply_patch({"tick_id": tick_id, "operations": post})
+                        continue
+                    
+                    ret = subprocess.run([sys.executable, "-m", "pytest", "-q"], capture_output=True, cwd=self.git.repo_dir)
+                    if ret.returncode != 0:
+                        self.git.runner(["git", "reset", "--hard", "HEAD"], self.git.repo_dir)
+                        self.git.runner(["git", "checkout", "main"], self.git.repo_dir)
+                        post = [{"op": "update_session", "idempotency_key": f"{tick_id}:{sid}:rescue_failed",
+                                 "data": {"session_id": sid, "state": "FAILED"}},
+                                {"op": "append_event", "idempotency_key": f"{tick_id}:{sid}:rescue_failed",
+                                 "data": {"session_id": sid, "reason": "pytest failed"},
+                                 "summary": f"rescue failed for session {sid}"}]
+                        self.state.apply_patch({"tick_id": tick_id, "operations": post})
+                        continue
+                    
+                    self.git.runner(["git", "add", "-A"], self.git.repo_dir)
+                    self.git.runner(["git", "commit", "-m", f"rescue: {tid} from session {sid}"], self.git.repo_dir)
+                    self.git.runner(["git", "checkout", "main"], self.git.repo_dir)
+                    rc, out = self.git.runner(["git", "merge", "-X", "theirs", "--no-ff", branch], self.git.repo_dir)
+                    
+                    rc, diff = self.git.runner(["git", "diff", "HEAD~1", "HEAD"], self.git.repo_dir)
+                    if re.search(r"KGAT_|AQ\.Ab|sk-ant-", diff):
+                        self.git.runner(["git", "reset", "--hard", "HEAD~1"], self.git.repo_dir)
+                        post = [{"op": "update_session", "idempotency_key": f"{tick_id}:{sid}:rescue_failed",
+                                 "data": {"session_id": sid, "state": "FAILED"}}]
+                        self.state.apply_patch({"tick_id": tick_id, "operations": post})
+                        continue
+                    
+                    post = [{"op": "clear_session", "idempotency_key": f"{tick_id}:{sid}:rescue_success",
+                             "data": {"session_id": sid}}]
+                    if tid:
+                        post.append({"op": "set_status", "idempotency_key": f"{tick_id}:{tid}:DONE",
+                                     "data": {"collection": "tasks", "id": tid, "status": "DONE"}})
+                    self.state.apply_patch({"tick_id": tick_id, "operations": post})
+
         for eid, run in list(self.state.in_flight_gpu_runs().items()):
             handle = self._gpu_handles.get(eid)
             if handle is None:
