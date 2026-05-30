@@ -76,6 +76,23 @@ class Settings:
             operator_auto_merge=os.environ.get("OPERATOR_AUTO_MERGE", cls.operator_auto_merge),
         )
 
+    @staticmethod
+    def jules_api_keys() -> list[str]:
+        """All Jules API keys from .env, in account order (JULES_API_KEY, JULES_API_KEY_2, …).
+
+        Each key is an independent account with its own quota; together they form the
+        multi-account JulesPool (R-008).
+        """
+        keys = []
+        primary = os.environ.get("JULES_API_KEY", "").strip()
+        if primary:
+            keys.append(primary)
+        for i in range(2, 10):
+            k = os.environ.get(f"JULES_API_KEY_{i}", "").strip()
+            if k:
+                keys.append(k)
+        return keys
+
     def competition_dir(self, slug: str | None = None) -> Path:
         return COMPETITIONS_DIR / (slug or self.active_competition)
 

@@ -55,6 +55,10 @@ class Orchestrator:
         changed = {"sessions_terminal": [], "gpu_terminal": [], "auto_merged": []}
         auto_merge_force = (getattr(self.settings, "operator_auto_merge", "force") == "force")
         for sid, sess in list(self.state.in_flight_sessions().items()):
+            # Repopulate pool ownership so polling uses the right account's key.
+            acc = sess.get("account_idx")
+            if acc is not None and hasattr(self.jules, "register_owner"):
+                self.jules.register_owner(sid, int(acc))
             remote = self.jules.get_session(sid)
             st = JulesClient.state_of(remote)
             pr_url = JulesClient.pr_url(remote)

@@ -43,10 +43,16 @@ def _repo_slug(source: str) -> str:
 def build_orchestrator(settings: config.Settings | None = None) -> Orchestrator:
     s = settings or config.Settings.load()
     git = GitOps(config.REPO_ROOT)
+    keys = config.Settings.jules_api_keys()
+    if not keys:
+        # fallback: empty key (offline tests don't actually call Jules)
+        keys = [""]
+    from .jules_pool import build_pool
+    jules = build_pool(keys, source=s.jules_source, base_url=s.jules_base_url)
     return Orchestrator(
         state=StateStore(active_competition=s.active_competition),
         locks=LockManager(cap=s.concurrency_cap),
-        jules=JulesClient(api_key=os.environ.get("JULES_API_KEY", ""), source=s.jules_source),
+        jules=jules,
         kaggle=KaggleClient(),
         operator=None,                      # the operator is the Claude Code session, not a subprocess
         git=git,
@@ -139,19 +145,22 @@ def cmd_promote(orch: Orchestrator, tick: str, n: int) -> dict:
 
 def cmd_register_session(orch: Orchestrator, tick: str, sid: str,
                          task_id: str | None = None, area: str | None = None,
-                         branch: str = "main") -> dict:
+                         branch: str = "main", account_idx: int = 0) -> dict:
     """Register a Jules session started outside `tools dispatch` (e.g. manually
     via jules.google) into the worker pool so the operator polls + auto-merges
     its PR like a native dispatch.
     """
-    # Fetch live to learn its state + any PR url it already has
+    # Tell the pool which account owns this session BEFORE polling it.
+    if hasattr(orch.jules, "register_owner"):
+        orch.jules.register_owner(sid, account_idx)
     remote = orch.jules.get_session(sid) if hasattr(orch.jules, "get_session") else {}
     from .jules_client import JulesClient
     state = JulesClient.state_of(remote) if remote else "QUEUED"
     pr_url = JulesClient.pr_url(remote) if remote else None
     ops = [{"op": "record_session", "idempotency_key": f"{tick}:{sid}:register",
             "data": {"session_id": sid, "task_id": task_id, "allowed_area": area,
-                     "state": state, "branch": branch, "pr_url": pr_url}}]
+                     "state": state, "branch": branch, "pr_url": pr_url,
+                     "account_idx": account_idx}}]
     if task_id:
         ops.append({"op": "set_status", "idempotency_key": f"{tick}:{task_id}:inprogress",
                     "data": {"collection": "tasks", "id": task_id, "status": "IN_PROGRESS"}})
@@ -223,13 +232,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if cmd == "register-session":
         if len(argv) < 2:
-            print("usage: register-session <session_id> [--task <id>] [--area <allowed_area>] [--branch main]")
+            print("usage: register-session <session_id> [--task <id>] [--area <allowed_area>] [--branch main] [--account 0|1|…]")
             return 2
         sid = argv[1]
         task_id = argv[argv.index("--task") + 1] if "--task" in argv else None
         area = argv[argv.index("--area") + 1] if "--area" in argv else None
         branch = argv[argv.index("--branch") + 1] if "--branch" in argv else "main"
-        print(json.dumps(cmd_register_session(orch, tick, sid, task_id, area, branch),
+        acct = int(argv[argv.index("--account") + 1]) if "--account" in argv else 0
+        print(json.dumps(cmd_register_session(orch, tick, sid, task_id, area, branch, acct),
                          indent=2, default=str))
         return 0
     if cmd == "sendmessage":

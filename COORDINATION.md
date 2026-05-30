@@ -1,11 +1,20 @@
 # Worker pool — registry of Jules workers in this SDLC
 
-This project's worker pool is **all in-flight Jules sessions on `manojdadi56/Kaggle`**, regardless of how they were started:
+This project's worker pool is **all in-flight Jules sessions on `manojdadi56/Kaggle`**, across multiple Jules accounts, regardless of how they were started.
+
+**Accounts (R-008)** — each is an independent Jules account with its own 15-concurrent / 100-day Pro quota:
+
+| `account_idx` | Where the key lives | Verified live |
+|---|---|---|
+| 0 | `JULES_API_KEY` in `.env` | ✓ has Kaggle source |
+| 1 | `JULES_API_KEY_2` in `.env` | ✓ has Kaggle source |
+
+The dispatcher **round-robins** across accounts (account 0 → 1 → 0 → 1 …), records `account_idx` on each session, and the poller routes each session's `get_session` / `sendmessage` / `approve_plan` calls back to the correct account's key. Combined effective cap: 30 concurrent / 200 day. Current `CONCURRENCY_CAP` is 15 (conservative — bump later if needed).
 
 | Source | How it joins the pool |
 |---|---|
 | **Orchestrator dispatch** (`tools dispatch`) | Recorded automatically by the dispatcher into `state/state.json` `sessions`. |
-| **Manually started** (e.g. you opened a session on jules.google directly) | Register it once with `python -m orchestrator.tools register-session <session_id> [--task <id>] [--area <allowed_area>]`. After that, the operator's poll loop treats it identically — polls it, auto-merges its PR on COMPLETED, releases its lock. |
+| **Manually started** (e.g. you opened a session on jules.google directly) | Register it once with `python -m orchestrator.tools register-session <session_id> [--task <id>] [--area <allowed_area>] [--account 0\|1]`. The `--account` is which Jules account it belongs to (0 or 1) — needed so the poller queries with the right key. After registration, the operator's poll loop treats it identically — polls it, auto-merges its PR on COMPLETED, releases its lock. |
 
 The operator (this Claude Code session) drives the **single** SDLC tick: poll every session in the pool, auto-merge every COMPLETED PR (R-007 unsupervised), role-select, top up the pool. Every worker — dispatched or manual — gets the same treatment.
 
