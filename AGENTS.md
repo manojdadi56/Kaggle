@@ -99,9 +99,15 @@ The earlier "T4×2 only / 7 fixes" notes were based on the WRONG assumption that
 The old "T4×2 / 7 fixes" subsection above is retained for history but is SUPERSEDED by this block for any RTX-Pro-6000 run.
 
 ### HARD LIMIT: two operations are interactive-UI-only (cannot be done via API/MCP)
-Verified across 9 programmatic `save_notebook` attempts (E-002 v1–v5 + variants):
-1. **Accelerator selection** — embedding `metadata.kaggle.accelerator="nvidiaRtxPro6000"` is IGNORED by `save_notebook`; the batch run always lands on a generic P100 (sm_60, incompatible). Only the web-editor's Settings→Accelerator dropdown sets the real GPU.
-2. **Model attachment** — `save_notebook` data-source params (and embedded `metadata.kaggle.dataSources`) do NOT attach the model; `/kaggle/input` comes back empty, and runtime `kagglehub.model_download` fails with **`New Models cannot be attached in non-interactive sessions`**. A model must be attached once via the interactive editor (Add Input).
+Verified across ~12 programmatic `save_notebook` attempts spanning two notebooks (testing fork + demo fork) and multiple cycles:
+1. **Accelerator selection** — embedding `metadata.kaggle.accelerator="nvidiaRtxPro6000"` is IGNORED by every `save_notebook --kernelExecutionType=SaveAndRunAll`. **API runs ALWAYS land on a generic P100 (sm_60, incompatible with PyTorch wheel)**, even with `enableGpuNullable=True` and the accelerator embedded in metadata.kaggle. Only the web-editor's Settings→Accelerator dropdown (then user-clicked Save & Run All) actually picks T4 x2 or RTX Pro 6000.
+2. **Data source mounting** — adding entries to `metadata.kaggle.dataSources` via API is cosmetic; the actual `/kaggle/input/*` mounts are determined by the editor's "Input" panel state. A dataset (or model, or competition) must be added once via the interactive editor (Add Input) for it to mount in subsequent runs. The API can ADD the metadata entry but cannot force the mount.
+
+### IMMUTABLE WORKFLOW (do not re-test these — confirmed across both notebooks, ~12 attempts)
+- **For code iteration**: API `save_notebook --kernelExecutionType=QuickSave` (preserves bindings, snapshots code only).
+- **For real GPU training runs**: USER must click browser Save & Run All. Period. No API workaround exists.
+- **For checking code syntax/deps cheaply**: API `SaveAndRunAll` is OK if your code has an early hard assertion that catches the P100 in <30s before doing real work (see cell 0 in `notebook_fork_working.ipynb`: `assert cc >= 7.0`).
+- **Operator role going forward**: edit code via MCP, monitor sessions via MCP, auto-submit via MCP (`tools/auto_submit.py`). The user role is reduced to: **one browser Save & Run All click per experiment iteration**.
 
 **Workflow that actually works**: USER does a ONE-TIME interactive setup in the web editor (open notebook → Add Input: competition + `metric/nemotron-3-nano-30b-a3b-bf16` model → Settings→Accelerator: NVIDIA RTX Pro 6000 → Save & Run All). AFTER that one interactive save, the inputs + accelerator are baked into the notebook config, and the operator CAN iterate via MCP: `save_notebook` (new code, inherits attached inputs) + `get_notebook_session_status` + `download_notebook_output` + `submit_to_competition`. So: **1 manual setup, then fully API-driven iteration + monitoring + submission.**
 
