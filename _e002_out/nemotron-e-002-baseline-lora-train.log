@@ -1,38 +1,57 @@
-[{"stream_name":"stdout","time":0.684501043,"data":"  installing causal-conv1d...\n"}
-,{"stream_name":"stdout","time":20.244685583,"data":"  installing mamba-ssm...\n"}
-,{"stream_name":"stdout","time":71.754361776,"data":"=== /kaggle/input contents ===\n"}
-,{"stream_name":"stdout","time":71.75441544,"data":"  /kaggle/input: dirs=['competitions', 'models'] files=[]\n"}
-,{"stream_name":"stdout","time":71.754421375,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
-,{"stream_name":"stdout","time":71.755236645,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
-,{"stream_name":"stdout","time":71.755265618,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
-,{"stream_name":"stdout","time":71.755319964,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
-,{"stream_name":"stdout","time":71.755329403,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
-,{"stream_name":"stdout","time":71.755335086,"data":"=== end mount listing ===\n"}
-,{"stream_name":"stdout","time":71.758707093,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
-,{"stream_name":"stdout","time":71.758725073,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
-,{"stream_name":"stdout","time":71.758729126,"data":"No training data provided or path does not exist.\n"}
-,{"stream_name":"stderr","time":71.782318685,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
-,{"stream_name":"stderr","time":75.390808384,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":75.390838671,"data":"  File \"/kaggle/src/script.py\", line 321, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":75.39100068,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
-,{"stream_name":"stderr","time":75.391081711,"data":"  File \"/kaggle/src/script.py\", line 121, in run_training\n"}
-,{"stream_name":"stderr","time":75.39120404,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
-,{"stream_name":"stderr","time":75.391338491,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":75.392115784,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 365, in from_pretrained\n"}
-,{"stream_name":"stderr","time":75.392129442,"data":"    return model_class.from_pretrained(\n"}
-,{"stream_name":"stderr","time":75.392134514,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":75.392139286,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/modeling_utils.py\", line 4015, in from_pretrained\n"}
-,{"stream_name":"stderr","time":75.39355531,"data":"    hf_quantizer, config, device_map = get_hf_quantizer(\n"}
-,{"stream_name":"stderr","time":75.393570422,"data":"                                       ^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":75.393575714,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/quantizers/auto.py\", line 326, in get_hf_quantizer\n"}
-,{"stream_name":"stderr","time":75.393863403,"data":"    hf_quantizer.validate_environment(\n"}
-,{"stream_name":"stderr","time":75.393873532,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/quantizers/quantizer_bnb_4bit.py\", line 60, in validate_environment\n"}
-,{"stream_name":"stderr","time":75.393975067,"data":"    raise ImportError(\n"}
-,{"stream_name":"stderr","time":75.393981879,"data":"ImportError: Using `bitsandbytes` 4-bit quantization requires bitsandbytes: `pip install -U bitsandbytes\u003e=0.46.1`\n"}
-,{"stream_name":"stderr","time":78.756059527,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
-,{"stream_name":"stderr","time":78.756099785,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
-,{"stream_name":"stderr","time":79.101319741,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
-,{"stream_name":"stderr","time":79.101353064,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
-,{"stream_name":"stderr","time":80.061739459,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
-,{"stream_name":"stderr","time":81.25594727,"data":"[NbConvertApp] Writing 352700 bytes to __results__.html\n"}
+[{"stream_name":"stdout","time":0.713876096,"data":"  installing causal-conv1d...\n"}
+,{"stream_name":"stdout","time":22.111149553,"data":"  installing mamba-ssm...\n"}
+,{"stream_name":"stdout","time":52.303574077,"data":"  installing bitsandbytes...\n"}
+,{"stream_name":"stdout","time":85.670268841,"data":"=== /kaggle/input contents ===\n"}
+,{"stream_name":"stdout","time":85.670302226,"data":"  /kaggle/input: dirs=['competitions', 'models'] files=[]\n"}
+,{"stream_name":"stdout","time":85.670320414,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
+,{"stream_name":"stdout","time":85.671035205,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
+,{"stream_name":"stdout","time":85.671080692,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
+,{"stream_name":"stdout","time":85.67108838,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
+,{"stream_name":"stdout","time":85.671107104,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
+,{"stream_name":"stdout","time":85.671113022,"data":"=== end mount listing ===\n"}
+,{"stream_name":"stdout","time":85.67271048,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
+,{"stream_name":"stdout","time":85.672728059,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
+,{"stream_name":"stdout","time":85.672733398,"data":"No training data provided or path does not exist.\n"}
+,{"stream_name":"stderr","time":85.689576896,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
+,{"stream_name":"stderr","time":89.091671685,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":89.091703161,"data":"    Found GPU0 Tesla P100-PCIE-16GB which is of cuda capability 6.0.\n"}
+,{"stream_name":"stderr","time":89.09170997,"data":"    Minimum and Maximum cuda capability supported by this version of PyTorch is\n"}
+,{"stream_name":"stderr","time":89.091714356,"data":"    (7.0) - (12.0)\n"}
+,{"stream_name":"stderr","time":89.091718603,"data":"    \n"}
+,{"stream_name":"stderr","time":89.091722993,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":89.091727351,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":89.091732052,"data":"    Please install PyTorch with a following CUDA\n"}
+,{"stream_name":"stderr","time":89.091736734,"data":"    configurations:  12.6 following instructions at\n"}
+,{"stream_name":"stderr","time":89.091741436,"data":"    https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":89.091746291,"data":"    \n"}
+,{"stream_name":"stderr","time":89.091750813,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":89.092004028,"data":"/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py:435: UserWarning: \n"}
+,{"stream_name":"stderr","time":89.092021365,"data":"Tesla P100-PCIE-16GB with CUDA capability sm_60 is not compatible with the current PyTorch installation.\n"}
+,{"stream_name":"stderr","time":89.09202667,"data":"The current PyTorch install supports CUDA capabilities sm_70 sm_75 sm_80 sm_86 sm_90 sm_100 sm_120.\n"}
+,{"stream_name":"stderr","time":89.092031686,"data":"If you want to use the Tesla P100-PCIE-16GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/\n"}
+,{"stream_name":"stderr","time":89.092036592,"data":"\n"}
+,{"stream_name":"stderr","time":89.092055206,"data":"  queued_call()\n"}
+,{"stream_name":"stderr","time":98.127527381,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":98.127569308,"data":"  File \"/kaggle/src/script.py\", line 321, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":98.127658184,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
+,{"stream_name":"stderr","time":98.127719698,"data":"  File \"/kaggle/src/script.py\", line 121, in run_training\n"}
+,{"stream_name":"stderr","time":98.127903337,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
+,{"stream_name":"stderr","time":98.127935323,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":98.127995435,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 365, in from_pretrained\n"}
+,{"stream_name":"stderr","time":98.128255182,"data":"    return model_class.from_pretrained(\n"}
+,{"stream_name":"stderr","time":98.128272523,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":98.128332931,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/modeling_utils.py\", line 4091, in from_pretrained\n"}
+,{"stream_name":"stderr","time":98.129240949,"data":"    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer)\n"}
+,{"stream_name":"stderr","time":98.129456044,"data":"                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":98.129470215,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/integrations/accelerate.py\", line 323, in _get_device_map\n"}
+,{"stream_name":"stderr","time":98.129710356,"data":"    hf_quantizer.validate_environment(device_map=device_map)\n"}
+,{"stream_name":"stderr","time":98.129726878,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/quantizers/quantizer_bnb_4bit.py\", line 72, in validate_environment\n"}
+,{"stream_name":"stderr","time":98.129874479,"data":"    raise ValueError(\n"}
+,{"stream_name":"stderr","time":98.129887029,"data":"ValueError: Some modules are dispatched on the CPU or the disk. Make sure you have enough GPU RAM to fit the quantized model. If you want to dispatch the model on the CPU or the disk while keeping these modules in 32-bit, you need to set `llm_int8_enable_fp32_cpu_offload=True` and pass a custom `device_map` to `from_pretrained`. Check https://huggingface.co/docs/transformers/main/en/main_classes/quantization#offload-between-cpu-and-gpu for more details. \n"}
+,{"stream_name":"stderr","time":101.593037406,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":101.593064184,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":101.800670324,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":101.800695335,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":102.490386785,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":103.681557384,"data":"[NbConvertApp] Writing 352773 bytes to __results__.html\n"}
 ]
