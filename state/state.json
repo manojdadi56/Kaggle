@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 23
+    "jules_dispatched_2026-05-30": 24
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -242,50 +242,14 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
-    "11421075369733643266": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/gravity",
-      "branch": "main",
-      "created_at": "2026-05-30T09:57:46.398134+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-R25-gravity-solver"
-    },
-    "12448053351024138122": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
-      "branch": "main",
-      "created_at": "2026-05-30T09:45:06.679887+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-R22-bit-manipulation-solver"
-    },
-    "13498726945260717217": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/numeral",
-      "branch": "main",
-      "created_at": "2026-05-30T09:57:49.077511+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-R26-numeral-solver"
-    },
     "14999046069002817843": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
       "branch": "main",
       "created_at": "2026-05-30T09:57:54.630022+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "AWAITING_USER_FEEDBACK",
       "task_id": "TASK-R28-cryptarithm-solver"
-    },
-    "17563574629297304829": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
-      "branch": "main",
-      "created_at": "2026-05-30T09:57:57.422695+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-R29-eval-per-category-breakdown"
     },
     "2307469717703277322": {
       "account_idx": 0,
@@ -293,7 +257,7 @@
       "branch": "main",
       "created_at": "2026-05-30T09:45:03.951672+00:00",
       "pr_url": null,
-      "state": "IN_PROGRESS",
+      "state": "AWAITING_USER_FEEDBACK",
       "task_id": "TASK-R21-equation-sympy-solver"
     },
     "5395719602075168188": {
@@ -302,17 +266,17 @@
       "branch": "main",
       "created_at": "2026-05-30T09:57:52.146814+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "AWAITING_USER_FEEDBACK",
       "task_id": "TASK-R27-unit-conversion-solver"
     },
-    "602625774702868507": {
+    "7319893951607715552": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
       "branch": "main",
-      "created_at": "2026-05-30T09:45:01.410205+00:00",
+      "created_at": "2026-05-30T10:39:20.132234+00:00",
       "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-R20-cipher-solver"
+      "state": "QUEUED",
+      "task_id": "TASK-E001-corpus-v1"
     },
     "7670477827188695622": {
       "account_idx": 0,
@@ -320,7 +284,7 @@
       "branch": "main",
       "created_at": "2026-05-30T10:23:11.158922+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-E-PRECOND-mamba-targets-smoke"
     }
   },
@@ -433,12 +397,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
       "blocked_by": "TASK-R20-cipher-solver",
+      "branch": "main",
       "experiment": "E-001-corpus-v1",
       "hypothesis": "H-DQ",
       "mode": "deep",
+      "session_id": "7319893951607715552",
       "size_hint": "~75 min",
       "spec": "Build data/corpus/v1/build_corpus.py that walks the 7+ landed solvers in data/solvers/<category>/, calls each to generate verified prompt+CoT+answer triples, writes corpus.jsonl in the winner's build_datum format (tokens, mask aligned per references/analysis-winner-training-internals.md): mask=1 ONLY on the CoT-reasoning + boxed-answer span, mask=0 on the prompt. Stratified 90/10 train/dev split keeping category frequencies. Emit corpus_index.jsonl listing per-row id/category/token_counts. Tests: format validation, mask correctness, stratification quality.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Assemble corpus.jsonl v1 from landed solvers (winner build_datum convention)"
     },
@@ -740,7 +706,7 @@
       "session_id": "602625774702868507",
       "size_hint": "~60 min",
       "spec": "Implement data/solvers/cipher/solve.py (substitution+offset detection from prompt, exact answer) and generate.py (fresh cipher problems with known answers). Offline tests: report accuracy on 100 cipher rows from train; document any sub-types not yet handled. Goal: 100% solve rate on solvable instances.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Cipher-category deterministic solver + 100-sample holdout validation"
     },
@@ -766,7 +732,7 @@
       "session_id": "12448053351024138122",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/bit_manipulation/solve.py: detect bit nicknames (32/64-bit byte-form descriptions), reconstruct the integer, apply the requested operation, return exact answer. Test on 100 rows from train. Goal: 100% on solvable.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Bit-manipulation deterministic solver via nickname regex extraction"
     },
@@ -805,7 +771,7 @@
       "session_id": "11421075369733643266",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/gravity/solve.py: parse the physics prompt (find v0/g/h/angle/m/etc), apply the appropriate closed-form (kinematic eqs, projectile, orbital), return exact answer (\boxed{}). Also generate.py producing fresh gravity problems with known answers. Offline tests on 100 train rows from the gravity category. Target 100% on solvable.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Gravity-category deterministic solver (closed-form mechanics) + 100-sample validation"
     },
@@ -818,7 +784,7 @@
       "session_id": "13498726945260717217",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/numeral/solve.py: parse digit alphabet + base from prompt, convert input numeral to/from decimal, perform asked arithmetic, return exact answer. generate.py for synthetic numeral problems. Offline tests on 100 train rows.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Numeral-system deterministic solver (arbitrary radix + novel digit systems)"
     },
@@ -857,7 +823,7 @@
       "session_id": "17563574629297304829",
       "size_hint": "~45 min",
       "spec": "Extend eval/cv.py (from R8): add per-category accuracy breakdown using the taxonomy classifier (from R1b once landed; until then use a simple keyword router as fallback). Stratified holdout split keeping category balance. Produce a Markdown report with per-category accuracies.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-2",
       "title": "Extend CV harness to report per-category accuracy + stratified split"
     },
@@ -904,5 +870,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T10:23:11.162787+00:00"
+  "updated_at": "2026-05-30T10:39:20.135984+00:00"
 }

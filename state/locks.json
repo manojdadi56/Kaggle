@@ -5,24 +5,12 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
       "kind": "jules"
     },
-    "TASK-R20-cipher-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher",
+    "TASK-E001-corpus-v1": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
       "kind": "jules"
     },
     "TASK-R21-equation-sympy-solver": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_numeric",
-      "kind": "jules"
-    },
-    "TASK-R22-bit-manipulation-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
-      "kind": "jules"
-    },
-    "TASK-R25-gravity-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/gravity",
-      "kind": "jules"
-    },
-    "TASK-R26-numeral-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/numeral",
       "kind": "jules"
     },
     "TASK-R27-unit-conversion-solver": {
@@ -31,10 +19,6 @@
     },
     "TASK-R28-cryptarithm-solver": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
-      "kind": "jules"
-    },
-    "TASK-R29-eval-per-category-breakdown": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
       "kind": "jules"
     }
   }
