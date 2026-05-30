@@ -1,12 +1,12 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-E001-corpus-v1": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
+    "TASK-E002-baseline-kernel": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
       "kind": "jules"
     },
-    "TASK-R28-cryptarithm-solver": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
+    "TASK-E007-cryptarithm-guess-integration": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "kind": "jules"
     }
   }

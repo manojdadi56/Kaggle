@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 24
+    "jules_dispatched_2026-05-30": 26
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -242,23 +242,23 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
-    "14999046069002817843": {
+    "13107147469450254389": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "branch": "main",
-      "created_at": "2026-05-30T09:57:54.630022+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/28",
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-R28-cryptarithm-solver"
-    },
-    "7319893951607715552": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus",
-      "branch": "main",
-      "created_at": "2026-05-30T10:39:20.132234+00:00",
+      "created_at": "2026-05-30T11:18:15.855361+00:00",
       "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-E001-corpus-v1"
+      "state": "QUEUED",
+      "task_id": "TASK-E007-cryptarithm-guess-integration"
+    },
+    "5869851881805383251": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
+      "branch": "main",
+      "created_at": "2026-05-30T11:18:13.229176+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-E002-baseline-kernel"
     }
   },
   "submit_counter": {},
@@ -377,7 +377,7 @@
       "session_id": "7319893951607715552",
       "size_hint": "~75 min",
       "spec": "Build data/corpus/v1/build_corpus.py that walks the 7+ landed solvers in data/solvers/<category>/, calls each to generate verified prompt+CoT+answer triples, writes corpus.jsonl in the winner's build_datum format (tokens, mask aligned per references/analysis-winner-training-internals.md): mask=1 ONLY on the CoT-reasoning + boxed-answer span, mask=0 on the prompt. Stratified 90/10 train/dev split keeping category frequencies. Emit corpus_index.jsonl listing per-row id/category/token_counts. Tests: format validation, mask correctness, stratification quality.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Assemble corpus.jsonl v1 from landed solvers (winner build_datum convention)"
     },
@@ -385,12 +385,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
       "blocked_by": "TASK-E001-corpus-v1",
+      "branch": "main",
       "experiment": "E-002-baseline-rank32",
       "hypothesis": "H-LORA32",
       "mode": "deep",
+      "session_id": "5869851881805383251",
       "size_hint": "~75 min",
       "spec": "Clone kernels/train/ to kernels/train-baseline-e002/. Final config: LoRA rank=32, alpha=64, 1 epoch, LinearDecayLRSchedule 2e-5 -> 1e-5 (per winner-lr_schedule.py), AdamW weight_decay=0.01, BF16 mixed precision, Mamba+attention target list from E-PRECOND, grad-accum for the largest stable micro-batch on 2xT4 4-bit, eval at end of epoch using eval/cv.py, write adapter/ + cv_score.json on success. Loss objective: maximize min log-prob over the masked CoT+answer span per winner-loss_config.py (CrossEntropyLossConfig baseline; no clipping/branch-weighting). Reject if smoke fails. Offline test that asserts rank<=32 and 1 epoch.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Finalize winner-faithful baseline training kernel (rank32/alpha64/1-epoch/LinearDecay)"
     },
@@ -450,12 +452,14 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "blocked_by": "TASK-R28-cryptarithm-solver",
+      "branch": "main",
       "experiment": "E-007-cryptarithm-guess",
       "hypothesis": "H-CRYPTARITHM-GUESS",
       "mode": "deep",
+      "session_id": "13107147469450254389",
       "size_hint": "~60 min",
       "spec": "CRITICAL PRIORITY: the winner skipped cryptarithm_guess (164 train rows). Use the cryptarithm solver from TASK-R28 to add verified CoT for cryptarithm_guess to the corpus (extend data/corpus/v1/build_corpus.py with the new category). Clone E-002 kernel to kernels/train-e007-cryptarithm/ pointing at the extended corpus. Tests: cryptarithm_guess rows present + verified.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Integrate cryptarithm_guess solver into corpus (winner skipped this category) \u2014 priority"
     },
@@ -783,7 +787,7 @@
       "session_id": "14999046069002817843",
       "size_hint": "~75 min",
       "spec": "Implement data/solvers/cryptarithm/solve.py: parse letter equation from prompt, search letter-digit assignments via constraint propagation (use python-constraint if available, else hand-rolled backtracking; Z3 acceptable but heavier dep), return the unique assignment. Offline tests on 50 deduce + 30 guess rows. Document any pathological cases.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Cryptarithm-deduce solver via constraint propagation (python-constraint / Z3)"
     },
@@ -843,5 +847,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T10:55:26.545817+00:00"
+  "updated_at": "2026-05-30T11:18:15.860341+00:00"
 }
