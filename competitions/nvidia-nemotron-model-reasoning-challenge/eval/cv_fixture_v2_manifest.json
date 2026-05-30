@@ -1,0 +1,14 @@
+{
+    "total": 300,
+    "categories": {
+        "gravity": 33,
+        "unit_conversion": 33,
+        "bit_manipulation": 34,
+        "equation_numeric_guess": 33,
+        "numeral": 33,
+        "cipher": 34,
+        "cryptarithm_deduce": 33,
+        "cryptarithm_guess": 33,
+        "equation_numeric_deduce": 34
+    }
+}
