@@ -229,6 +229,18 @@
       "statement": "Select2Reason-style curation (drop low-utility / repetitive traces) matches baseline accuracy at ~30 percent of cost.",
       "status": "proposed"
     },
+    "H-SUBMIT-GATE": {
+      "created_at": "2026-05-30T11:50:00Z",
+      "expected_effect": "Saves >=1 wasted submit/day in practice (real cap is 5/day, 2 reserved finals); makes the unsupervised auto-merge safer because broken-adapter PRs cannot accidentally trigger a submit.",
+      "how_to_test": "Inject a deliberately broken adapter (rank=64) and confirm gate fails; inject an adapter that outputs no \\boxed{} and confirm gate fails; pass a valid baseline adapter and confirm gate returns 0.",
+      "source_refs": [
+        "AGENTS.md submission handoff",
+        "tools/kaggle_lite.py submission-upload"
+      ],
+      "statement": "A tools/validate_adapter.py that (a) loads base+adapter via peft, (b) asserts the adapter_config rank <= 32, (c) runs 5 sample prompts through the adapter and confirms each output contains \\boxed{...}, and (d) returns 0 only on full pass - used as a precondition by both the dispatcher submission_proposal flow and the operator submit gate - eliminates wasted submits on adapters that fail to load, exceed rank, or omit the required answer format.",
+      "status": "PROPOSED",
+      "title": "Pre-submit adapter-validation gate (loadability + rank<=32 + boxed-output smoke) prevents wasting submits on broken adapters"
+    },
     "H-UNIT-CONV-100": {
       "expected_effect": "+0.17 LB on 1594 unit_conversion rows",
       "source_refs": [
@@ -237,6 +249,19 @@
       ],
       "statement": "Unit-conversion problems decompose into a directed graph of conversion factors; a Floyd-Warshall closure over the parsed factors yields exact answers.",
       "status": "proposed"
+    },
+    "H-VLLM-EVAL": {
+      "created_at": "2026-05-30T11:50:00Z",
+      "expected_effect": "Per technique-backlog #2 (effort:M, expected_gain:HIGH); enables every other iteration and prevents wasted submits against the 5/day hard cap; mirrors winner dashboards.",
+      "how_to_test": "Run harness on the winner-faithful baseline adapter (from E-002 once it lands), record cv_score.json, confirm metric reproduces across 3 reruns within +/-0.5pp; then validate gate refuses to forward a deliberately-broken adapter to submit.",
+      "source_refs": [
+        "technique-backlog.md #2",
+        "analysis-winner-training-internals.md",
+        "winner-train_sft.py.md"
+      ],
+      "statement": "Building eval/vllm_eval.py that loads (base + adapter), runs inference with temperature=0.0/top_p=1.0/max_tokens=7680/max_model_len=8192/max_lora_rank=32 and extracts \\boxed{...} for exact (and +/-1e-2 numeric) match against a held-out CV slice gives us a reproducible local CV metric that the operator-side submit gate can compare against best_cv, preventing burned submit slots on duplicates and surfacing regressions before they hit the leaderboard.",
+      "status": "PROPOSED",
+      "title": "Local vLLM CV/eval harness mirroring exact host inference params unlocks beats-best-CV submit gate"
     }
   },
   "metrics": [],
@@ -488,6 +513,21 @@
       "status": "BLOCKED",
       "story": "US-4",
       "title": "Synthesis: combine winning ablation choices into final config"
+    },
+    "TASK-EVAL-vllm-harness-skeleton": {
+      "acceptance_criteria": "eval/vllm_eval.py exists; CLI works in mock mode (no vllm needed); cv_score.json schema includes aggregate + per_category + n_boxed_missing; pytest -q green.",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/, tests/test_vllm_eval.py",
+      "created_at": "2026-05-30T11:50:00Z",
+      "definition_of_done": "One PR; tests green; mock-mode roundtrip documented in PR body; hypothesis_id=H-VLLM-EVAL noted.",
+      "est_hours": 1.0,
+      "hypothesis_id": "H-VLLM-EVAL",
+      "priority": "P1",
+      "source_refs": [
+        "technique-backlog.md #2"
+      ],
+      "spec": "Create eval/vllm_eval.py implementing: (1) CLI: --base /path/to/Nemotron-3-Nano-30B-A3B-BF16 --adapter <adapter_dir> --eval-jsonl <path> --out cv_score.json --max-samples N. (2) Inference config exactly matching host: temperature=0.0, top_p=1.0, max_tokens=7680, max_model_len=8192, max_lora_rank=32. (3) For each row: render the host-style chat template, get completion, extract last \\boxed{...} via regex, normalize numeric answers (allow +/-1e-2 for numeric; exact-string otherwise - match host scoring). (4) Emit cv_score.json with aggregate, per_category, n_total, n_correct, n_boxed_missing. (5) NO real GPU run required in this task - gate the vllm import so the harness is unit-testable without vllm installed (mock mode flag). (6) Add tests/test_vllm_eval.py covering boxed extraction + per-category aggregation on a 5-row fixture. Acceptance: pytest -q passes; mock-mode CLI roundtrip on the 5-row sample produces a valid cv_score.json schema.",
+      "status": "BACKLOG",
+      "title": "Write eval/vllm_eval.py harness skeleton with host-faithful params + \\boxed{} extractor + per-category scoring"
     },
     "TASK-K0-kaggle-access-smoke": {
       "actor": "jules",
@@ -845,7 +885,22 @@
       "status": "DONE",
       "story": "US-3",
       "title": "Corpus curation: filter, dedup, difficulty-balance"
+    },
+    "TASK-SUBMIT-validate-adapter": {
+      "acceptance_criteria": "CLI works in --mock mode; rank>32 -> nonzero CODE=RANK_TOO_HIGH; missing files -> nonzero CODE=MISSING_FILES; pytest -q green.",
+      "allowed_area": "tools/validate_adapter.py, tests/test_validate_adapter.py",
+      "created_at": "2026-05-30T11:50:00Z",
+      "definition_of_done": "One PR; tests green; PR body lists every exit CODE; hypothesis_id=H-SUBMIT-GATE noted.",
+      "est_hours": 1.0,
+      "hypothesis_id": "H-SUBMIT-GATE",
+      "priority": "P1",
+      "source_refs": [
+        "AGENTS.md submission handoff"
+      ],
+      "spec": "Create tools/validate_adapter.py with CLI: --adapter <adapter_dir> --base <base_path> [--prompts <path_to_5_smoke_prompts.jsonl>] [--mock]. Behavior: (1) Load adapter_config.json, assert r <= 32 (else exit nonzero with reason CODE=RANK_TOO_HIGH). (2) Verify required files exist (adapter_config.json + adapter_model.{safetensors,bin}); else CODE=MISSING_FILES. (3) Optionally: in non-mock mode, peft.PeftModel.from_pretrained(base, adapter) and run 5 smoke prompts at temperature=0.0; for each completion assert \\boxed{...} regex present; else CODE=BOXED_MISSING (report which prompt). (4) Output validation_report.json {ok:bool, code:str|null, rank:int, n_smoke:int, n_boxed_ok:int}. (5) Add tests/test_validate_adapter.py covering: rank-too-high path (mock), missing-files path, mock-mode pass path. Acceptance: pytest -q passes; CLI returns 0 on a valid adapter dir (mock mode), nonzero on the failure cases.",
+      "status": "BACKLOG",
+      "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T12:13:40.868937+00:00"
+  "updated_at": "2026-05-30T12:16:42.181093+00:00"
 }
