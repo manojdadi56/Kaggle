@@ -2,54 +2,132 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 5
+    "jules_dispatched_2026-05-30": 10
   },
   "decisions": {},
   "experiments": {},
   "gpu_runs": {},
-  "hypotheses": {},
+  "hypotheses": {
+    "H-1EPOCH": {
+      "expected_effect": "simpler training; no degradation",
+      "source_refs": [
+        "winner-train_sft.py.md",
+        "winner-loss_config.py.md"
+      ],
+      "statement": "1-epoch SFT is sufficient given high-quality CoT; more epochs over-fit on synthetic patterns.",
+      "status": "proposed"
+    },
+    "H-DQ": {
+      "expected_effect": "+0.20 LB (matches winner 0.85 vs naive baselines ~0.65)",
+      "source_refs": [
+        "winner-INDEX.md",
+        "DIGEST-community.md",
+        "technique-backlog.md",
+        "winner-reasoning.py.md"
+      ],
+      "statement": "DATA QUALITY is the dominant lever: per-category deterministic solvers + verified \boxed{} CoT corpora beat fancier training regimes.",
+      "status": "proposed"
+    },
+    "H-LORA32": {
+      "expected_effect": "matches winner; cheaper variants underperform",
+      "source_refs": [
+        "winner-train_sft.py.md"
+      ],
+      "statement": "LoRA rank 32 / alpha 64 SFT (winner config) is the right anchor; deviations should justify themselves with CV evidence.",
+      "status": "supported"
+    },
+    "H-NORL": {
+      "expected_effect": "saves compute; lower risk",
+      "source_refs": [
+        "winner-INDEX.md",
+        "DIGEST-community.md"
+      ],
+      "statement": "RL / distillation are NOT needed; pure SFT on verified CoT reaches top-LB.",
+      "status": "proposed"
+    }
+  },
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "14163923906156693592": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-deltas.md",
+      "branch": "main",
+      "created_at": "2026-05-30T08:49:27.522222+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R11b-deltas-and-new-hypotheses"
+    },
+    "15297474666584217295": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
+      "branch": "main",
+      "created_at": "2026-05-30T08:49:23.124374+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R10b-kernel-metadata-readme"
+    },
+    "17312665199062602490": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
+      "branch": "main",
+      "created_at": "2026-05-30T08:49:31.859812+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R1b-category-classifier"
+    },
     "18046708952198334024": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-do-avoid.md",
       "branch": "main",
       "created_at": "2026-05-30T08:02:12.669822+00:00",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/10",
+      "state": "COMPLETED",
+      "task_id": "TASK-R11a-discussion-do-avoid"
+    },
+    "18401029609494141683": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
+      "branch": "main",
+      "created_at": "2026-05-30T08:49:34.736003+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R11a-discussion-do-avoid"
+      "task_id": "TASK-R7"
     },
     "3224516737148809732": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/train.py",
       "branch": "main",
       "created_at": "2026-05-30T08:02:09.636762+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/11",
+      "state": "COMPLETED",
       "task_id": "TASK-R10a-train-script-and-smoke"
     },
     "7801873606779501347": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/writeup",
       "branch": "main",
       "created_at": "2026-05-30T08:02:15.875875+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/9",
+      "state": "COMPLETED",
       "task_id": "TASK-R12"
     },
     "9044919978019878599": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-winner-training-internals.md",
       "branch": "main",
       "created_at": "2026-05-30T08:02:18.880194+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/7",
+      "state": "COMPLETED",
       "task_id": "TASK-R13-winner-trio-digest"
     },
     "9152147452051460438": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/taxonomy.md",
       "branch": "main",
       "created_at": "2026-05-30T08:02:21.827572+00:00",
+      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/8",
+      "state": "COMPLETED",
+      "task_id": "TASK-R1a-category-taxonomy-doc"
+    },
+    "9538569035955801003": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
+      "branch": "main",
+      "created_at": "2026-05-30T08:49:20.438538+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R1a-category-taxonomy-doc"
+      "task_id": "TASK-K0-kaggle-access-smoke"
     }
   },
   "submit_counter": {},
@@ -146,11 +224,13 @@
     "TASK-K0-kaggle-access-smoke": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
+      "branch": "main",
       "hypothesis": "H-OPS",
       "mode": "deep",
+      "session_id": "9538569035955801003",
       "size_hint": "~20 min",
       "spec": "Verify Jules has Kaggle access wired via the VM env vars. Run (capturing stdout):\n  python tools/kaggle_lite.py whoami\n  python tools/kaggle_lite.py submissions nvidia-nemotron-model-reasoning-challenge\n  python tools/kaggle_lite.py leaderboard nvidia-nemotron-model-reasoning-challenge\nWrite the THREE results (status + first 30 lines of body each) into competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md. Then in the PR Summary state whether kaggle_user is correct, today/cap (5), and our current LB position. NEVER print or commit KAGGLE_API_TOKEN / KAGGLE_USERNAME values themselves.",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "story": "US-OPS",
       "title": "Kaggle access smoke test from the Jules VM"
     },
@@ -162,8 +242,9 @@
       "hypothesis": "H-001",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R1-category-taxonomy.md",
-      "status": "BACKLOG",
+      "status": "SUPERSEDED",
       "story": "US-1",
+      "supersedes_notes": "legacy stub; replaced by R*a children (done) and per-category template R2.<cat>",
       "title": "Derive the problem-category taxonomy + classifier"
     },
     "TASK-R1-category-taxonomy": {
@@ -178,8 +259,9 @@
       "hypothesis": "H-006",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R10-sft-training-kernel.md",
-      "status": "BACKLOG",
+      "status": "SUPERSEDED",
       "story": "US-4",
+      "supersedes_notes": "legacy stub; replaced by R*a children (done) and per-category template R2.<cat>",
       "title": "Author the QLoRA SFT training kernel (GPU-ready; runs later)"
     },
     "TASK-R10-sft-training-kernel": {
@@ -195,7 +277,7 @@
       "session_id": "3224516737148809732",
       "size_hint": "~75 min",
       "spec": "Port winner's train_sft.py to a clean training entrypoint; assert rank<=32/alpha 64 at runtime; --smoke path runs on a toy model (no GPU); writes adapter/ + cv_score.json. Includes offline test that rejects rank=64.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "QLoRA train.py + --smoke offline test (rank<=32/alpha 64 asserted)"
     },
@@ -203,11 +285,13 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
       "blocked_by": "TASK-R10a-train-script-and-smoke",
-      "hypothesis": "H-006",
+      "branch": "main",
+      "hypothesis": "H-LORA32",
       "mode": "deep",
+      "session_id": "15297474666584217295",
       "size_hint": "~45 min",
       "spec": "kernel-metadata.json: GPU enabled, base model + dataset attached as placeholders; README documents the push->poll->pull workflow for the kaggle_gpu backend.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Kaggle kernel-metadata.json + README for the training kernel"
     },
@@ -219,8 +303,9 @@
       "hypothesis": "H-007",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R11-discussion-meta-analysis.md",
-      "status": "BACKLOG",
+      "status": "SUPERSEDED",
       "story": "US-1",
+      "supersedes_notes": "legacy stub; replaced by R*a children (done) and per-category template R2.<cat>",
       "title": "Meta-analysis of the 217 discussion threads"
     },
     "TASK-R11-discussion-meta-analysis": {
@@ -236,7 +321,7 @@
       "session_id": "18046708952198334024",
       "size_hint": "~75 min",
       "spec": "Skim all 217 discussion-*.md; produce a ranked 'do' list + 'avoid' list with discussion-id citations and short evidence per item.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-1",
       "title": "217 discussions \u2192 ranked Do / Avoid digest (cited)"
     },
@@ -244,11 +329,13 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-deltas.md",
       "blocked_by": "TASK-R11a-discussion-do-avoid",
+      "branch": "main",
       "hypothesis": "H-007",
       "mode": "deep",
+      "session_id": "14163923906156693592",
       "size_hint": "~60 min",
       "spec": "Using R11a + winner files, write a short deltas section and \u22655 concrete candidate hypotheses (statement, expected effect, how to test) ready for the operator to create_hypothesis.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-1",
       "title": "Deltas vs winner + \u22655 new hypotheses for the ledger"
     },
@@ -262,7 +349,7 @@
       "mode": "deep",
       "session_id": "7801873606779501347",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R12-writeup-skeleton.md",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-6",
       "title": "Public notebook + writeup skeleton (prize eligibility)"
     },
@@ -275,7 +362,7 @@
       "session_id": "9044919978019878599",
       "size_hint": "~45 min (3 clubbed small reads)",
       "spec": "Read references/winner-lr_schedule.py.md, winner-loss_config.py.md, winner-train_common.py.md; produce ONE coherent digest covering LR schedule, loss/regularization choices, and the shared training utilities \u2014 each with file/line citations and how we replicate it in TASK-R10a.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-1",
       "title": "Trio digest: winner LR schedule + loss config + train_common (clubbed)"
     },
@@ -288,7 +375,7 @@
       "session_id": "9152147452051460438",
       "size_hint": "~60 min",
       "spec": "Derive the category taxonomy with definitions + train.csv frequencies + value ranking (frequency \u00d7 expected gain). DOC only, no classifier code.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-1",
       "title": "Category taxonomy + value ranking (doc only)"
     },
@@ -296,11 +383,13 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
       "blocked_by": "TASK-R1a-category-taxonomy-doc",
+      "branch": "main",
       "hypothesis": "H-001",
       "mode": "deep",
+      "session_id": "17312665199062602490",
       "size_hint": "~60 min",
       "spec": "Implement classify(prompt)->category + offline tests; report classification coverage on train. Depends on R1a's taxonomy.",
-      "status": "BLOCKED",
+      "status": "IN_PROGRESS",
       "story": "US-1",
       "title": "Rule classifier + tests for the taxonomy"
     },
@@ -312,19 +401,22 @@
       "hypothesis": "H-002",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R2-solver-template.md",
-      "status": "BACKLOG",
+      "status": "SUPERSEDED",
       "story": "US-3",
+      "supersedes_notes": "legacy stub; replaced by R*a children (done) and per-category template R2.<cat>",
       "title": "Per-category deterministic solver  (TEMPLATE \u2014 operator clones one per category)"
     },
     "TASK-R7": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
+      "branch": "main",
       "dependencies": "TASK-R1 (taxonomy), TASK-R2.* (solvers)  [start design now; wire to solvers as they land]",
       "gpu": "no",
-      "hypothesis": "H-003",
+      "hypothesis": "H-DQ",
       "mode": "deep",
+      "session_id": "18401029609494141683",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R7-cot-generator.md",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "story": "US-3",
       "title": "Verified `\\boxed{}` chain-of-thought generator"
     },
@@ -333,7 +425,7 @@
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
       "dependencies": "none",
       "gpu": "no",
-      "hypothesis": "H-004",
+      "hypothesis": "H-DQ",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R8-cv-harness.md",
       "status": "READY",
@@ -345,7 +437,7 @@
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
       "dependencies": "TASK-R7 (CoT format)  [design now]",
       "gpu": "no",
-      "hypothesis": "H-005",
+      "hypothesis": "H-DQ",
       "mode": "deep",
       "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R9-corpus-curation.md",
       "status": "READY",
@@ -353,5 +445,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T08:19:15.920591+00:00"
+  "updated_at": "2026-05-30T08:50:44.175219+00:00"
 }

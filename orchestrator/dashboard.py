@@ -11,11 +11,29 @@ from pathlib import Path
 from . import config
 
 
+import re as _re
+_ILLEGAL = _re.compile(r"[\x00-\x08\x0b-\x0c\x0e-\x1f]")
+
+
+def _cell(v):
+    """Coerce a value to something openpyxl will accept (no lists/dicts/control chars)."""
+    if v is None or isinstance(v, (int, float, bool)):
+        return v
+    if isinstance(v, str):
+        return _ILLEGAL.sub("", v)
+    if isinstance(v, (list, tuple, set)):
+        return _ILLEGAL.sub("", ", ".join(str(x) for x in v))
+    if isinstance(v, dict):
+        import json as _json
+        return _ILLEGAL.sub("", _json.dumps(v, default=str))[:1000]
+    return _ILLEGAL.sub("", str(v))
+
+
 def _ws_from_rows(wb, title, headers, rows):
     ws = wb.create_sheet(title)
     ws.append(headers)
     for r in rows:
-        ws.append([r.get(h) if isinstance(r, dict) else r for h in headers])
+        ws.append([_cell(r.get(h) if isinstance(r, dict) else r) for h in headers])
     return ws
 
 

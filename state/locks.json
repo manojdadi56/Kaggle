@@ -1,24 +1,24 @@
 {
   "cap": 5,
   "holders": {
-    "TASK-R10a-train-script-and-smoke": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/train.py",
+    "TASK-K0-kaggle-access-smoke": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
       "kind": "jules"
     },
-    "TASK-R11a-discussion-do-avoid": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-do-avoid.md",
+    "TASK-R10b-kernel-metadata-readme": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train/(kernel-metadata.json|README.md)",
       "kind": "jules"
     },
-    "TASK-R12": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/writeup",
+    "TASK-R11b-deltas-and-new-hypotheses": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions-deltas.md",
       "kind": "jules"
     },
-    "TASK-R13-winner-trio-digest": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-winner-training-internals.md",
+    "TASK-R1b-category-classifier": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/classify.py",
       "kind": "jules"
     },
-    "TASK-R1a-category-taxonomy-doc": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy/taxonomy.md",
+    "TASK-R7": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
       "kind": "jules"
     }
   }
