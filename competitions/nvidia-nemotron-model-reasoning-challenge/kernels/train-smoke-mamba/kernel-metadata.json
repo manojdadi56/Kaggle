@@ -1,20 +1,20 @@
 {
-  "id": "username/nemotron-model-reasoning-train-smoke-mamba",
+  "id": "sai1881/nemotron-model-reasoning-train-smoke-mamba",
   "title": "Nvidia Nemotron Model Reasoning Challenge Train Smoke Mamba",
   "code_file": "train.py",
   "language": "python",
   "kernel_type": "script",
-  "is_private": "true",
-  "enable_gpu": "true",
-  "enable_internet": "false",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
   "dataset_sources": [
-    "username/placeholder-dataset"
+    "TODO/REPLACE-WITH-CORPUS-DATASET-SLUG"
   ],
   "competition_sources": [
     "nvidia-nemotron-model-reasoning-challenge"
   ],
   "kernel_sources": [],
   "model_sources": [
-    "nvidia/nemotron-3-nano-30b-a3b-bf16/placeholder-version"
+    "TODO/REPLACE-WITH-REAL-MODEL-VERSION-FROM-KAGGLE"
   ]
 }

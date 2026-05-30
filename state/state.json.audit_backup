@@ -5,11 +5,6 @@
     "jules_dispatched_2026-05-30": 42
   },
   "decisions": {
-    "D-AUDIT-2026-05-30": {
-      "decision": "Pause new feature work; land the 6 audit-corrections + 5 seeded tasks before adding capability.",
-      "entity": "project",
-      "rationale": "Audit found 5 live defects (3 fixed mid-pass), 6 invalidated assumptions, 0 end-to-end runs. Infrastructure-complete but execution-untriggered. Adding features now compounds cross-PR invariant drift the audit identified."
-    },
     "D-EXPLAN-001": {
       "decision": "Lock experimentation plan (Phase A done, B->C->D->E->F; E-007 cryptarithm_guess prioritized).",
       "entity": "project",
@@ -87,7 +82,7 @@
         "winner-loss_config.py.md"
       ],
       "statement": "1-epoch SFT is sufficient given high-quality CoT; more epochs over-fit on synthetic patterns.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-AUTO-RESCUE": {
       "created_at": "2026-05-30T13:45:00Z",
@@ -109,7 +104,7 @@
         "discussion-689915.md"
       ],
       "statement": "Bit-manipulation problems use nickname encodings (e.g. \"the integer formed by bytes\u2026\"); a robust regex extractor across all 1602 bit_manipulation rows yields 100% solver coverage.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-CHAT-TEMPLATE": {
       "created_at": "2026-05-30T13:45:00Z",
@@ -132,7 +127,7 @@
         "discussion-689915.md"
       ],
       "statement": "Cipher-category problems reduce to substitution+offset and admit a 100% deterministic solver.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-CRYPTARITHM": {
       "expected_effect": "+0.07 LB on 659+164 cryptarithm rows",
@@ -141,7 +136,7 @@
         "data/taxonomy/taxonomy.md"
       ],
       "statement": "Cryptarithm-deduce problems are uniquely solvable letter-digit assignment problems; constraint propagation (or python-constraint / Z3) yields the exact answer.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-CRYPTARITHM-GUESS": {
       "expected_effect": "+0.01-0.03 LB direct from a category the winner never trained on.",
@@ -150,7 +145,7 @@
         "winner-reasoning.py.md"
       ],
       "statement": "Winner skipped cryptarithm_guess; adding a solver + verified CoT for it gives direct LB headroom (164 train rows).",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-CURRICULUM": {
       "expected_effect": "+0.01-0.03 LB vs random ordering, free improvement",
@@ -159,7 +154,7 @@
         "DIGEST-community.md"
       ],
       "statement": "Difficulty-ordered curriculum SFT (easy\u2192hard within each category) generalizes better than random shuffle on the hidden test set.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-DQ": {
       "expected_effect": "+0.20 LB (matches winner 0.85 vs naive baselines ~0.65)",
@@ -170,7 +165,7 @@
         "winner-reasoning.py.md"
       ],
       "statement": "DATA QUALITY is the dominant lever: per-category deterministic solvers + verified \boxed{} CoT corpora beat fancier training regimes.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-EQ-FALLBACK": {
       "expected_effect": "+0.01 LB on equation_numeric category.",
@@ -179,7 +174,7 @@
         "winner-reasoning.py.md"
       ],
       "statement": "Default to absolute-difference fallback in equation_numeric solvers when no rule is found; captures edge cases.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-EQ-SYMPY": {
       "expected_effect": "+0.07 LB on equation_numeric_deduce(596)+_guess(136) categories",
@@ -188,7 +183,7 @@
         "technique-backlog.md"
       ],
       "statement": "Equation-numeric problems are solvable with SymPy linear/quadratic solvers; algebraic CoT is reproducible.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-GPU-DISPATCH": {
       "created_at": "2026-05-30T12:00:00Z",
@@ -210,7 +205,7 @@
         "data/taxonomy/taxonomy.md"
       ],
       "statement": "Gravity-category problems (free-fall/projectile/orbital mechanics) reduce to closed-form physics formulas and admit a deterministic solver.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-LOGPROB-FILTER": {
       "expected_effect": "+0.01 LB on hard categories.",
@@ -219,7 +214,7 @@
         "winner-loss_config.py.md"
       ],
       "statement": "Filtering out examples whose base-model min-logprob > -0.05 prevents over-tuning on easy examples and improves accuracy on hard rules.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-LORA32": {
       "expected_effect": "matches winner; cheaper variants underperform",
@@ -227,7 +222,7 @@
         "winner-train_sft.py.md"
       ],
       "statement": "LoRA rank 32 / alpha 64 SFT (winner config) is the right anchor; deviations should justify themselves with CV evidence.",
-      "status": "SUPPORTED"
+      "status": "supported"
     },
     "H-MAMBA-TARGETS": {
       "expected_effect": "Unblocks training on free GPU. Critical precondition.",
@@ -236,7 +231,7 @@
         "multiple discussions"
       ],
       "statement": "Explicit Mamba mixer LoRA targeting (mixer.in_proj, mixer.out_proj) + attention-only avoids the MoE expert-scan hang and enables training on 2xT4 4-bit.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-NORL": {
       "expected_effect": "saves compute; lower risk",
@@ -245,7 +240,7 @@
         "DIGEST-community.md"
       ],
       "statement": "RL / distillation are NOT needed; pure SFT on verified CoT reaches top-LB.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-NUMERAL-100": {
       "expected_effect": "+0.16 LB on 1576 numeral rows",
@@ -254,7 +249,7 @@
         "data/taxonomy/taxonomy.md"
       ],
       "statement": "Numeral-system problems (base conversions, radix arithmetic, novel digit systems) are deterministic given the rules in the prompt.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-RANK16": {
       "expected_effect": "~equal LB, 2x cheaper experiments",
@@ -263,7 +258,7 @@
         "technique-backlog.md"
       ],
       "statement": "LoRA rank 16 (half the cap) reaches within 0.005 of rank-32 with half the parameters; ablation worth running for compute efficiency.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-SELECT2REASON": {
       "expected_effect": "~equal LB at half cost; may slightly improve generalization.",
@@ -272,7 +267,7 @@
         "konbu17 discussion"
       ],
       "statement": "Select2Reason-style curation (drop low-utility / repetitive traces) matches baseline accuracy at ~30 percent of cost.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-SUBMIT-GATE": {
       "created_at": "2026-05-30T11:50:00Z",
@@ -293,7 +288,7 @@
         "data/taxonomy/taxonomy.md"
       ],
       "statement": "Unit-conversion problems decompose into a directed graph of conversion factors; a Floyd-Warshall closure over the parsed factors yields exact answers.",
-      "status": "PROPOSED"
+      "status": "proposed"
     },
     "H-VLLM-EVAL": {
       "created_at": "2026-05-30T11:50:00Z",
@@ -312,14 +307,41 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "11091484301140930622": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/chat_template_fixture.jsonl, tests/test_chat_template_parity.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:56:06.431789+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-chat-template-parity"
+    },
+    "11172407645040114728": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
+      "branch": "main",
+      "created_at": "2026-05-30T13:21:24.649025+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-E009-synthesis-kernel"
+    },
     "4390025997776432846": {
       "account_idx": 0,
       "allowed_area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "branch": "main",
       "created_at": "2026-05-30T13:56:09.030293+00:00",
       "pr_url": null,
-      "state": "IN_PROGRESS",
+      "state": "QUEUED",
       "task_id": "TASK-OPS-auto-rescue"
+    },
+    "5860122008944918375": {
+      "account_idx": 0,
+      "allowed_area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:21:27.285114+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-EVAL-cv-score-ingest"
     }
   },
   "submit_counter": {},
@@ -442,19 +464,6 @@
       "story": "US-3",
       "title": "Assemble corpus.jsonl v1 from landed solvers (winner build_datum convention)"
     },
-    "TASK-E002-SMOKE-RUN": {
-      "acceptance_criteria": "Kernel completes; outputs pulled; runtime <10 min; metrics logged.",
-      "actor": "jules",
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-smoke-mamba",
-      "blocked_by": "TASK-FIX-kernel-metadata",
-      "definition_of_done": "Result under experiments/SMOKE-001/; cv recorded via update_gpu_run.",
-      "mode": "deep",
-      "size_hint": "~45 min",
-      "spec": "Push smoke-mamba kernel with reduced hyperparams (rank=4, max_steps=20, 100 rows). Validate full chain: kernel-push -> status=complete -> output-pull -> cv_score.json + adapter_config.json present. Do NOT submit. Steelman counter-arg 8.",
-      "status": "BLOCKED",
-      "story": "US-4",
-      "title": "Kaggle GPU smoke run: 5-min rank=4 max_steps=20 100-row preflight"
-    },
     "TASK-E002-baseline-kernel": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
@@ -469,19 +478,6 @@
       "status": "DONE",
       "story": "US-4",
       "title": "Finalize winner-faithful baseline training kernel (rank32/alpha64/1-epoch/LinearDecay)"
-    },
-    "TASK-E002-push-and-train": {
-      "acceptance_criteria": "state.gpu_runs entry for the slug; cv_score numeric; rank<=32.",
-      "actor": "operator",
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-baseline-e002",
-      "blocked_by": "TASK-E002-SMOKE-RUN",
-      "definition_of_done": "best_cv is non-null; submit-gate unlocked.",
-      "mode": "deep",
-      "size_hint": "GPU ~2-3hr; orchestrator ~15 min.",
-      "spec": "Once smoke run succeeds: emit gpu_dispatch for experiment_id=E-002-baseline-rank32, backend=kaggle_gpu, slug=sai1881/train-baseline-e002. Poll until terminal; pull adapter/ + cv_score.json into experiments/E-002-baseline-rank32/; record cv; set experiments[E-002].cv_score + status=COMPLETED.",
-      "status": "BLOCKED",
-      "story": "US-4",
-      "title": "Push baseline E-002 (rank=32) kernel to Kaggle GPU and ingest cv_score"
     },
     "TASK-E003-rank16-finalize": {
       "actor": "jules",
@@ -543,18 +539,6 @@
       "story": "US-4",
       "title": "Select2Reason curation: keep top-utility ~30 percent of corpus, then train baseline"
     },
-    "TASK-E007-RESCOPE": {
-      "acceptance_criteria": "Session terminal (COMPLETED + PR or canceled); lock released.",
-      "actor": "operator",
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v1, competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm, competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
-      "definition_of_done": "No stale lock; ledger reflects terminal state.",
-      "mode": "deep",
-      "size_hint": "~15 min",
-      "spec": "Session 13107147469450254389 stuck in out-of-scope edit retry loop (~35min idle, 26 identical refused patches). See F-057. Decision: (a) sendmessage steer to ship kernel-only + NEEDS_SPLIT, or (b) kill + re-dispatch with widened area. User decision needed.",
-      "status": "BACKLOG",
-      "story": "US-3",
-      "title": "Rescope or abort stuck E-007 cryptarithm-guess Jules session"
-    },
     "TASK-E007-cryptarithm-guess-integration": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
@@ -596,7 +580,7 @@
       "session_id": "11172407645040114728",
       "size_hint": "~75 min",
       "spec": "Operator runs this only after E-003..E-008 results are in. Build kernels/train-synthesis-e009/ combining the ablation choices whose CV beat E-002 (read state.json experiments collection for cv_score). Each combined choice cited in the kernel README. This is the final training run before finalize.",
-      "status": "DONE",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Synthesis: combine winning ablation choices into final config"
     },
@@ -616,7 +600,7 @@
         "competitions/.../eval/vllm_eval.py (from PR #35)"
       ],
       "spec": "(1) Create eval/chat_template_fixture.jsonl with 10 host-realistic prompts (mix of equation_numeric, cryptarithm, cipher, bit_manipulation - sample from existing data/curation classifier output, NOT raw train.csv since that is gitignored). (2) For each fixture row, write a 'expected_rendered' field containing the EXACT string the official Nemotron tokenizer's apply_chat_template returns for a {role=user, content=<prompt>} message with the reasoning_on system header matching the host. (Capture these offline using the HF tokenizer.) (3) Write tests/test_chat_template_parity.py that: imports the prompt-rendering function from competitions/.../eval/vllm_eval.py (which TASK-EVAL-vllm-harness-skeleton already provides) and asserts the rendered output byte-equals expected_rendered for all 10 rows. (4) If our vllm_eval.py uses a hard-coded template (current state), this task documents the gap and the test should be marked xfail with a TODO note pointing at a follow-up task to load the official tokenizer template. If our harness already loads the official template, the test should pass. Acceptance: pytest -q passes (including xfail if applicable); fixture jsonl committed with prompts but the answer column dropped (DATA.md rule).",
-      "status": "DONE",
+      "status": "IN_PROGRESS",
       "title": "Add eval/chat_template_fixture.jsonl + tests/test_chat_template_parity.py asserting byte-equality vs official tokenizer"
     },
     "TASK-EVAL-cv-fixture": {
@@ -653,7 +637,7 @@
         "orchestrator/loop.py"
       ],
       "spec": "(1) orchestrator/state.py: add op 'record_cv_score' with data={experiment_id, cv_aggregate, per_category, n_total, n_correct, n_boxed_missing, source_kernel:str|None}. Appends to state['metrics'][f'cv:{experiment_id}'] = data; if cv_aggregate > state.get('best_cv', -inf), set state['best_cv'] = cv_aggregate AND state['best_cv_source'] = experiment_id. (2) orchestrator/loop.py.apply_decision: after a gpu_dispatch completes successfully, automatically read out_dir/cv_score.json and emit a record_cv_score op into the patch. (3) tools/status.py: update the snapshot to show best_cv + best_cv_source. (4) Add tests/test_record_cv_score.py covering: new best_cv -> updates; lower cv -> recorded but best_cv unchanged; per_category serialized. Acceptance: pytest -q green; status snapshot shows best_cv after a mock gpu_dispatch run.",
-      "status": "DONE",
+      "status": "IN_PROGRESS",
       "title": "Add record_cv_score state op + auto best_cv update + apply_decision pickup from kernel-output"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
@@ -672,19 +656,6 @@
       "spec": "Create eval/vllm_eval.py implementing: (1) CLI: --base /path/to/Nemotron-3-Nano-30B-A3B-BF16 --adapter <adapter_dir> --eval-jsonl <path> --out cv_score.json --max-samples N. (2) Inference config exactly matching host: temperature=0.0, top_p=1.0, max_tokens=7680, max_model_len=8192, max_lora_rank=32. (3) For each row: render the host-style chat template, get completion, extract last \\boxed{...} via regex, normalize numeric answers (allow +/-1e-2 for numeric; exact-string otherwise - match host scoring). (4) Emit cv_score.json with aggregate, per_category, n_total, n_correct, n_boxed_missing. (5) NO real GPU run required in this task - gate the vllm import so the harness is unit-testable without vllm installed (mock mode flag). (6) Add tests/test_vllm_eval.py covering boxed extraction + per-category aggregation on a 5-row fixture. Acceptance: pytest -q passes; mock-mode CLI roundtrip on the 5-row sample produces a valid cv_score.json schema.",
       "status": "DONE",
       "title": "Write eval/vllm_eval.py harness skeleton with host-faithful params + \\boxed{} extractor + per-category scoring"
-    },
-    "TASK-FIX-kernel-metadata": {
-      "acceptance_criteria": "All 8 files have non-placeholder values; dry-run passes.",
-      "actor": "jules",
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
-      "blocked_by": null,
-      "definition_of_done": "One PR; tests green.",
-      "mode": "deep",
-      "size_hint": "~30 min",
-      "spec": "Each kernel-metadata.json has dataset_sources=['TODO/REPLACE-WITH-CORPUS-DATASET-SLUG'] and model_sources=['TODO/REPLACE-WITH-REAL-MODEL-VERSION-FROM-KAGGLE']. Replace with the real Kaggle dataset slug owned by sai1881 holding corpus.jsonl v1 (built by TASK-E001), and the real model-version slug for Nemotron-3-Nano-30B-A3B-BF16. Validate with kaggle_lite kernel-push dry-run. Blocked on Q-018/Q-019.",
-      "status": "BLOCKED",
-      "story": "US-4",
-      "title": "Replace TODO dataset_sources + model_sources in 8 kernel-metadata.json files"
     },
     "TASK-K0-kaggle-access-smoke": {
       "actor": "jules",
@@ -717,18 +688,6 @@
       "spec": "Extend orchestrator/loop.py.poll_in_flight: when a session response has state=COMPLETED AND pr_url is empty, before clearing the session: (1) GET https://jules.googleapis.com/v1alpha/sessions/<sid>/activities (use the existing JulesClient or jules_pool routing). (2) Find the last activity with sessionCompleted and a non-empty artifact.changeSet.gitPatch.unidiffPatch; if none found, mark the session FAILED and skip rescue. (3) Create a temp rescue branch off main: 'operator-rescue/<sid>-<short_ts>'. (4) Write the patch to a temp file and run `git apply --whitespace=nowarn <patchfile>`. If apply fails, mark FAILED and skip. (5) Run pytest -q with subprocess.run; capture rc. If rc != 0, leave the rescue branch and mark the session FAILED with a rescue_failed note. (6) On rc==0: commit the staged files with message 'rescue: <task_id> from session <sid>'; switch to main; merge --no-ff with the same -X theirs strategy used by github_ops.merge_pr; scan diff for secrets (same regex KGAT_/AQ.Ab/sk-ant-); on secret leak, abort and mark FAILED. (7) On success: mark the task DONE and clear the session - emit the ops via the existing StatePatch flow, not a side effect. Add tests/test_auto_rescue.py covering: happy path (rescue + merge + DONE), pytest-fails path (rescue branch present, main untouched, FAILED), patch-fails path (FAILED, no branch), no-artifact path (FAILED, no branch), secret-leak path (FAILED, no merge). Acceptance: pytest -q green; happy path produces a real merge commit in a test git repo.",
       "status": "IN_PROGRESS",
       "title": "Add auto-rescue path to poll_in_flight (COMPLETED-without-PR -> extract patch + pytest + merge)"
-    },
-    "TASK-OPS-cron-trigger": {
-      "acceptance_criteria": "Scheduled trigger exists OR explicit manual-tick acceptance recorded.",
-      "actor": "operator",
-      "allowed_area": "(scheduler only)",
-      "definition_of_done": "CronList/Task Scheduler shows entry; or feedback memory records decision.",
-      "mode": "deep",
-      "size_hint": "~10 min",
-      "spec": "No cron exists (F-054). Pick: (a) /schedule @hourly running tools dispatch+status, (b) Windows Task Scheduler + claude -p (CLAUDE_CODE_OAUTH_TOKEN), (c) accept manual-tick mode. User decision.",
-      "status": "BACKLOG",
-      "story": "US-meta",
-      "title": "Schedule the autonomous operator tick (cron / Task Scheduler) - user approval"
     },
     "TASK-OPS-gpu-dispatch-op": {
       "acceptance_criteria": "gpu_dispatch op accepted by state.py schema; loop.py invokes tools/run_kernel.py with --mock honored via env; gpu_runs records state transitions; pytest -q green.",
@@ -1166,5 +1125,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T14:16:58.293389+00:00"
+  "updated_at": "2026-05-30T13:56:09.037696+00:00"
 }
