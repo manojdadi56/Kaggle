@@ -1,45 +1,38 @@
-[{"stream_name":"stdout","time":25.459999873,"data":"=== /kaggle/input contents ===\n"}
-,{"stream_name":"stdout","time":25.460071461,"data":"  /kaggle/input: dirs=['models', 'competitions'] files=[]\n"}
-,{"stream_name":"stdout","time":25.460243851,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
-,{"stream_name":"stdout","time":25.460260129,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
-,{"stream_name":"stdout","time":25.460265179,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
-,{"stream_name":"stdout","time":25.460269429,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
-,{"stream_name":"stdout","time":25.460938378,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
-,{"stream_name":"stdout","time":25.460958174,"data":"=== end mount listing ===\n"}
-,{"stream_name":"stdout","time":25.462367889,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
-,{"stream_name":"stdout","time":25.462396007,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
-,{"stream_name":"stdout","time":25.462400818,"data":"No training data provided or path does not exist.\n"}
-,{"stream_name":"stderr","time":25.485162207,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
-,{"stream_name":"stderr","time":25.549139442,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":25.549165906,"data":"  File \"/root/.cache/huggingface/modules/transformers_modules/_1/modeling_nemotron_h.py\", line 64, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":25.549334087,"data":"    from mamba_ssm.ops.triton.layernorm_gated import rmsnorm_fn\n"}
-,{"stream_name":"stderr","time":25.549341978,"data":"ModuleNotFoundError: No module named 'mamba_ssm'\n"}
-,{"stream_name":"stderr","time":25.549346162,"data":"\n"}
-,{"stream_name":"stderr","time":25.549350388,"data":"During handling of the above exception, another exception occurred:\n"}
-,{"stream_name":"stderr","time":25.549366566,"data":"\n"}
-,{"stream_name":"stderr","time":25.549371196,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":25.549375734,"data":"  File \"/kaggle/src/script.py\", line 302, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":25.54964737,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
-,{"stream_name":"stderr","time":25.549663916,"data":"  File \"/kaggle/src/script.py\", line 102, in run_training\n"}
-,{"stream_name":"stderr","time":25.549833464,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
-,{"stream_name":"stderr","time":25.549933012,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":25.549944572,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 354, in from_pretrained\n"}
-,{"stream_name":"stderr","time":25.550175073,"data":"    model_class = get_class_from_dynamic_module(\n"}
-,{"stream_name":"stderr","time":25.550229132,"data":"                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":25.550242617,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 583, in get_class_from_dynamic_module\n"}
-,{"stream_name":"stderr","time":25.550548838,"data":"    return get_class_in_module(class_name, final_module, force_reload=force_download)\n"}
-,{"stream_name":"stderr","time":25.550830727,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":25.550882485,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/dynamic_module_utils.py\", line 309, in get_class_in_module\n"}
-,{"stream_name":"stderr","time":25.551032587999998,"data":"    module_spec.loader.exec_module(module)\n"}
-,{"stream_name":"stderr","time":25.551045631,"data":"  File \"\u003cfrozen importlib._bootstrap_external\u003e\", line 999, in exec_module\n"}
-,{"stream_name":"stderr","time":25.551050553,"data":"  File \"\u003cfrozen importlib._bootstrap\u003e\", line 488, in _call_with_frames_removed\n"}
-,{"stream_name":"stderr","time":25.551054857,"data":"  File \"/root/.cache/huggingface/modules/transformers_modules/_1/modeling_nemotron_h.py\", line 66, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":25.551187001,"data":"    raise ImportError(\"mamba-ssm is required by the Mamba model but cannot be imported\")\n"}
-,{"stream_name":"stderr","time":25.55119403,"data":"ImportError: mamba-ssm is required by the Mamba model but cannot be imported\n"}
-,{"stream_name":"stderr","time":30.044694397,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
-,{"stream_name":"stderr","time":30.044737557,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
-,{"stream_name":"stderr","time":30.265835631,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
-,{"stream_name":"stderr","time":30.265878078,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
-,{"stream_name":"stderr","time":30.959348752,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
-,{"stream_name":"stderr","time":32.264153686,"data":"[NbConvertApp] Writing 348660 bytes to __results__.html\n"}
+[{"stream_name":"stdout","time":0.684501043,"data":"  installing causal-conv1d...\n"}
+,{"stream_name":"stdout","time":20.244685583,"data":"  installing mamba-ssm...\n"}
+,{"stream_name":"stdout","time":71.754361776,"data":"=== /kaggle/input contents ===\n"}
+,{"stream_name":"stdout","time":71.75441544,"data":"  /kaggle/input: dirs=['competitions', 'models'] files=[]\n"}
+,{"stream_name":"stdout","time":71.754421375,"data":"  /kaggle/input/competitions: dirs=['nvidia-nemotron-model-reasoning-challenge'] files=[]\n"}
+,{"stream_name":"stdout","time":71.755236645,"data":"  /kaggle/input/competitions/nvidia-nemotron-model-reasoning-challenge: dirs=[] files=['train.csv', 'test.csv']\n"}
+,{"stream_name":"stdout","time":71.755265618,"data":"  /kaggle/input/models: dirs=['metric'] files=[]\n"}
+,{"stream_name":"stdout","time":71.755319964,"data":"  /kaggle/input/models/metric: dirs=['nemotron-3-nano-30b-a3b-bf16'] files=[]\n"}
+,{"stream_name":"stdout","time":71.755329403,"data":"  /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16: dirs=['transformers'] files=[]\n"}
+,{"stream_name":"stdout","time":71.755335086,"data":"=== end mount listing ===\n"}
+,{"stream_name":"stdout","time":71.758707093,"data":"=== Found model dir: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1 ===\n"}
+,{"stream_name":"stdout","time":71.758725073,"data":"Loading model: /kaggle/input/models/metric/nemotron-3-nano-30b-a3b-bf16/transformers/default/1\n"}
+,{"stream_name":"stdout","time":71.758729126,"data":"No training data provided or path does not exist.\n"}
+,{"stream_name":"stderr","time":71.782318685,"data":"`torch_dtype` is deprecated! Use `dtype` instead!\n"}
+,{"stream_name":"stderr","time":75.390808384,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":75.390838671,"data":"  File \"/kaggle/src/script.py\", line 321, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":75.39100068,"data":"    run_training(rank=args.rank, smoke=args.smoke, data_path=args.data)\n"}
+,{"stream_name":"stderr","time":75.391081711,"data":"  File \"/kaggle/src/script.py\", line 121, in run_training\n"}
+,{"stream_name":"stderr","time":75.39120404,"data":"    model = AutoModelForCausalLM.from_pretrained(\n"}
+,{"stream_name":"stderr","time":75.391338491,"data":"            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":75.392115784,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/models/auto/auto_factory.py\", line 365, in from_pretrained\n"}
+,{"stream_name":"stderr","time":75.392129442,"data":"    return model_class.from_pretrained(\n"}
+,{"stream_name":"stderr","time":75.392134514,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":75.392139286,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/modeling_utils.py\", line 4015, in from_pretrained\n"}
+,{"stream_name":"stderr","time":75.39355531,"data":"    hf_quantizer, config, device_map = get_hf_quantizer(\n"}
+,{"stream_name":"stderr","time":75.393570422,"data":"                                       ^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":75.393575714,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/quantizers/auto.py\", line 326, in get_hf_quantizer\n"}
+,{"stream_name":"stderr","time":75.393863403,"data":"    hf_quantizer.validate_environment(\n"}
+,{"stream_name":"stderr","time":75.393873532,"data":"  File \"/usr/local/lib/python3.12/dist-packages/transformers/quantizers/quantizer_bnb_4bit.py\", line 60, in validate_environment\n"}
+,{"stream_name":"stderr","time":75.393975067,"data":"    raise ImportError(\n"}
+,{"stream_name":"stderr","time":75.393981879,"data":"ImportError: Using `bitsandbytes` 4-bit quantization requires bitsandbytes: `pip install -U bitsandbytes\u003e=0.46.1`\n"}
+,{"stream_name":"stderr","time":78.756059527,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":78.756099785,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":79.101319741,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":79.101353064,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":80.061739459,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":81.25594727,"data":"[NbConvertApp] Writing 352700 bytes to __results__.html\n"}
 ]

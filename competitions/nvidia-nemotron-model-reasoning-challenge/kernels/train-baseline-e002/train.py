@@ -7,7 +7,7 @@ import os
 # === Install mamba-ssm + causal-conv1d (Nemotron Mamba-hybrid; not in Kaggle base image) ===
 # Requires kernel-metadata.json: "enable_internet": true
 def _ensure_deps():
-    for pkg in ["causal-conv1d", "mamba-ssm"]:
+    for pkg in ["causal-conv1d", "mamba-ssm", "bitsandbytes"]:
         mod = pkg.replace("-", "_")
         try:
             __import__(mod)
