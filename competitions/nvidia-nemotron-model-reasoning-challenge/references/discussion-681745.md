@@ -1,8 +1,8 @@
 # Information for First-Timers
 
-- **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/discussion/681745#3453107
+- **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/discussion/681745
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 15781
+- **chars:** 16197
 
 ---
 
@@ -19,34 +19,32 @@ smart_toy
 Game Arena
 code
 Data Hub
-expand_more
+expand_less
+Datasets
+Models
+Code
 format_list_bulleted
 More
-expand_more
+expand_less
+comment
+Discussions
+school
+Learn
+Kaggle Rankings
+Progression
+Documentation
+Blog
+Host a Competition
+Research Grants
+Educator Resources
+Support/Contact
+Community Guidelines
+Team
+Terms
+Privacy
 note_alt
 Your Work
-expand_less
-Viewed
-expand_less
-NVIDIA Nemotron Model Reasoning Challenge
-Strategy to solve 85% of bit manipulation
-Mainstream LLM Performance Comparison：Gemini-3.1-Pro delivers the best performance, while DeepSeek-V3.2 is also highly impressive.
-Kaggle CLI — Develop Locally and Run on RTX Pro 6000 GPU
-Kitesdata
-Edited
-expand_less
-Kitesdata
-Save order db V1
-History inferencing V3
-History inferencing
-Fork of inferencing
-Bookmarks
-expand_less
-ARC Prize 2024
-LMSYS - Chatbot Arena Human Preference Predictions
-notebookc7a610ad46
-train Swin_T[pytorch lightning]
-Viral Pneumonia Classification | GoogLeNet
+expand_more
 auto_awesome_motion
 1
 View Active Events
@@ -153,7 +151,7 @@ attach_file
 Post Comment
 Ashutosh Kumar
 Posted 2 months ago
-· 1898th in this Competition
+· 1901st in this Competition
 arrow_drop_up
 9
 arrow_drop_down
@@ -193,7 +191,7 @@ add_reaction
 React
 Ievgenii Krevenets
 Posted 2 months ago
-· 3388th in this Competition
+· 3391st in this Competition
 arrow_drop_up
 1
 arrow_drop_down
@@ -206,7 +204,7 @@ add_reaction
 React
 cg
 Posted 2 months ago
-· 2516th in this Competition
+· 2519th in this Competition
 arrow_drop_up
 3
 arrow_drop_down
@@ -218,7 +216,7 @@ add_reaction
 React
 MD Mushfirat Mohaimin
 Posted 2 months ago
-· 2471st in this Competition
+· 2474th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -232,7 +230,7 @@ add_reaction
 React
 cg
 Posted 2 months ago
-· 2516th in this Competition
+· 2519th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -242,11 +240,59 @@ reply
 Reply
 add_reaction
 React
-4 more replies
+emoji_people
+Nabid Nur
+Posted 2 months ago
+· 344th in this Competition
+arrow_drop_up
+1
 arrow_drop_down
+more_vert
+why might that be due to selection of random 600 samples?
+reply
+Reply
+add_reaction
+React
+NoorMazhar
+Posted 2 months ago
+arrow_drop_up
+0
+arrow_drop_down
+more_vert
+may I ask if the notebooks can be run locally? Or I have to buy brev credits to run?
+reply
+Reply
+add_reaction
+React
 Asadullah Baig
 Posted 2 months ago
-· 3002nd in this Competition
+· 3005th in this Competition
+arrow_drop_up
+0
+arrow_drop_down
+more_vert
+The notebooks cant be run locally And you dont have to buy credits. each week you get 30 hrs for the 4 different GPUs.
+reply
+Reply
+add_reaction
+React
+jerryv69
+Posted 2 months ago
+· 2588th in this Competition
+arrow_drop_up
+0
+arrow_drop_down
+more_vert
+locally ij a mac mini?
+reply
+Reply
+add_reaction
+React
+Hide replies
+arrow_drop_up
+Asadullah Baig
+Posted 2 months ago
+· 3005th in this Competition
 arrow_drop_up
 1
 arrow_drop_down
@@ -258,7 +304,7 @@ add_reaction
 React
 Muhammad
 Posted 2 months ago
-· 3453rd in this Competition
+· 3456th in this Competition
 arrow_drop_up
 3
 arrow_drop_down
@@ -282,7 +328,7 @@ add_reaction
 React
 Muhammad
 Posted 2 months ago
-· 3453rd in this Competition
+· 3456th in this Competition
 arrow_drop_up
 2
 arrow_drop_down
@@ -294,7 +340,7 @@ add_reaction
 React
 xianxu qiu
 Posted 2 months ago
-· 2569th in this Competition
+· 2572nd in this Competition
 arrow_drop_up
 1
 arrow_drop_down
@@ -306,7 +352,7 @@ add_reaction
 React
 Muhammad
 Posted 2 months ago
-· 3453rd in this Competition
+· 3456th in this Competition
 arrow_drop_up
 1
 arrow_drop_down
@@ -342,7 +388,7 @@ add_reaction
 React
 Marcelo
 Posted 2 months ago
-· 2149th in this Competition
+· 2152nd in this Competition
 arrow_drop_up
 2
 arrow_drop_down
@@ -394,7 +440,7 @@ add_reaction
 React
 UoM23MLMSc239362l
 Posted 25 days ago
-· 3557th in this Competition
+· 3560th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -421,7 +467,7 @@ add_reaction
 React
 Alpaca
 Posted 2 months ago
-· 3192nd in this Competition
+· 3196th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -471,7 +517,7 @@ add_reaction
 React
 Asadullah Baig
 Posted 2 months ago
-· 3002nd in this Competition
+· 3005th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -495,7 +541,7 @@ add_reaction
 React
 Liangjie Zhao
 Posted 2 months ago
-· 3491st in this Competition
+· 3494th in this Competition
 arrow_drop_up
 0
 arrow_drop_down
@@ -508,7 +554,7 @@ React
 This comment has been deleted.
 HADY
 Posted 2 months ago
-· 3525th in this Competition
+· 3528th in this Competition
 arrow_drop_up
 0
 arrow_drop_down

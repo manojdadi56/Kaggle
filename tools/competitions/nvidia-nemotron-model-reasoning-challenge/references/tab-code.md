@@ -2,7 +2,7 @@
 
 - **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/code?sortBy=voteCount
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 4711
+- **chars:** 4427
 
 ---
 
@@ -19,42 +19,19 @@ smart_toy
 Game Arena
 code
 Data Hub
-expand_less
-Datasets
-Models
-Code
+expand_more
 format_list_bulleted
 More
-expand_less
-comment
-Discussions
-school
-Learn
-Kaggle Rankings
-Progression
-Documentation
-Blog
-Host a Competition
-Research Grants
-Educator Resources
-Support/Contact
-Community Guidelines
-Team
-Terms
-Privacy
-note_alt
-Your Work
 expand_more
-auto_awesome_motion
-1
-View Active Events
 
 search
+Sign In
+Register
 Kaggle uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.
 Learn more
 OK, Got it.
 NVIDIA · FEATURED PREDICTION COMPETITION · 17 DAYS TO GO
-Submit Prediction
+Join Competition
 more_horiz
 NVIDIA Nemotron Model Reasoning Challenge
 Advance reasoning techniques using NVIDIA Nemotron open models on a novel benchmark
@@ -65,8 +42,6 @@ Models
 Discussion
 Leaderboard
 Rules
-Team
-Submissions
 Notebooks
 add
 New Notebook
@@ -84,7 +59,7 @@ NVIDIA Nemotron Submission Demo
 Updated 2mo ago
 Score: 0.53 · 48 comments · NVIDIA Nemotron Model Reasoning Challenge +2
 arrow_drop_up
-2467
+2468
 Gold
 more_horiz
 Unpinned notebooks
@@ -92,7 +67,7 @@ Tinker Adapter to Ready To Submit Adapter
 Updated 1mo ago
 Score: 0.86 · 4 comments · NVIDIA Nemotron Model Reasoning Challenge +1
 arrow_drop_up
-794
+797
 Gold
 more_horiz
 NVIDIA Nemotron - SFTTrainer training

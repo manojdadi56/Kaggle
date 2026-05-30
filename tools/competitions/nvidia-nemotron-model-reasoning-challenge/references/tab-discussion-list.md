@@ -2,7 +2,7 @@
 
 - **source:** https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/discussion?sort=votes
 - **scraped:** 2026-05-30 (authenticated browser)
-- **chars:** 4524
+- **chars:** 4223
 
 ---
 
@@ -19,42 +19,19 @@ smart_toy
 Game Arena
 code
 Data Hub
-expand_less
-Datasets
-Models
-Code
+expand_more
 format_list_bulleted
 More
-expand_less
-comment
-Discussions
-school
-Learn
-Kaggle Rankings
-Progression
-Documentation
-Blog
-Host a Competition
-Research Grants
-Educator Resources
-Support/Contact
-Community Guidelines
-Team
-Terms
-Privacy
-note_alt
-Your Work
 expand_more
-auto_awesome_motion
-1
-View Active Events
 
 search
+Sign In
+Register
 Kaggle uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.
 Learn more
 OK, Got it.
 NVIDIA · FEATURED PREDICTION COMPETITION · 17 DAYS TO GO
-Submit Prediction
+Join Competition
 more_horiz
 NVIDIA Nemotron Model Reasoning Challenge
 Advance reasoning techniques using NVIDIA Nemotron open models on a novel benchmark
@@ -65,8 +42,6 @@ Models
 Discussion
 Leaderboard
 Rules
-Team
-Submissions
 Discussion
 notifications
 Follow
@@ -77,8 +52,6 @@ search
 filter_list
 Filters
 All
-Owned
-Bookmarks
 Most Votes
 Pinned topics
 push_pin
@@ -171,9 +144,9 @@ arrow_drop_down
 19 comments
 more_horiz
 97.2% Gold-Conditioned Symbolic Solver Exposing Digit Mappings and Operators
-lkevincc · Last comment 21h ago by jane96
+lkevincc · Last comment 1d ago by jane96
 arrow_drop_up
-48
+49
 arrow_drop_down
 8 comments
 more_horiz
@@ -198,6 +171,13 @@ arrow_drop_up
 arrow_drop_down
 7 comments
 more_horiz
+symbol_transformation class problem can have multiple valid candidate answer
+toolazyhhh123 · Last comment 21h ago by jane96
+arrow_drop_up
+24
+arrow_drop_down
+15 comments
+more_horiz
 [Fake Notebook Alert] Watch out for fake laptops that copy and upload other people's submission.
 EISLab_hwlee · Last comment 1mo ago by Bhawesh Sinha 07
 arrow_drop_up
@@ -211,13 +191,6 @@ arrow_drop_up
 24
 arrow_drop_down
 27 comments
-more_horiz
-symbol_transformation class problem can have multiple valid candidate answer
-toolazyhhh123 · Last comment 19h ago by jane96
-arrow_drop_up
-24
-arrow_drop_down
-15 comments
 more_horiz
 Fix for “CUDA error: no kernel image is available for execution on the device” on RTX PRO 6000 Blackwell
 Adarsh Kumar · Last comment 2mo ago by Adarsh Kumar
