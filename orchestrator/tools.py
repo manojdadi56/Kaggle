@@ -79,6 +79,51 @@ def cmd_status(orch: Orchestrator) -> dict:
     return summarize(orch.state.state, free_slots=orch.locks.free_slots())
 
 
+def cmd_next(orch: Orchestrator) -> dict:
+    """Role-select the next move from the ledger (like the SDLC router)."""
+    from . import selector
+    st = orch.state.state
+    open_prs = len([s for s in st.get("sessions", {}).values() if s.get("pr_url")])
+    prev = (st.get("cursors", {}) or {}).get("last_role")
+    return selector.select(
+        st, free_slots=orch.locks.free_slots(), open_prs=open_prs,
+        previous_role=prev, concurrency_target=orch.settings.concurrency_cap,
+    )
+
+
+def cmd_dashboard(orch: Orchestrator):
+    from . import dashboard
+    return dashboard.build_dashboard(orch.state.state, dashboard.default_path())
+
+
+def _parse_task_md(text: str, fallback_id: str) -> dict:
+    import re
+    rec = {"id": fallback_id, "status": "BACKLOG"}
+    m = re.search(r"^#\s*(\S+)\s*[—-]\s*(.+)$", text, re.M)
+    if m:
+        rec["id"] = m.group(1).strip()
+        rec["title"] = m.group(2).strip()
+    for line in text.splitlines():
+        fm = re.match(r"^-\s*([a-z_]+):\s*(.+)$", line.strip())
+        if fm and fm.group(1) in ("status", "allowed_area", "hypothesis", "story", "actor", "gpu", "mode", "dependencies"):
+            rec[fm.group(1)] = fm.group(2).strip()
+    rec["status"] = "BACKLOG"  # ledger owns lifecycle from here
+    return rec
+
+
+def cmd_seed(orch: Orchestrator, tick: str = "SEED") -> dict:
+    """Ingest competitions/<slug>/tasks/todo/*.md into ledger task rows (one-time)."""
+    from pathlib import Path
+    todo = orch.settings.competition_dir() / "tasks" / "todo"
+    ops = []
+    for f in sorted(Path(todo).glob("*.md")):
+        rec = _parse_task_md(f.read_text(encoding="utf-8"), f.stem)
+        rec["spec_path"] = str(f.relative_to(config.REPO_ROOT))
+        ops.append({"op": "create_task", "idempotency_key": f"seed:{rec['id']}",
+                    "data": rec, "summary": f"seed task {rec['id']}"})
+    return orch.state.apply_patch({"tick_id": tick, "operations": ops})
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv:
@@ -94,6 +139,16 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if cmd == "status":
         print(render(cmd_status(orch)))
+        return 0
+    if cmd == "next":
+        print(json.dumps(cmd_next(orch), indent=2, default=str))
+        return 0
+    if cmd == "dashboard":
+        p = cmd_dashboard(orch)
+        print(f"dashboard written: {p}")
+        return 0
+    if cmd == "seed":
+        print(json.dumps(cmd_seed(orch, tick), indent=2, default=str))
         return 0
     if cmd == "apply":
         if len(argv) < 2:

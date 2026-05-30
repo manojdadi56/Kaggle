@@ -1,0 +1,193 @@
+{
+  "active_competition": "nvidia-nemotron-model-reasoning-challenge",
+  "best_cv": null,
+  "cursors": {},
+  "decisions": {},
+  "experiments": {},
+  "gpu_runs": {},
+  "hypotheses": {},
+  "metrics": [],
+  "schema_version": 1,
+  "sessions": {},
+  "submit_counter": {},
+  "suggestions": {},
+  "tasks": {
+    "TASK-1.0": {
+      "actor": "operator",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references",
+      "dependencies": "none",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-1.0-vendor-references.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Vendor reference solutions into references/"
+    },
+    "TASK-1.1": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-winner.md",
+      "dependencies": "TASK-1.0",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-1.1-analyze-winner.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Analyze the winning solution"
+    },
+    "TASK-1.2": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-community.md",
+      "dependencies": "TASK-1.0",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-1.2-analyze-community.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Analyze community repos + official starter"
+    },
+    "TASK-1.3": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-data-and-scoring.md",
+      "dependencies": "TASK-1.0",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-1.3-analyze-data-scoring.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Analyze data schema + scoring harness"
+    },
+    "TASK-1.4": {
+      "actor": "operator",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/plan.md",
+      "dependencies": "TASK-1.1, TASK-1.2, TASK-1.3",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-1.4-synthesize-plan.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Synthesize analyses into the plan"
+    },
+    "TASK-2.1": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "dependencies": "TASK-1.3",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-2.1-cv-eval-harness.md",
+      "status": "BACKLOG",
+      "story": "US-2",
+      "title": "Build local CV eval harness"
+    },
+    "TASK-3.1": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/synthetic",
+      "dependencies": "TASK-1.3",
+      "gpu": "no",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-3.1-synthetic-data-gen.md",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Synthetic reasoning data generator"
+    },
+    "TASK-4.0": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
+      "dependencies": "TASK-1.4, TASK-2.1",
+      "gpu": "no  (authoring only \u2014 training runs on the GPU executor)",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-4.0-training-script.md",
+      "status": "BACKLOG",
+      "story": "US-4",
+      "title": "Author the QLoRA training script + Kaggle kernel"
+    },
+    "TASK-R1": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy",
+      "dependencies": "none",
+      "gpu": "no",
+      "hypothesis": "H-001",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R1-category-taxonomy.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Derive the problem-category taxonomy + classifier"
+    },
+    "TASK-R10": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
+      "dependencies": "none (refine after TASK-R8)",
+      "gpu": "no   (authoring only; trains later on kaggle_gpu / local_40g)",
+      "hypothesis": "H-006",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R10-sft-training-kernel.md",
+      "status": "BACKLOG",
+      "story": "US-4",
+      "title": "Author the QLoRA SFT training kernel (GPU-ready; runs later)"
+    },
+    "TASK-R11": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/analysis-discussions.md",
+      "dependencies": "none",
+      "gpu": "no",
+      "hypothesis": "H-007",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R11-discussion-meta-analysis.md",
+      "status": "BACKLOG",
+      "story": "US-1",
+      "title": "Meta-analysis of the 217 discussion threads"
+    },
+    "TASK-R12": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/writeup",
+      "dependencies": "none",
+      "gpu": "no",
+      "hypothesis": "H-008",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R12-writeup-skeleton.md",
+      "status": "BACKLOG",
+      "story": "US-6",
+      "title": "Public notebook + writeup skeleton (prize eligibility)"
+    },
+    "TASK-R2.<cat>": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/<category>",
+      "dependencies": "TASK-R1 (taxonomy)",
+      "gpu": "no",
+      "hypothesis": "H-002",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R2-solver-template.md",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Per-category deterministic solver  (TEMPLATE \u2014 operator clones one per category)"
+    },
+    "TASK-R7": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/cot",
+      "dependencies": "TASK-R1 (taxonomy), TASK-R2.* (solvers)  [start design now; wire to solvers as they land]",
+      "gpu": "no",
+      "hypothesis": "H-003",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R7-cot-generator.md",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Verified `\\boxed{}` chain-of-thought generator"
+    },
+    "TASK-R8": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "dependencies": "none",
+      "gpu": "no",
+      "hypothesis": "H-004",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R8-cv-harness.md",
+      "status": "BACKLOG",
+      "story": "US-2",
+      "title": "Local CV eval harness mirroring host scoring"
+    },
+    "TASK-R9": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation",
+      "dependencies": "TASK-R7 (CoT format)  [design now]",
+      "gpu": "no",
+      "hypothesis": "H-005",
+      "mode": "deep",
+      "spec_path": "competitions\\nvidia-nemotron-model-reasoning-challenge\\tasks\\todo\\TASK-R9-corpus-curation.md",
+      "status": "BACKLOG",
+      "story": "US-3",
+      "title": "Corpus curation: filter, dedup, difficulty-balance"
+    }
+  },
+  "updated_at": "2026-05-30T07:27:55.217347+00:00"
+}

@@ -29,10 +29,13 @@ Full mapping: `INTEGRATION.md`. Role/capability DNA: `references/`.
 - **validator** (`references/role_validator.md`) — judge a proposed change/experiment before spending GPU.
 - **reporter** (`references/role_reporter.md`) — status digest when nothing else is productive.
 
+## The single work ledger (R-004 — this is the "Excel sheet", git-JSON)
+ALL work lives in ONE store: `state/state.json` (+ append-only `events.jsonl`), with collections **tasks / hypotheses / experiments / suggestions / decisions / metrics** (the "sheets"). Planner & innovator **append** work here via ops (`create_task`, `create_hypothesis`, …) — never as hand-authored `.md` files. A read-only Excel view is `state/dashboard.xlsx` (`python -m orchestrator.tools dashboard`).
+
 ## Tick SOP
-1. `python -m orchestrator.tools context --tick RUN-<ts>` → read the decision-context (state, in-flight, open PRs, feedback, plan, todo, hypotheses/experiments).
-2. **Reconcile** finished Jules PRs / experiment results into the experiments ledger; update best-CV.
-3. **Select one role/move** by feasibility + urgency (`references/infra_role_selector.md`): unblock → review&merge a ready PR → trigger/pull a GPU run → gated submit → else innovate (new hypotheses) + plan (new deep tasks) to keep ~5 Jules sessions in flight.
+1. `python -m orchestrator.tools context --tick RUN-<ts>` → read the decision-context, then `python -m orchestrator.tools next` → the **role-selector** returns the next feasible role + work item from the ledger (ported `score_roles`; `references/infra_role_selector.md`).
+2. **Reconcile** finished Jules PRs / experiment results into the ledger (`set_status` / `update_entity`); update best-CV.
+3. **Act on the selected role/move**: unblock → review&merge a ready PR → trigger/pull a GPU run → gated submit → else **innovator** appends new hypotheses + **planner** appends new tasks to keep ~5 Jules sessions in flight. (You append work to the ledger; you do NOT scatter task files.)
 4. **Parallel fan-out** (optional): dispatch additional certified-independent deep Jules tasks (disjoint `allowed_area`) up to the concurrency cap.
 5. Write `decision.json` (schema `operator_decision.schema.json`) → `python -m orchestrator.tools apply decision.json` → it does the state patch, Jules dispatch (cap+locks), GPU runs, approved merges, gated submit, and git commit.
 6. Audit-safe one-paragraph summary; stop.

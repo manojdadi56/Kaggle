@@ -3,7 +3,8 @@
 Research workspace for the implementation plan. **The plan is [REPORT.md](REPORT.md).**
 
 ## Current state
-- **Phase:** BUILT + LIVE-PROVEN + re-architected (R-001). The system exists on GitHub `main`, runs real Jules sessions, and merged 3 real PRs. Now: stand up the recurring operator trigger + human-gated Phase-0 setup.
+- **Phase:** BUILT + LIVE-PROVEN + re-architected (R-001) + **single-ledger automation (R-004)**. On GitHub `main`; real Jules PRs merged; **one git-JSON work ledger** (tasks/hypotheses/experiments/…) with a role-selector (`tools next`) + Excel view (`state/dashboard.xlsx`) — planner/innovator append work, each run picks the next item (no hand-authored task MDs). 93 tests green. Now: stand up the recurring trigger + Phase-0 setup.
+- **R-004 (single ledger):** `state/state.json` is the one store; `orchestrator/selector.py` (ported `score_roles`) selects the next role/move; `state/dashboard.xlsx` is the read-only "see everything" Excel view. Verified live (seed → selector picked `owner` 40 → dashboard).
 - **Last updated:** 2026-05-30.
 - **R-001 (operator execution):** the operator is the **Claude Code session on the user's subscription — NO `ANTHROPIC_API_KEY`** (if set it overrides the subscription, F-039). Python is a **toolkit** (`orchestrator.tools`: context/apply/status) the operator drives. Recurring trigger = scheduled Routine (`/schedule`, cloud, ≥1h, no key) or Task-Scheduler `claude -p` via `CLAUDE_CODE_OAUTH_TOKEN`.
 - **Decisions locked:** D-1 = 40 GB 2-GPU box primary (configure later) + Kaggle free GPU + RTX-3050 dev-only + paid-cloud upgrade (multi-account pooling rejected, F-037); D-2 = baseline-first; D-3 = chat feedback; repo = `C:\Users\Manoj Sai\Ksggle` (pushed).

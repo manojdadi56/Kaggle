@@ -214,6 +214,18 @@ Sources: S-030 (the skill, read directly). **Confidence: Well-established.**
 Claude Code discovers project skills under `.claude/skills/`; `name` + `description` frontmatter make `/sdlc` invokable. `.gitignore` only excludes `.claude/*.local.md` + `settings.local.json`, so `.claude/skills/**` commits normally. The skill is discovered at session start → `/sdlc` becomes available to the operator in a **new** session (not retroactively in the current one).
 Sources: S-032 (Claude Code skills docs), live `.gitignore`. **Confidence: Supported.**
 
+### F-048 — The SDLC value is the single-ledger automation, not the file format; behavior is portable to git-JSON
+The skill's power (user's insight): ONE workbook is the single source of truth; planner/innovator **write work rows into it**; each run role-selects (`score_roles.py`: feasibility gate → numeric score → alphabetical tie-break → no-adjacent-repeat) and completes the top item. This BEHAVIOR is substrate-independent. `score_roles.py` reads sheets as row-dicts — trivially reproducible on JSON collections. **Decision (R-004): port the model to git-JSON, not Excel-as-truth.**
+Sources: S-030 (score_roles.py, workbook_schema, role_selector — read directly). **Confidence: Well-established.**
+
+### F-049 — git-JSON ledger + generated Excel view beats Excel-as-truth for this agent+git system
+Excel-as-truth = binary (no git diff/merge), openpyxl-as-critical-writer, file-lock risk if opened mid-write. git-JSON = diffable, merges with Jules PRs, no lock, event-sourced replay (already built). The user's literal "see everything in an Excel sheet" want is satisfied by a **read-only generated `dashboard.xlsx`** (regenerated each tick) — keeping JSON as truth. Chat-only feedback (D-3) means the user never opens the truth-file mid-write, so the original anti-Excel risk (A-009) is moot for the view.
+Sources: F-028, F-043, A-009, design. **Confidence: Well-established.**
+
+### F-050 — Implemented: ledger ops + role-selector + Excel dashboard; verified live
+`state.py` gained collections (tasks/hypotheses/experiments/suggestions/decisions/metrics) + ops (`create_task`/`create_hypothesis`/`create_experiment`/`create_suggestion`/`create_decision`/`add_metric`/`set_status`/`update_entity`). `selector.py` ports `score_roles` feasibility/scoring to JSON. `dashboard.py` renders `state/dashboard.xlsx`. `tools` gained `next`/`dashboard`/`seed`. **Verified live:** `tools seed` ingested all R-tasks into the ledger; `tools next` selected `owner` (score 40, "5 dispatchable vs 5 free slots"); `dashboard.xlsx` written. 93 tests green. The operator now appends work to ONE store and role-selects the next item — no hand-authored task .md as source of truth.
+Sources: this revision (execution + live run). **Confidence: Well-established.**
+
 ### F-047 — Integration = new project SKILL.md + INTEGRATION.md mapping, DNA kept, Excel quarantined
 Installed at `.claude/skills/sdlc/`: a rewritten **SKILL.md** (the operator-tick playbook: router→tick, state-ledger→`orchestrator.tools`, owner→Jules, no Excel, no API key), an **INTEGRATION.md** mapping table, `references/` (31 DNA files, kept), and `_legacy_excel/` (scripts+assets, do-not-run README). Operator prompts + AGENTS.md now point at it. This gives the project the SDLC orchestration discipline without a second state system.
 Sources: this revision (execution). **Confidence: Well-established** (design decision, implemented + committed).

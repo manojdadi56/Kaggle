@@ -27,7 +27,19 @@ OPS = {
     "record_gpu_run", "update_gpu_run", "clear_gpu_run",
     "set_task_status",
     "increment_submit_counter", "set_best_cv", "set_cursor",
+    # --- ledger ops (R-004): planning/innovation auto-append work into ONE store ---
+    "create_task", "create_hypothesis", "create_experiment",
+    "create_suggestion", "create_decision", "add_metric",
+    "set_status",          # generic status transition: data={collection, id, status}
+    "update_entity",       # generic field merge: data={collection, id, ...fields}
 }
+
+# ledger collections (the "sheets") + the status vocabulary, ported from the SDLC workbook
+LEDGER_COLLECTIONS = ("tasks", "hypotheses", "experiments", "suggestions", "decisions")
+TASK_STATUSES = (
+    "BACKLOG", "READY", "CLAIMED", "IN_PROGRESS", "SATURATED", "BLOCKED",
+    "READY_FOR_REVIEW", "CHANGES_REQUESTED", "MERGED", "DONE", "SUPERSEDED",
+)
 
 
 def _utc_now_iso() -> str:
@@ -39,9 +51,15 @@ def default_state(active_competition: str = "") -> dict:
         "schema_version": SCHEMA_VERSION,
         "active_competition": active_competition,
         "updated_at": None,
-        "sessions": {},        # session_id -> {...}
-        "gpu_runs": {},        # experiment_id -> {...}
-        "tasks": {},           # task_id -> {status, allowed_area}
+        "sessions": {},        # session_id -> {...}  (in-flight Jules)
+        "gpu_runs": {},        # experiment_id -> {...} (in-flight training)
+        # --- the single work ledger (planner/innovator auto-append here) ---
+        "tasks": {},           # task_id -> {title,status,allowed_area,hypothesis,story,acceptance,dod,spec_path,...}
+        "hypotheses": {},      # H-id -> {statement,status,expected_effect,source_refs,experiments:[]}
+        "experiments": {},     # E-id -> {hypothesis,config,backend,cv_score,status,...}
+        "suggestions": {},     # S-id -> {title,change_size,status,...}
+        "decisions": {},       # D-id -> {entity,decision,rationale,...}
+        "metrics": [],         # append-only [{name,value,unit,at}]
         "submit_counter": {},  # "YYYY-MM-DD" -> int
         "best_cv": None,
         "cursors": {},
@@ -97,6 +115,42 @@ def _apply_op(state: dict, op: str, data: dict) -> None:
         state["best_cv"] = data["score"]
     elif op == "set_cursor":
         state["cursors"][data["key"]] = data["value"]
+    # --- ledger ops (R-004) ---
+    elif op == "create_task":
+        tid = data["id"]
+        rec = {k: v for k, v in data.items() if k != "id"}
+        rec.setdefault("status", "BACKLOG")
+        state["tasks"][tid] = {**state["tasks"].get(tid, {}), **rec}
+    elif op == "create_hypothesis":
+        state["hypotheses"][data["id"]] = {
+            **state["hypotheses"].get(data["id"], {}),
+            **{k: v for k, v in data.items() if k != "id"},
+        }
+    elif op == "create_experiment":
+        state["experiments"][data["id"]] = {
+            **state["experiments"].get(data["id"], {}),
+            **{k: v for k, v in data.items() if k != "id"},
+        }
+    elif op == "create_suggestion":
+        state["suggestions"][data["id"]] = {
+            **state["suggestions"].get(data["id"], {}),
+            **{k: v for k, v in data.items() if k != "id"},
+        }
+    elif op == "create_decision":
+        state["decisions"][data["id"]] = {
+            **state["decisions"].get(data["id"], {}),
+            **{k: v for k, v in data.items() if k != "id"},
+        }
+    elif op == "add_metric":
+        state["metrics"].append({k: v for k, v in data.items()})
+    elif op == "set_status":
+        coll = state.setdefault(data["collection"], {})
+        coll.setdefault(data["id"], {})["status"] = data["status"]
+    elif op == "update_entity":
+        coll = state.setdefault(data["collection"], {})
+        coll.setdefault(data["id"], {}).update(
+            {k: v for k, v in data.items() if k not in ("collection", "id")}
+        )
     else:
         raise ValueError(f"unknown op: {op}")
 

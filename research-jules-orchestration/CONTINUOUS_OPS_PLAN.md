@@ -28,11 +28,8 @@ Each operator tick (via `tools context` → decide → `tools apply`) runs these
 
 The operator never idles: if nothing else is actionable it generates the next hypothesis/experiment or deepens analysis (SDLC always-move-forward).
 
-## 4. New state ledgers (to implement when we "start")
-Add to the toolkit/state (small additions to `state.py` + task-file conventions):
-- **Hypotheses ledger** `competitions/<slug>/hypotheses/H-XXX.md` + index in `state.json`: `{id, statement, rationale, expected_effect, status: proposed|testing|supported|refuted, source_refs, experiments:[E-IDs]}`.
-- **Experiments ledger** `competitions/<slug>/experiments/E-XXX/` + `state.json`: `{id, hypothesis, config (data recipe / LoRA params), backend, jules_sessions:[], cv_score, status, artifact, notes}`.
-- Linkage: hypothesis → experiments → Jules sessions / GPU runs → CV → submit decision. This is the SDLC event-sourced pattern extended to research.
+## 4. Single work ledger — IMPLEMENTED (R-004)
+The SDLC single-ledger model now runs on git-JSON. `state/state.json` (+ `events.jsonl`) is the ONE store with collections **tasks / hypotheses / experiments / suggestions / decisions / metrics** (the "sheets"). The operator appends work via ops (`create_task`, `create_hypothesis`, `create_experiment`, `set_status`, `update_entity`, …) — **no hand-authored task .md as source of truth**. `orchestrator/selector.py` (ported `score_roles`) role-selects the next item each run via `python -m orchestrator.tools next`. A read-only Excel view is `state/dashboard.xlsx` (`tools dashboard`). Verified live: seeded all R-tasks → selector picked `owner` (score 40) → dashboard generated. 93 tests green.
 
 ## 5. Deep, parallel Jules tasks (your explicit ask)
 - **Deep contract:** `prompts/jules_deep_worker.md` — tasks are scoped *big* and Jules is told to take its time, plan, mine references, build in steps, self-verify, self-review, and only PR when truly complete. Each task carries acceptance criteria + a definition-of-done.
