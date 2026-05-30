@@ -32,3 +32,6 @@ The generic SDLC skill mutates an Excel workbook (`state.xlsx`) via `scripts/sta
 - The operator (Claude Code) invokes **`/sdlc`** (or follows `prompts/operator_tick.md`, which points here) to run one tick.
 - AGENTS.md (Jules-facing) notes that task contracts follow the SDLC owner-role discipline.
 - Do not invoke the Excel scripts; do not create `state.xlsx`.
+
+## Task sizing (R-005, enforced by planner)
+Every `create_task` op appends a task sized for **~1 hour of Jules work**. Smaller items (≤15 min) are clubbed 2–3 at a time into one coherent deliverable; bigger items (>2 h / >5 files of new code / whole pipelines) are split into independent siblings the planner can fan out in parallel. Reviewer enforces scope: PRs that grew past ~1 hour become follow-up tasks instead of monster merges. See SKILL.md "Task sizing rule" for the full heuristic.

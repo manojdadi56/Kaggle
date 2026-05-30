@@ -29,6 +29,17 @@ Full mapping: `INTEGRATION.md`. Role/capability DNA: `references/`.
 - **validator** (`references/role_validator.md`) — judge a proposed change/experiment before spending GPU.
 - **reporter** (`references/role_reporter.md`) — status digest when nothing else is productive.
 
+## Task sizing rule (R-005 — non-negotiable)
+**Every task you append to the ledger must be sized for ~1 hour of Jules work** — a single substantive deliverable a careful worker can plan, build, self-verify, and PR in one session. Calibrate against the deep-worker SOP (`prompts/jules_deep_worker.md`).
+
+- **Too small** (≤15 min each) — **club 2–3 related items** into one task (e.g. "analyze winner training + LR schedule + loss config" → one task), keep their distinct acceptance criteria as a checklist, keep the `allowed_area` covering all the files they touch.
+- **Right-sized** (~30–90 min) — ship as one task.
+- **Too big** (>2 hours / a whole pipeline / >5 files of substantive new code) — **split** into independent siblings the planner can fan out in parallel: per-category, per-stage, or per-file. Each split is itself a ~1-hour task with its own acceptance criteria.
+- **Clubbing safe-pair test:** items may club only if they (a) share the same `allowed_area` (or fit cleanly under one), (b) read the same references, and (c) have a coherent single deliverable. If "Summary / Evidence / DoD" would naturally fragment into separate sections per item, prefer splitting instead.
+- **Concrete heuristics:** ≤1 new module + tests · ≤3 short analysis files into one digest · 1 deterministic solver per category · 1 ablation per task · 1 review-and-merge cluster per task.
+
+The planner role enforces this every time it appends `create_task` ops; the reviewer rejects PRs that grew past scope and spawns follow-up tasks instead.
+
 ## The single work ledger (R-004 — this is the "Excel sheet", git-JSON)
 ALL work lives in ONE store: `state/state.json` (+ append-only `events.jsonl`), with collections **tasks / hypotheses / experiments / suggestions / decisions / metrics** (the "sheets"). Planner & innovator **append** work here via ops (`create_task`, `create_hypothesis`, …) — never as hand-authored `.md` files. A read-only Excel view is `state/dashboard.xlsx` (`python -m orchestrator.tools dashboard`).
 
