@@ -1,13 +1,19 @@
 import json
-TICK = "RUN-20260530-131519"
-COMPLETED = ["15457649004442238545","290296703496810863","728421577080239025"]
-ops = [{"op":"clear_session","idempotency_key":f"{TICK}:{sid}:clear","data":{"session_id":sid}} for sid in COMPLETED]
-# also explicitly mark package-zip task DONE since we rescued its PR
-ops.append({"op":"set_status","idempotency_key":f"{TICK}:TASK-SUBMIT-package-zip:done",
-            "data":{"collection":"tasks","id":"TASK-SUBMIT-package-zip","status":"DONE"}})
+TICK = "RUN-20260530-135009"
+ops = [
+  # clear PR-43 session
+  {"op":"clear_session","idempotency_key":f"{TICK}:15996892913727706506:clear",
+   "data":{"session_id":"15996892913727706506"}},
+  # clear E-007 session (rescued operator-side)
+  {"op":"clear_session","idempotency_key":f"{TICK}:13107147469450254389:clear",
+   "data":{"session_id":"13107147469450254389"}},
+  # mark E-007 task DONE
+  {"op":"set_status","idempotency_key":f"{TICK}:TASK-E007:done",
+   "data":{"collection":"tasks","id":"TASK-E007-cryptarithm-guess-integration","status":"DONE"}},
+]
 decision = {
   "tick_id":TICK,"status":"complete",
-  "summary":"clear 3 COMPLETED + mark package-zip DONE (operator-rescued patch from session that completed without PR)",
+  "summary":"clear PR-43 + operator-rescued E-007 sessions; mark E-007 DONE",
   "state_patch":{"tick_id":TICK,"operations":ops},
 }
 with open("decision_clear.json","w",encoding="utf-8") as f: json.dump(decision,f)

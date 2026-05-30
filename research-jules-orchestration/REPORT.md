@@ -256,3 +256,63 @@ The orchestrator fills `{{...}}` from the chosen `tasks/<id>.md` and sends it as
 
 ## 10. Workspace map
 - [00_research_plan](00_research_plan.md) · [01_pre_registration](01_pre_registration.md) · [02_findings_log](02_findings_log.md) · [03_assumption_log](03_assumption_log.md) · [04_open_questions](04_open_questions.md) · [05_contradictions](05_contradictions.md) · [06_source_log](06_source_log.md) · [07_glossary](07_glossary.md) · [08_progress_snapshots](08_progress_snapshots.md) · [09_meta_log](09_meta_log.md) · [10_steelman](10_steelman.md) · [INDEX](INDEX.md)
+
+---
+
+# ADDENDUM — Audit 2026-05-30 (max-rigor full-system review)
+
+## Executive summary (audit pass)
+
+The infrastructure is **complete on paper, untriggered in practice**. Across 36 merged Jules tasks the orchestrator's code surfaces (state, locks, dispatcher, executor registry, run-kernel runner, packaging, validate-adapter, submit-gate) are all authored and unit-tested. But **no end-to-end execution has occurred**: `best_cv: null`, `gpu_runs: 0`, `metrics: 0`, `submissions: 0`. The audit identified **5 live integration defects** that would block the first GPU run even if a trigger fired, plus **6 invalidated assumptions** carried in from the prior summary. Net effect: the system is **7 mechanical fixes** away from being able to produce a first CV — none requiring re-architecting.
+
+## Critical-path corrections list (priority order)
+
+| # | Correction | Type | Risk | Owner |
+|---|------------|------|------|-------|
+| 1 | Fix `loop.py` `/tmp/gpu_run_{slug}.log` → cross-platform `tempfile.NamedTemporaryFile(prefix=...)` | Code edit | Trivial | Operator (this session) — safe |
+| 2 | Add `_apply_op` branch for `gpu_dispatch` in `state.py` (currently in OPS but no projection handler — F-062) | Code edit | Low | Operator — safe |
+| 3 | Reconcile `slug` vs `experiment_id` in `update_gpu_run` data shape across `loop.py` ↔ `state.py` (F-061) | Code edit | Low | Operator — safe |
+| 4 | Normalize hypothesis status casing (F-058) — coerce `proposed` → `PROPOSED` at projection time, or fix the planner-emitted-patch to upper-case | Code edit | Low | Operator — safe |
+| 5 | Fix all 7 `kernel-metadata.json` files: real owner (`sai1881/...`), real dataset slug (Q-018), real model version (Q-019), boolean types not strings (F-053) | Code + config | Med (needs Q-018, Q-019 answered) | User-confirmed values, then operator applies |
+| 6 | Seed 4 new ledger tasks: TASK-FIX-kernel-metadata, TASK-E002-push-and-train, TASK-E007-RESCOPE, TASK-E002-SMOKE-RUN | Ledger seed | Low (only changes ledger, no external calls) | Operator — safe |
+| 7 | Resolve E-007 stuck session (F-057): either `sendmessage` steer to NEEDS_SPLIT, or kill + re-dispatch with widened `allowed_area` | Live op on Jules | **Med — externally visible** | **User decision required** |
+| 8 | Create cron / Task Scheduler trigger to fire `tools dispatch + tools status` periodically (F-054) — autonomous operation depends on this | Scheduler | **Med — runs unattended** | **User decision required** (cadence, command) |
+
+## Synthesis — the audit-level pattern
+
+Every defect (C-007..C-011, plus the missing kernel-metadata customisation) lives **at a seam**:
+- between the op-name registry (`OPS`) and the op-handler (`_apply_op`);
+- between the call-site (`loop.py`) and the projection (`state.py`);
+- between Windows host and POSIX assumption;
+- between the task spec and the locked `allowed_area`;
+- between the kernel-metadata template and per-account substitution;
+- between the design (cron-driven autonomous loop) and the runtime (no cron exists).
+
+This is the characteristic failure mode of **many small Jules PRs each authored by a different short-lived session** — within-PR invariants are preserved; cross-PR invariants drift. The remedy at the workflow level: every cross-cutting invariant gets either (a) clubbed into one task (R-005 sizing rule allows up to ~1h, all these would qualify), or (b) backed by an integration test that fails until both halves land.
+
+## Honest reframe (from the steelman, counter-arg 7)
+
+"Autonomous loop" overpromises the current state. The accurate framing is **"manually-supervised pipeline with autonomous sub-steps."** The Jules sub-steps (authoring code, opening PRs, getting auto-merged) are genuinely autonomous; the operator-level dispatch is gated on a cron that doesn't exist. The pre-registered "tick-driven progress without intervention" hypothesis is **disconfirmed**. To match the original promise, the user must approve either (a) creating a real cron, or (b) accepting that this session is the cron — fires when invoked.
+
+## Concrete next ticks (after corrections #1-#6 land)
+
+1. **Smoke run** (recommended by steelman counter-arg 8): push a 5-minute kernel (rank=4, max_steps=20, 100 rows) to confirm the full kernel-push → output-pull → cv-ingest chain works before burning 3hr on E-002.
+2. **TASK-E002-push-and-train** — fires `gpu_dispatch {experiment_id: "E-002-baseline-rank32", backend: "kaggle_gpu", slug: "sai1881/train-baseline-e002", kernel_dir: "competitions/.../kernels/train-baseline-e002", owner: "sai1881", out_dir: "competitions/.../experiments/E-002-baseline-rank32"}`.
+3. **First cv_score lands** → submit-gate evaluates: `cv ≥ MIN_SANITY_FLOOR=0.40` AND `submits_today < cap` → upload `submission.zip` + `competitions submit`.
+4. **First Kaggle submission recorded** → `submit_counter[date] += 1`, `best_cv = cv_score`, audit trail in `submissions/submitted/<date>-E-002.json`.
+
+After (4) the rest of the experiment matrix (E-003..E-008) can be batch-fired; E-009 synthesis remains gated on those CV results.
+
+## Workspace updates
+
+- Findings F-053..F-064 added → `02_findings_log.md`.
+- Open questions Q-018..Q-025 added → `04_open_questions.md`.
+- Assumptions A-021..A-028 added (6 invalidated, 2 active/flagged) → `03_assumption_log.md`.
+- Contradictions C-007..C-011 added (5 live defects) → `05_contradictions.md`.
+- Sources S-033..S-038 added (live primary evidence only) → `06_source_log.md`.
+- Steelman counter-args 7 (audit) + 8 (smoke-run gate) added → `10_steelman.md`.
+- Snapshot N added → `08_progress_snapshots.md`.
+- Audit pass notes added → `09_meta_log.md`.
+- This addendum added → `REPORT.md`.
+- INDEX → updated below.
+

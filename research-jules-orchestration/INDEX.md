@@ -15,7 +15,10 @@ Research workspace for the implementation plan. **The plan is [REPORT.md](REPORT
 The **operator is the Claude Code session on the user's subscription** (no API key). On a recurring trigger (a scheduled Routine, or Task-Scheduler `claude -p` via an OAuth token), it runs one **tick**: `tools context` → review open PRs + decide → `tools apply`. That drives a pure Python **toolkit** which triggers **Jules** (worker, `POST /v1alpha/sessions` with `AUTO_CREATE_PR` + auto-approved plans) to author non-GPU code and open PRs, **reviews/merges** those PRs, drives a **GPU executor** (Kaggle / the 40 GB box — Jules has no GPU and the comp is LoRA training), packages the adapter, and submits within budget. State is git-committed JSON/markdown using the SDLC event-sourced, idempotent, single-writer patterns. Real constraints: **compute** + **~16-day deadline** → **baseline-first**.
 
 ## Key metrics
-- Findings **36** · Sources **31** (1 live primary probe) · Assumptions **15** (2 invalidated) · Open Qs **13** (5 High) · Contradictions **5** · Steel-man counter-args **6**.
+- Findings **64** (F-053..F-064 added 2026-05-30 audit) · Sources **38** (6 live primary in audit) · Assumptions **28** (8 invalidated, 6 in audit) · Open Qs **25** (8 added in audit) · Contradictions **11** (5 live-defect contradictions added in audit) · Steel-man counter-args **8**.
+
+## Audit 2026-05-30 — TL;DR
+The system is **infrastructure-complete, execution-untriggered**: `best_cv: null`, `gpu_runs: 0`, `submissions: 0`, no cron scheduled, 7 kernel-metadata files have placeholder `username/`/`placeholder-version` values, and the `gpu_dispatch` op is half-wired (in OPS but missing projection arm). **5 live defects** + **6 invalidated assumptions** + **8 new questions**. See [REPORT.md addendum](REPORT.md#addendum--audit-2026-05-30-max-rigor-full-system-review) for the corrections list and next ticks.
 
 ## Navigation
 | File | What's in it |

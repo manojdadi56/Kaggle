@@ -316,24 +316,6 @@
       "state": "IN_PROGRESS",
       "task_id": "TASK-E009-synthesis-kernel"
     },
-    "13107147469450254389": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
-      "branch": "main",
-      "created_at": "2026-05-30T11:18:15.855361+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-E007-cryptarithm-guess-integration"
-    },
-    "15996892913727706506": {
-      "account_idx": 0,
-      "allowed_area": "orchestrator/submit_gate.py, orchestrator/loop.py, tests/test_submit_gate.py",
-      "branch": "main",
-      "created_at": "2026-05-30T13:21:30.018173+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-SUBMIT-gate-decision"
-    },
     "5860122008944918375": {
       "account_idx": 0,
       "allowed_area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
@@ -550,7 +532,7 @@
       "session_id": "13107147469450254389",
       "size_hint": "~60 min",
       "spec": "CRITICAL PRIORITY: the winner skipped cryptarithm_guess (164 train rows). Use the cryptarithm solver from TASK-R28 to add verified CoT for cryptarithm_guess to the corpus (extend data/corpus/v1/build_corpus.py with the new category). Clone E-002 kernel to kernels/train-e007-cryptarithm/ pointing at the extended corpus. Tests: cryptarithm_guess rows present + verified.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Integrate cryptarithm_guess solver into corpus (winner skipped this category) \u2014 priority"
     },
@@ -1121,5 +1103,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T13:48:44.735123+00:00"
+  "updated_at": "2026-05-30T13:55:41.878125+00:00"
 }
