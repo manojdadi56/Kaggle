@@ -1,0 +1,31 @@
+## Summary
+Implemented the `vllm_eval.py` evaluation harness to faithfully emulate the Kaggle host environment for Nemotron reasoning. Added a comprehensive 5-row mock testing suite in `test_vllm_eval.py` to ensure unit testability without GPU resources.
+
+## Plan & steps
+1. Extracted and isolated the `\boxed{...}` parsing logic and numeric normalization (±1e-2 tolerance) to directly reside within `vllm_eval.py` to ensure a self-contained submission.
+2. Built the CLI and core `vllm` execution logic with host parameters (`max_tokens=7680`, `max_model_len=8192`, `temperature=0`, `max_lora_rank=32`).
+3. Added a `--mock` flag to allow generation of synthetic outputs matching the test fixture requirements.
+4. Exported evaluation metrics (overall stats and per-category accuracy breakdowns) to a robust `cv_score.json` format.
+5. Wrote `test_vllm_eval.py` in the `tests` directory mimicking a full mock-mode roundtrip.
+
+## Evidence
+- `pytest -q competitions/nvidia-nemotron-model-reasoning-challenge/tests/test_vllm_eval.py competitions/nvidia-nemotron-model-reasoning-challenge/eval/` runs green.
+- Mock-mode roundtrip correctly generates expected accuracy counts across the fixture's diverse subset.
+- Code avoids loading `vllm` libraries globally, avoiding CI/CD crashes on CPU-only machines.
+
+## Self-review
+- Extraction logic uses brace counting over pure regex, matching the host's need to correctly balance potentially nested `{}` strings.
+- All files strictly adhere to the user's `allowed_area` invariant.
+- Unnecessary imports have been squashed to maintain complete scope containment.
+- Cleaned up temp artifacts.
+
+## Risks
+- The script uses conditional imports for `vllm` which require correct package availability at runtime on the eventual GPU node; mock mode mitigates development risk.
+- Assumes inputs provide `"problem"` or `"question"` keys.
+
+## Definition-of-done check
+- [x] Plan written and followed; task is genuinely complete (not a stub)
+- [x] Relevant references mined + cited; built on the winner where applicable
+- [x] Tests/validation run; generated data verified correct; edge cases considered
+- [x] Self-review pass done; diff within allowed_area; invariants respected
+- [x] PR body complete
