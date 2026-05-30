@@ -84,10 +84,11 @@
       "created_at": null,
       "cv_score": null,
       "fix": "chmod +x ptxas-blackwell from utility-script (Blackwell triton wheel ships non-executable on RTX Pro 6000)",
+      "fix_v27": "cutlass DSL site-dir + ptxas chmod + bnb install appended to user heartbeat cell 0",
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
-      "machine": "NvidiaTeslaT4",
+      "machine": "NvidiaRtxPro6000",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 17,
+      "notebook_version": 27,
       "state": "AWAITING_USER_RUN"
     }
   },
@@ -379,7 +380,7 @@
       "branch": "main",
       "created_at": "2026-05-30T22:46:29.779211+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-NOTEBOOK-stratified-batching"
     },
     "3423175478610363796": {
@@ -406,7 +407,7 @@
       "branch": "main",
       "created_at": "2026-05-30T22:46:32.380066+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-NOTEBOOK-target-masking"
     },
     "6780419095411095356": {
@@ -417,15 +418,6 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-CORPUS-scale-9cat"
-    },
-    "9475504503105628655": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
-      "branch": "main",
-      "created_at": "2026-05-30T22:40:17.378623+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-ABLATION-configs"
     }
   },
   "submit_counter": {},
@@ -528,7 +520,7 @@
       "priority": "P1",
       "session_id": "9475504503105628655",
       "spec": "Create a single Python module that yields 5 ablation configs as dicts (one per knob), each one compatible with our notebook's tunables (LORA_RANK, MAX_TRAIN, REASONING_ON, EPOCHS, etc). Place at competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py exposing CONFIGS = {'baseline':..., 'rank16':..., '2epoch':..., 'curriculum':..., 'select2reason':..., 'logprob_filter':...}}. For each, include: (a) the parameter delta from baseline (e.g. rank=16 instead of 32), (b) one-line hypothesis, (c) source citation (winner repo file:line or discussion id). Also write experiments/README.md explaining how the operator applies one config to the notebook via save_notebook (search/replace the tunable block). Add tests/test_ablation_configs.py asserting all 6 keys exist and each has the required fields. Acceptance: 6 configs total (baseline + 5); each has rank, alpha, epochs, lr, target_modules, hypothesis, source; pytest -q green.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Pre-build 5 ablation config JSONs (rank16, 2epoch, curriculum, select2reason, logprob_filter)"
     },
     "TASK-CORPUS-scale-9cat": {
@@ -1443,5 +1435,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T22:46:32.386143+00:00"
+  "updated_at": "2026-05-30T22:58:28.160444+00:00"
 }

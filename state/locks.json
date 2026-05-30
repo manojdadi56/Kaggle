@@ -1,10 +1,6 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-ABLATION-configs": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
-      "kind": "jules"
-    },
     "TASK-CORPUS-scale-9cat": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
       "kind": "jules"
