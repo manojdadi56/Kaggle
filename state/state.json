@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 47
+    "jules_dispatched_2026-05-30": 50
   },
   "decisions": {
     "D-AUDIT-2026-05-30": {
@@ -360,6 +360,15 @@
       "state": "QUEUED",
       "task_id": "TASK-DATA-cot-corpus-v1"
     },
+    "3959759277942667967": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx, tests/test_community_and_tabs.py",
+      "branch": "main",
+      "created_at": "2026-05-30T21:17:11.924311+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-XLSX-community-and-tabs"
+    },
     "4066723169138526005": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_vs_current_v1.md",
@@ -368,6 +377,15 @@
       "pr_url": null,
       "state": "QUEUED",
       "task_id": "TASK-RESEARCH-winner-vs-ours"
+    },
+    "4245240514941347715": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx, tests/test_discussions_extract.py",
+      "branch": "main",
+      "created_at": "2026-05-30T21:17:14.547105+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-XLSX-discussions-extract"
     },
     "7816444016371433148": {
       "account_idx": 0,
@@ -386,6 +404,15 @@
       "pr_url": null,
       "state": "QUEUED",
       "task_id": "TASK-RESEARCH-mine-top-notebooks"
+    },
+    "9470450860965081304": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx, tests/test_winner_code_analysis.py",
+      "branch": "main",
+      "created_at": "2026-05-30T21:17:17.632853+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-XLSX-winner-code-analysis"
     }
   },
   "submit_counter": {},
@@ -1283,22 +1310,26 @@
     },
     "TASK-XLSX-community-and-tabs": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx, tests/test_community_and_tabs.py",
+      "branch": "main",
       "created_at": "2026-05-31T01:30:00Z",
       "est_hours": 1.5,
       "hypothesis_id": "H-DEEP-ANALYSIS-XLSX",
       "priority": "P1",
+      "session_id": "3959759277942667967",
       "spec": "Read these reference files: (a) competitions/.../references/community-sources.md (95KB, multi-section), (b) all 6 analysis-*.md files, (c) all 7 tab-*.md files (overview, rules, data, code, models, leaderboard, discussion-list), (d) technique-backlog.md + DIGEST-community.md + scraped-index.md. Build ONE Excel workbook at competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx with these sheets: (1) 'CommunityCode' \u2014 every code-snippet/repo/notebook referenced in community-sources.md: source_block | author | what_it_does | key_techniques | applicable_to_us. (2) 'CompetitionFacts' \u2014 extracted from tab-overview/rules/data: fact | source_tab | implication_for_us (eval metric, daily cap, accelerator grant, scoring formula etc.). (3) 'TechniqueBacklog' \u2014 every ranked technique from technique-backlog.md + DIGEST-community.md: rank | technique | source | effort_S/M/L | expected_gain | rationale | status (TODO/DONE/SUPERSEDED). (4) 'OurAnalysisSummary' \u2014 distill our own 6 analysis-*.md files into key conclusions per file. Use openpyxl. Acceptance: xlsx with all 4 sheets; >=30 community-code rows; >=20 facts; >=9 backlog rows.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Excel: community-sources + 6 analyses + 7 tab pages + technique-backlog into one workbook"
     },
     "TASK-XLSX-discussions-extract": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx, tests/test_discussions_extract.py",
+      "branch": "main",
       "created_at": "2026-05-31T01:30:00Z",
       "est_hours": 2.0,
       "hypothesis_id": "H-DEEP-ANALYSIS-XLSX",
       "priority": "P0",
+      "session_id": "4245240514941347715",
       "spec": "Read ALL 217 files matching competitions/nvidia-nemotron-model-reasoning-challenge/references/discussion-*.md (1.08MB total). For each thread, extract structured rows. Build ONE Excel workbook at competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx with these sheets: (1) 'Threads' \u2014 one row per thread: file | topic_id | title_inferred | category (TRAIN_TRICK / DATA_TRICK / EVAL_TRICK / GPU_TIP / GOTCHA / SUBMIT_TIP / META / RULES) | word_count | author_count_inferred | confidence_rating_1to5. (2) 'Insights' \u2014 one row PER extracted insight (multiple per thread allowed): thread_file | insight_text | category | applicability_to_our_notebook (YES/MAYBE/NO) | expected_cv_delta_qualitative (HIGH/MED/LOW) | concrete_code_change_if_applicable. (3) 'Top20Actionable' \u2014 the 20 highest-impact insights ranked by expected_cv_delta and applicability, with concrete code-change pseudocode for our notebook_fork_working.ipynb. (4) 'KnownGotchas' \u2014 every documented failure mode (P100, mamba-ssm versions, OOM, chat template, boxed extraction, submission format etc.) with the fix. Use openpyxl. Acceptance: xlsx with all 4 sheets; >=217 rows on Threads; >=100 rows on Insights; exactly 20 on Top20Actionable with code-change pseudocode.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Excel: structured extraction from all 217 discussion-*.md threads"
     },
     "TASK-XLSX-master-roadmap": {
@@ -1314,14 +1345,16 @@
     },
     "TASK-XLSX-winner-code-analysis": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx, tests/test_winner_code_analysis.py",
+      "branch": "main",
       "created_at": "2026-05-31T01:30:00Z",
       "est_hours": 1.5,
       "hypothesis_id": "H-DEEP-ANALYSIS-XLSX",
       "priority": "P0",
+      "session_id": "9470450860965081304",
       "spec": "Read ALL 17 files matching competitions/nvidia-nemotron-model-reasoning-challenge/references/winner-*.md (135KB total: train_sft.py, reasoning.py, corpus.py, loss_config.py, lr_schedule.py, augmentation.py, generate_csv.py, train_common.py, upload_adapter.py, notebook_tinker.py, serve.sh, README.md, delete-tinker-checkpoint.sh, .mcp.json, CLAUDE.md, pyproject.toml, INDEX.md). Build ONE Excel workbook at competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx with these sheets: (1) 'Overview' \u2014 one row per file: filename | role | LoC | key_functions | depends_on | criticality_1to5. (2) 'TechnicalDetails' \u2014 one row per significant function/class across all 17 files: file | symbol | purpose | input | output | algorithm_summary | hyperparams_used | gotchas. (3) 'KeyImprovements' \u2014 one row per technique we should adopt: technique | source_file | source_lines | current_state_in_our_notebook | expected_cv_delta | priority_1to5 | code_change_pseudocode. (4) 'CoreApproach' \u2014 narrative cells: 'data_pipeline', 'training_recipe', 'inference_pipeline', 'evaluation_method', 'submission_packaging' \u2014 what the winner does end-to-end. (5) 'OpenQuestions' \u2014 things the code reveals about the winner's choices we don't yet understand. Use openpyxl. NO LLM/external API calls \u2014 pure file reading + parsing. Acceptance: xlsx exists with all 5 sheets populated; >= 17 rows on Overview; >= 30 rows on TechnicalDetails; >= 10 rows on KeyImprovements ranked by priority.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T21:17:06.738924+00:00"
+  "updated_at": "2026-05-30T21:17:17.640735+00:00"
 }

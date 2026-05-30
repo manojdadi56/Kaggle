@@ -20,6 +20,18 @@
     "TASK-RESEARCH-winner-vs-ours": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_vs_current_v1.md",
       "kind": "jules"
+    },
+    "TASK-XLSX-community-and-tabs": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx, tests/test_community_and_tabs.py",
+      "kind": "jules"
+    },
+    "TASK-XLSX-discussions-extract": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx, tests/test_discussions_extract.py",
+      "kind": "jules"
+    },
+    "TASK-XLSX-winner-code-analysis": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx, tests/test_winner_code_analysis.py",
+      "kind": "jules"
     }
   }
 }
