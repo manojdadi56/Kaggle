@@ -51,7 +51,7 @@ def compute_logprobs(logits, labels, mask):
     return masked_log_probs, shift_mask
 
 def run_filter(input_path: str, output_path: str, smoke: bool = False):
-    model_name = "gpt2" if smoke else f"/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/placeholder-version/1"
+    model_name = "gpt2" if smoke else f"/kaggle/input/nvidia-nemotron-3-nano-30b-a3b-bf16/transformers/default/1"
     print(f"Loading model: {model_name}")
 
     if smoke:
