@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 42
+    "jules_dispatched_2026-05-30": 43
   },
   "decisions": {
     "D-AUDIT-2026-05-30": {
@@ -312,6 +312,15 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "12749140667475037666": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
+      "branch": "main",
+      "created_at": "2026-05-30T14:19:13.062724+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-FIX-kernel-metadata"
+    },
     "4390025997776432846": {
       "account_idx": 0,
       "allowed_area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
@@ -678,11 +687,13 @@
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
       "blocked_by": null,
+      "branch": "main",
       "definition_of_done": "One PR; tests green.",
       "mode": "deep",
+      "session_id": "12749140667475037666",
       "size_hint": "~30 min",
       "spec": "Each kernel-metadata.json has dataset_sources=['TODO/REPLACE-WITH-CORPUS-DATASET-SLUG'] and model_sources=['TODO/REPLACE-WITH-REAL-MODEL-VERSION-FROM-KAGGLE']. Replace with the real Kaggle dataset slug owned by sai1881 holding corpus.jsonl v1 (built by TASK-E001), and the real model-version slug for Nemotron-3-Nano-30B-A3B-BF16. Validate with kaggle_lite kernel-push dry-run. Blocked on Q-018/Q-019.",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "story": "US-4",
       "title": "Replace TODO dataset_sources + model_sources in 8 kernel-metadata.json files"
     },
@@ -1166,5 +1177,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T14:18:06.415235+00:00"
+  "updated_at": "2026-05-30T14:19:13.070627+00:00"
 }

@@ -1,16 +1,12 @@
 {
   "cap": 15,
   "holders": {
-    "TASK-E007-cryptarithm-guess-integration": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
+    "TASK-FIX-kernel-metadata": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels",
       "kind": "jules"
     },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
-      "kind": "jules"
-    },
-    "TASK-SUBMIT-gate-decision": {
-      "area": "orchestrator/submit_gate.py, orchestrator/loop.py, tests/test_submit_gate.py",
       "kind": "jules"
     }
   }
