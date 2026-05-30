@@ -1,0 +1,35 @@
+# Winner solution — `pyproject.toml`
+
+- **source repo:** https://github.com/tonghuikang/nemotron (tonghuikang, Open Progress Prize, LB ~0.85)
+- **file:** pyproject.toml
+- **chars:** 456
+
+---
+
+```toml
+[project]
+name = "claude-code-template"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "jinja2>=3.1.6",
+    "modal>=1.4.1",
+    "pydantic>=2.12.1",
+    "tinker>=0.16.1",
+    "tinker-cookbook>=0.3.0",
+    "torch>=2.11.0",
+    "transformers==4.57.6",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "ruff>=0.13.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = [".claude"]
+
+```
