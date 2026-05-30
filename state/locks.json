@@ -4,18 +4,6 @@
     "TASK-E007-cryptarithm-guess-integration": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-e007-cryptarithm",
       "kind": "jules"
-    },
-    "TASK-E008-logprob-filter": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
-      "kind": "jules"
-    },
-    "TASK-OPS-gpu-dispatch-op": {
-      "area": "orchestrator/state.py, orchestrator/loop.py, tests/test_gpu_dispatch.py",
-      "kind": "jules"
-    },
-    "TASK-SUBMIT-package-zip": {
-      "area": "tools/package_submission.py, tests/test_package_submission.py",
-      "kind": "jules"
     }
   }
 }

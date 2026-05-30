@@ -288,33 +288,6 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-E007-cryptarithm-guess-integration"
-    },
-    "15457649004442238545": {
-      "account_idx": 0,
-      "allowed_area": "orchestrator/state.py, orchestrator/loop.py, tests/test_gpu_dispatch.py",
-      "branch": "main",
-      "created_at": "2026-05-30T12:48:21.756971+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-OPS-gpu-dispatch-op"
-    },
-    "290296703496810863": {
-      "account_idx": 0,
-      "allowed_area": "tools/package_submission.py, tests/test_package_submission.py",
-      "branch": "main",
-      "created_at": "2026-05-30T12:48:24.526405+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-SUBMIT-package-zip"
-    },
-    "728421577080239025": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008",
-      "branch": "main",
-      "created_at": "2026-05-30T12:26:33.812779+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-E008-logprob-filter"
     }
   },
   "submit_counter": {},
@@ -538,7 +511,7 @@
       "session_id": "728421577080239025",
       "size_hint": "~75 min",
       "spec": "Add data/curation/logprob_filter.py: inference-pass the BASE model over corpus, record per-row min token log-prob, drop rows where min_logprob > -0.05. Clone E-002 kernel to kernels/train-logprob-filter-e008/ pointing at the filtered corpus. Document the dropped-rows histogram by category in the PR.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Pre-filter corpus by base-model min log-prob (drop already-easy examples)"
     },
@@ -636,7 +609,7 @@
         "orchestrator/state.py ALLOWED_OPS"
       ],
       "spec": "Extend the orchestrator to dispatch merged kernel experiments to Kaggle GPU automatically. (1) state.py: add op 'gpu_dispatch' with data={experiment_id, kernel_dir, owner, slug, out_dir}; appends to state['gpu_runs'][slug] = {state:'QUEUED', experiment_id, started_at, kernel_url:None}. (2) loop.py.apply_decision: if decision contains gpu_dispatch ops, invoke tools.run_kernel.py (via subprocess.run with --mock=$RUN_KERNEL_MOCK) and update gpu_runs[slug] with terminal_state + cv_aggregate. (3) loop.py.poll_in_flight: extend to also poll non-terminal gpu_runs and update their state. (4) Add tests/test_gpu_dispatch.py exercising the mock path. Acceptance: an experiment with status=READY_FOR_GPU + kernel_dir set, when included in a decision's gpu_dispatch list, ends up with gpu_runs[slug].state in {COMPLETE,ERROR,TIMEOUT} and (on complete) cv_aggregate captured. pytest -q green.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Wire gpu_dispatch op into orchestrator/loop.py + state.py (auto-run merged kernels)"
     },
     "TASK-OPS-run-kernel-runner": {
@@ -1033,7 +1006,7 @@
         "AGENTS.md submission handoff"
       ],
       "spec": "Create tools/package_submission.py with CLI: --adapter <adapter_dir> --out <submission.zip> [--cv-score <path>] [--manifest <path>]. Behavior: (1) Validate adapter dir has adapter_config.json + adapter_model.{safetensors,bin}; validate rank <= 32 (same check as validate_adapter.py - import that function, don't duplicate). (2) Build submission.zip with the host-required layout (adapter_config.json at root, adapter_model.safetensors at root, tokenizer files passed through if present). (3) Write a manifest.json inside the zip containing {cv_score, adapter_sha256, packed_at, experiment_id_if_provided}. (4) Print zip path + bytes + cv_score on stdout as JSON. (5) Add tests/test_package_submission.py covering: valid adapter -> zip created; rank>32 -> nonzero; missing files -> nonzero; zip contents include manifest.json. Acceptance: pytest -q green; CLI roundtrip on a stub adapter dir.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Write tools/package_submission.py that builds submission.zip from an adapter dir (Kaggle format)"
     },
     "TASK-SUBMIT-validate-adapter": {
@@ -1054,5 +1027,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T12:48:24.531044+00:00"
+  "updated_at": "2026-05-30T13:21:00.241779+00:00"
 }
