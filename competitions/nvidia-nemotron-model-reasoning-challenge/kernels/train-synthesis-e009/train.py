@@ -1,4 +1,12 @@
-"""placeholder synthesis pending ablation CV results"""
+"""pending synthesis pending ablation CV results"""
+
+import sys
+import subprocess
+try:
+    subprocess.run([sys.executable, "../../data/corpus/v1/build_corpus.py"], check=True)
+except Exception as e:
+    print(f"Error building corpus: {e}")
+
 import argparse
 import json
 import os
@@ -49,7 +57,7 @@ def run_training(rank: int, smoke: bool = False, data_path: str = None):
     if rank > 32:
         raise ValueError(f"LoRA rank must be <= 32, but got {rank}")
 
-    model_name = "gpt2" if smoke else f"/kaggle/input/nemotron-3-nano-30b-a3b-bf16/transformers/placeholder-version/1"
+    model_name = "gpt2" if smoke else f"/kaggle/input/nvidia-nemotron-3-nano-30b-a3b-bf16/transformers/default/1"
     print(f"Loading model: {model_name}")
 
     if data_path and os.path.exists(data_path):

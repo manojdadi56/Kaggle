@@ -1,3 +1,10 @@
+import sys
+import subprocess
+try:
+    subprocess.run([sys.executable, "../../data/corpus/v1/build_corpus.py"], check=True)
+except Exception as e:
+    print(f"Error building corpus: {e}")
+
 import argparse
 import json
 import os
