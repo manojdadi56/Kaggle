@@ -1,1 +1,0 @@
-{"tick_id": "CAMP-C3", "status": "complete", "summary": "v8 RUNNING on NvidiaTeslaT4 sm_75 (4-bit NF4 path)", "state_patch": {"tick_id": "CAMP-C3", "operations": [{"op": "update_gpu_run", "idempotency_key": "CAMP-C3:upd", "data": {"experiment_id": "nvidia-nemotron-submission-demo", "state": "RUNNING", "notebook_version": 8, "machine": "NvidiaTeslaT4"}}]}}
