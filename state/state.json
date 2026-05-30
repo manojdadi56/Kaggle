@@ -143,6 +143,17 @@
       "supersedes_notes": "covered by Wave-1 R-tasks",
       "title": "Author the QLoRA training script + Kaggle kernel"
     },
+    "TASK-K0-kaggle-access-smoke": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md",
+      "hypothesis": "H-OPS",
+      "mode": "deep",
+      "size_hint": "~20 min",
+      "spec": "Verify Jules has Kaggle access wired via the VM env vars. Run (capturing stdout):\n  python tools/kaggle_lite.py whoami\n  python tools/kaggle_lite.py submissions nvidia-nemotron-model-reasoning-challenge\n  python tools/kaggle_lite.py leaderboard nvidia-nemotron-model-reasoning-challenge\nWrite the THREE results (status + first 30 lines of body each) into competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md. Then in the PR Summary state whether kaggle_user is correct, today/cap (5), and our current LB position. NEVER print or commit KAGGLE_API_TOKEN / KAGGLE_USERNAME values themselves.",
+      "status": "READY",
+      "story": "US-OPS",
+      "title": "Kaggle access smoke test from the Jules VM"
+    },
     "TASK-R1": {
       "actor": "jules",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/taxonomy",
@@ -342,5 +353,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T08:02:21.848357+00:00"
+  "updated_at": "2026-05-30T08:19:15.920591+00:00"
 }

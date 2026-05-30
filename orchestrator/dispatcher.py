@@ -23,14 +23,25 @@ def _now() -> str:
 
 
 def _render_prompt(template: str, task: dict, slug: str) -> str:
-    return (template
-            .replace("{{task_id}}", task["id"])
-            .replace("{{title}}", task.get("title", task["id"]))
-            .replace("{{goal}}", task.get("spec", task.get("title", "")))
-            .replace("{{allowed_area}}", task.get("allowed_area", f"{SLUG_PREFIX}/{slug}/"))
-            .replace("{{acceptance_criteria}}", task.get("acceptance_criteria", "See task spec; ensure the deliverable is complete and tests pass."))
-            .replace("{{definition_of_done}}", task.get("definition_of_done", "Committed via one PR; tests green; acceptance criteria met."))
-            .replace("{{slug}}", slug))
+    rendered = (template
+                .replace("{{task_id}}", task["id"])
+                .replace("{{title}}", task.get("title", task["id"]))
+                .replace("{{goal}}", task.get("spec", task.get("title", "")))
+                .replace("{{allowed_area}}", task.get("allowed_area", f"{SLUG_PREFIX}/{slug}/"))
+                .replace("{{acceptance_criteria}}", task.get("acceptance_criteria", "See task spec; ensure the deliverable is complete and tests pass."))
+                .replace("{{definition_of_done}}", task.get("definition_of_done", "Committed via one PR; tests green; acceptance criteria met."))
+                .replace("{{slug}}", slug))
+    # Append a per-task authorization marker if the task carries submit_authorized.
+    # The marker is a session-prompt hint; the actual env-var KAGGLE_SUBMIT_AUTHORIZED
+    # must still be set on the Jules side (we suggest a one-line setup-script tweak
+    # for the rare task that needs it). Default: NOT authorized.
+    if str(task.get("submit_authorized", "")).lower() in ("1", "true", "yes"):
+        rendered += ("\n\n## Submission authorization\n"
+                     "This task IS authorized to call `python tools/kaggle_lite.py competition-submit`. "
+                     "Before doing so: re-read `submissions <comp>` to confirm there is daily-cap headroom, "
+                     "and put `submit_authorized: true` in your task header comment for audit. "
+                     "Set `export KAGGLE_SUBMIT_AUTHORIZED=1` for the single command, never globally.\n")
+    return rendered
 
 
 def select_ready(state: dict, n: int, locks) -> list[dict]:

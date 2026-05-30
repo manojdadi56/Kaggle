@@ -42,7 +42,10 @@ NEEDS_SPLIT:          (only if the task as scoped exceeds ~1 hour — proposed s
 ```
 
 ## Hard invariants (never violate)
-LoRA rank ≤ 32 · base model fixed (`Nemotron-3-Nano-30B-A3B-BF16`) · answers in `\boxed{...}` · one task, one PR, inside `{{allowed_area}}` · no secrets · offline tests only (no live Kaggle/Jules/Anthropic calls).
+LoRA rank ≤ 32 · base model fixed (`Nemotron-3-Nano-30B-A3B-BF16`) · answers in `\boxed{...}` · one task, one PR, inside `{{allowed_area}}`.
+
+## Secrets & Kaggle
+You DO have Kaggle access — provided as VM env vars (`KAGGLE_USERNAME`, `KAGGLE_API_TOKEN`) on jules.google. **Never print, log, or commit those values.** Use the API only through `python tools/kaggle_lite.py …` (see `AGENTS.md` "Kaggle access" for the allowed verbs). **Do NOT call competition submit yourself** — the operator runs a 5/day gate. For submissions, follow the "Submission handoff" pattern in `AGENTS.md`: upload the zip, capture the `blob_token`, and put a `## Submission proposal` block in your PR; the operator commits the actual submit.
 
 ## Self-check before opening the PR
 - [ ] Plan written and followed; task is genuinely complete (not a stub)
