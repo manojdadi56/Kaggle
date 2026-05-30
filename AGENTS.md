@@ -49,9 +49,18 @@ You may use the Kaggle web API via `python tools/kaggle_lite.py …`. The helper
 
 So the steady-state loop is: **operator writes code via API → user taps "Save & Run All" → operator monitors + submits.** Not fully hands-off (Kaggle forbids it for this comp's GPU), but the user only presses one button per iteration.
 
+### Multi-account Kaggle pool — use when one account is exhausted
+**Two Kaggle accounts** are configured in `.env` (gitignored):
+- **ACCT1 = `sai1881`** (`KAGGLE_API_TOKEN` / `KGAT`) — primary; all current notebooks live here.
+- **ACCT2 = `akhildadi`** (`KAGGLE_API_TOKEN_2` / `KGAT_2`) — team-mate fallback. Use when ACCT1 hits 5/day submit cap, runs out of weekly GPU hours, or is rate-limited.
+
+Each Kaggle account has independent quotas: 5 submissions/day, weekly GPU-hour pool, kernel sessions. **Combined = ~10 submissions/day usable + 2× GPU budget.**
+
+How to swap accounts: change the `Authorization: Bearer` header from `$KAGGLE_API_TOKEN` to `$KAGGLE_API_TOKEN_2` on the MCP `tools/call` request. The MCP server is bound to whichever Bearer you send. Caveat: a notebook owned by ACCT1 can only be edited/run from ACCT1 — to use ACCT2, the user must `Copy & Edit` the same demo under `akhildadi` and the operator then maintains a parallel `akhildadi/<slug>` notebook.
+
 ### Working reference
 - Reference notebook source: `notebook_fork_working.ipynb` (repo root) — data-load (glob `/kaggle/input/*/train.csv`) → kagglehub model + LoRA rank 32 → 1-epoch answer-masked SFT → `\boxed{}` eval + `cv_score.json` → `submission.zip`.
-- Live working fork: `sai1881/nvidia-testing` (kernel_id 121127681).
+- Live working fork: `sai1881/nvidia-nemotron-submission-demo` (the actively-iterated one, currently at v17 with ptxas chmod fix).
 - Demo's proven LoRA targeting: `target_modules=r".*\.(in_proj|out_proj|up_proj|down_proj)$"`, rank 32, alpha 16, bf16.
 - **kagglehub vs mount**: prefer reading the model from the mounted `/kaggle/input/...` path (it's attached as a dataSource on a fork). `kagglehub.model_download` works only when the model is already attached (it re-attaches otherwise → batch-mode error). If `/kaggle/input` shows the model, point `from_pretrained` straight at it.
 - MCP creds: Kaggle MCP is registered at user scope (`~/.claude.json`, HTTP transport, KGAT bearer). 66 tools. Call via JSON-RPC `tools/call` if the harness tools aren't loaded in-session.
