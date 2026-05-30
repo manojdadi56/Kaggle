@@ -13,12 +13,24 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
       "kind": "jules"
     },
-    "TASK-R23-curriculum-config": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
+    "TASK-R25-gravity-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/gravity",
       "kind": "jules"
     },
-    "TASK-R24-rank16-ablation-kernel": {
-      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
+    "TASK-R26-numeral-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/numeral",
+      "kind": "jules"
+    },
+    "TASK-R27-unit-conversion-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/unit_conversion",
+      "kind": "jules"
+    },
+    "TASK-R28-cryptarithm-solver": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
+      "kind": "jules"
+    },
+    "TASK-R29-eval-per-category-breakdown": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
       "kind": "jules"
     }
   }

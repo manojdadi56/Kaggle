@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 17
+    "jules_dispatched_2026-05-30": 22
   },
   "decisions": {},
   "experiments": {},
@@ -35,6 +35,15 @@
       "statement": "Cipher-category problems reduce to substitution+offset and admit a 100% deterministic solver.",
       "status": "proposed"
     },
+    "H-CRYPTARITHM": {
+      "expected_effect": "+0.07 LB on 659+164 cryptarithm rows",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "data/taxonomy/taxonomy.md"
+      ],
+      "statement": "Cryptarithm-deduce problems are uniquely solvable letter-digit assignment problems; constraint propagation (or python-constraint / Z3) yields the exact answer.",
+      "status": "proposed"
+    },
     "H-CURRICULUM": {
       "expected_effect": "+0.01-0.03 LB vs random ordering, free improvement",
       "source_refs": [
@@ -64,6 +73,15 @@
       "statement": "Equation-numeric problems are solvable with SymPy linear/quadratic solvers; algebraic CoT is reproducible.",
       "status": "proposed"
     },
+    "H-GRAVITY-100": {
+      "expected_effect": "+0.17 LB from solving all 1597 gravity rows (16.8% of train)",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "data/taxonomy/taxonomy.md"
+      ],
+      "statement": "Gravity-category problems (free-fall/projectile/orbital mechanics) reduce to closed-form physics formulas and admit a deterministic solver.",
+      "status": "proposed"
+    },
     "H-LORA32": {
       "expected_effect": "matches winner; cheaper variants underperform",
       "source_refs": [
@@ -81,6 +99,15 @@
       "statement": "RL / distillation are NOT needed; pure SFT on verified CoT reaches top-LB.",
       "status": "proposed"
     },
+    "H-NUMERAL-100": {
+      "expected_effect": "+0.16 LB on 1576 numeral rows",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "data/taxonomy/taxonomy.md"
+      ],
+      "statement": "Numeral-system problems (base conversions, radix arithmetic, novel digit systems) are deterministic given the rules in the prompt.",
+      "status": "proposed"
+    },
     "H-RANK16": {
       "expected_effect": "~equal LB, 2x cheaper experiments",
       "source_refs": [
@@ -89,28 +116,64 @@
       ],
       "statement": "LoRA rank 16 (half the cap) reaches within 0.005 of rank-32 with half the parameters; ablation worth running for compute efficiency.",
       "status": "proposed"
+    },
+    "H-UNIT-CONV-100": {
+      "expected_effect": "+0.17 LB on 1594 unit_conversion rows",
+      "source_refs": [
+        "winner-reasoning.py.md",
+        "data/taxonomy/taxonomy.md"
+      ],
+      "statement": "Unit-conversion problems decompose into a directed graph of conversion factors; a Floyd-Warshall closure over the parsed factors yields exact answers.",
+      "status": "proposed"
     }
   },
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "11421075369733643266": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/gravity",
+      "branch": "main",
+      "created_at": "2026-05-30T09:57:46.398134+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R25-gravity-solver"
+    },
     "12448053351024138122": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/bit_manipulation",
       "branch": "main",
       "created_at": "2026-05-30T09:45:06.679887+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R22-bit-manipulation-solver"
     },
-    "15031698388707699362": {
+    "13498726945260717217": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/curriculum.py",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/numeral",
       "branch": "main",
-      "created_at": "2026-05-30T09:45:08.180538+00:00",
+      "created_at": "2026-05-30T09:57:49.077511+00:00",
       "pr_url": null,
       "state": "QUEUED",
-      "task_id": "TASK-R23-curriculum-config"
+      "task_id": "TASK-R26-numeral-solver"
+    },
+    "14999046069002817843": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
+      "branch": "main",
+      "created_at": "2026-05-30T09:57:54.630022+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R28-cryptarithm-solver"
+    },
+    "17563574629297304829": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "branch": "main",
+      "created_at": "2026-05-30T09:57:57.422695+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R29-eval-per-category-breakdown"
     },
     "2307469717703277322": {
       "account_idx": 0,
@@ -118,8 +181,17 @@
       "branch": "main",
       "created_at": "2026-05-30T09:45:03.951672+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R21-equation-sympy-solver"
+    },
+    "5395719602075168188": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/unit_conversion",
+      "branch": "main",
+      "created_at": "2026-05-30T09:57:52.146814+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-R27-unit-conversion-solver"
     },
     "602625774702868507": {
       "account_idx": 0,
@@ -127,17 +199,8 @@
       "branch": "main",
       "created_at": "2026-05-30T09:45:01.410205+00:00",
       "pr_url": null,
-      "state": "QUEUED",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-R20-cipher-solver"
-    },
-    "7541274270049586049": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-rank16",
-      "branch": "main",
-      "created_at": "2026-05-30T09:45:09.999462+00:00",
-      "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-R24-rank16-ablation-kernel"
     }
   },
   "submit_counter": {},
@@ -464,7 +527,7 @@
       "session_id": "15031698388707699362",
       "size_hint": "~60 min",
       "spec": "Add data/curation/curriculum.py: per-row difficulty score (length, category fingerprint, solver-confidence), sort training data easy->hard, expose as a config option the training kernel can opt into. Offline tests on a small synthetic batch.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-3",
       "title": "Difficulty estimator + curriculum-shuffle SFT config"
     },
@@ -477,9 +540,74 @@
       "session_id": "7541274270049586049",
       "size_hint": "~45 min",
       "spec": "Clone kernels/train/ to kernels/train-rank16/, change config to LoRA rank=16/alpha=32, update kernel-metadata.json. Verify --smoke path runs; existing rank<=32 assertion still passes (16<=32).",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "story": "US-4",
       "title": "Rank-16 LoRA ablation: kernel-metadata variant + smoke test"
+    },
+    "TASK-R25-gravity-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/gravity",
+      "branch": "main",
+      "hypothesis": "H-GRAVITY-100",
+      "mode": "deep",
+      "session_id": "11421075369733643266",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/gravity/solve.py: parse the physics prompt (find v0/g/h/angle/m/etc), apply the appropriate closed-form (kinematic eqs, projectile, orbital), return exact answer (\boxed{}). Also generate.py producing fresh gravity problems with known answers. Offline tests on 100 train rows from the gravity category. Target 100% on solvable.",
+      "status": "IN_PROGRESS",
+      "story": "US-3",
+      "title": "Gravity-category deterministic solver (closed-form mechanics) + 100-sample validation"
+    },
+    "TASK-R26-numeral-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/numeral",
+      "branch": "main",
+      "hypothesis": "H-NUMERAL-100",
+      "mode": "deep",
+      "session_id": "13498726945260717217",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/numeral/solve.py: parse digit alphabet + base from prompt, convert input numeral to/from decimal, perform asked arithmetic, return exact answer. generate.py for synthetic numeral problems. Offline tests on 100 train rows.",
+      "status": "IN_PROGRESS",
+      "story": "US-3",
+      "title": "Numeral-system deterministic solver (arbitrary radix + novel digit systems)"
+    },
+    "TASK-R27-unit-conversion-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/unit_conversion",
+      "branch": "main",
+      "hypothesis": "H-UNIT-CONV-100",
+      "mode": "deep",
+      "session_id": "5395719602075168188",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/unit_conversion/solve.py: parse the unit-to-unit conversion factors from the prompt into a graph, run Floyd-Warshall transitive closure for the asked source->target, apply to the asked value, return exact answer. generate.py with synthetic conversion problems. Tests on 100 train rows.",
+      "status": "IN_PROGRESS",
+      "story": "US-3",
+      "title": "Unit-conversion deterministic solver via Floyd-Warshall conversion graph"
+    },
+    "TASK-R28-cryptarithm-solver": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm",
+      "branch": "main",
+      "hypothesis": "H-CRYPTARITHM",
+      "mode": "deep",
+      "session_id": "14999046069002817843",
+      "size_hint": "~75 min",
+      "spec": "Implement data/solvers/cryptarithm/solve.py: parse letter equation from prompt, search letter-digit assignments via constraint propagation (use python-constraint if available, else hand-rolled backtracking; Z3 acceptable but heavier dep), return the unique assignment. Offline tests on 50 deduce + 30 guess rows. Document any pathological cases.",
+      "status": "IN_PROGRESS",
+      "story": "US-3",
+      "title": "Cryptarithm-deduce solver via constraint propagation (python-constraint / Z3)"
+    },
+    "TASK-R29-eval-per-category-breakdown": {
+      "actor": "jules",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval",
+      "branch": "main",
+      "hypothesis": "H-DQ",
+      "mode": "deep",
+      "session_id": "17563574629297304829",
+      "size_hint": "~45 min",
+      "spec": "Extend eval/cv.py (from R8): add per-category accuracy breakdown using the taxonomy classifier (from R1b once landed; until then use a simple keyword router as fallback). Stratified holdout split keeping category balance. Produce a Markdown report with per-category accuracies.",
+      "status": "IN_PROGRESS",
+      "story": "US-2",
+      "title": "Extend CV harness to report per-category accuracy + stratified split"
     },
     "TASK-R7": {
       "actor": "jules",
@@ -524,5 +652,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T09:47:16.460483+00:00"
+  "updated_at": "2026-05-30T09:57:57.433955+00:00"
 }
