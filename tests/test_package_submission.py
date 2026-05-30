@@ -1,0 +1,85 @@
+import os
+import json
+import zipfile
+import subprocess
+import pytest
+
+SCRIPT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "tools", "package_submission.py"))
+
+def run_script(*args):
+    cmd = ["python", SCRIPT_PATH] + list(args)
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result
+
+def test_valid_adapter_zip_creation(tmp_path):
+    adapter_dir = tmp_path / "adapter"
+    adapter_dir.mkdir()
+    
+    (adapter_dir / "adapter_config.json").write_text('{"r": 32}')
+    (adapter_dir / "adapter_model.safetensors").write_text('dummy model content')
+    (adapter_dir / "tokenizer.json").write_text('{}')
+    (adapter_dir / "special_tokens_map.json").write_text('{}')
+    
+    out_zip = tmp_path / "submission.zip"
+    cv_score_file = tmp_path / "cv_score.json"
+    cv_score_file.write_text('{"score": 0.95}')
+    
+    manifest_in_file = tmp_path / "manifest_in.json"
+    manifest_in_file.write_text('{"experiment_id": "EXP123"}')
+    
+    res = run_script(
+        "--adapter", str(adapter_dir),
+        "--out", str(out_zip),
+        "--cv-score", str(cv_score_file),
+        "--manifest", str(manifest_in_file)
+    )
+    
+    assert res.returncode == 0
+    output_json = json.loads(res.stdout)
+    assert output_json["zip_path"] == str(out_zip)
+    assert output_json["cv_score"]["score"] == 0.95
+    assert output_json["bytes"] > 0
+    
+    assert out_zip.exists()
+    
+    with zipfile.ZipFile(out_zip, "r") as zf:
+        namelist = zf.namelist()
+        assert "adapter_config.json" in namelist
+        assert "adapter_model.safetensors" in namelist
+        assert "tokenizer.json" in namelist
+        assert "special_tokens_map.json" in namelist
+        assert "manifest.json" in namelist
+        
+        manifest_content = json.loads(zf.read("manifest.json").decode("utf-8"))
+        assert manifest_content["cv_score"]["score"] == 0.95
+        assert "adapter_sha256" in manifest_content
+        assert "packed_at" in manifest_content
+        assert manifest_content["experiment_id"] == "EXP123"
+
+def test_missing_files(tmp_path):
+    adapter_dir = tmp_path / "adapter"
+    adapter_dir.mkdir()
+    out_zip = tmp_path / "submission.zip"
+    
+    # Missing config and model
+    res = run_script("--adapter", str(adapter_dir), "--out", str(out_zip))
+    assert res.returncode == 1
+    assert "CODE=MISSING_FILES" in res.stdout
+
+    # Missing model
+    (adapter_dir / "adapter_config.json").write_text('{"r": 16}')
+    res = run_script("--adapter", str(adapter_dir), "--out", str(out_zip))
+    assert res.returncode == 1
+    assert "CODE=MISSING_FILES" in res.stdout
+
+def test_rank_too_high(tmp_path):
+    adapter_dir = tmp_path / "adapter"
+    adapter_dir.mkdir()
+    out_zip = tmp_path / "submission.zip"
+    
+    (adapter_dir / "adapter_config.json").write_text('{"r": 64}')
+    (adapter_dir / "adapter_model.bin").write_text('dummy')
+
+    res = run_script("--adapter", str(adapter_dir), "--out", str(out_zip))
+    assert res.returncode == 1
+    assert "CODE=RANK_TOO_HIGH" in res.stdout
