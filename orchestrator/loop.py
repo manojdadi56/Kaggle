@@ -16,6 +16,7 @@ from __future__ import annotations
 import time
 import subprocess
 import os
+import sys
 import json
 import sys
 from datetime import datetime, timezone
@@ -273,7 +274,29 @@ class Orchestrator:
                  "summary": f"merge PR #{m['number']}: {'ok' if ok else 'failed'}"}]})
             summary["merged_prs"].append({"number": m["number"], "ok": ok, "detail": out[:200]})
 
+
+        import tools.kaggle_lite as kaggle_lite
+        verdict = decide_submit(self.state.state, kaggle_lite)
+        if verdict.action == "submit":
+            os.environ["KAGGLE_SUBMIT_AUTHORIZED"] = "1"
+            cand = verdict.candidate
+            sr = kaggle_lite.competition_submit(self.settings.active_competition, cand["blob_token"], message=f"auto {tick_id}")
+            del os.environ["KAGGLE_SUBMIT_AUTHORIZED"]
+
+            if sr.get("status") == 200:
+                today_str = self.today_fn()
+                ops = [
+                    {"op": "record_submission", "idempotency_key": f"{tick_id}:submit:{today_str}", "data": {"experiment_id": cand["experiment_id"]}},
+                    {"op": "increment_submit_counter", "idempotency_key": f"{tick_id}:submit_count:{today_str}", "data": {"date": today_str}},
+                    {"op": "update_entity", "idempotency_key": f"{tick_id}:exp:{cand['experiment_id']}:status", "data": {"collection": "experiments", "id": cand["experiment_id"], "status": "SUBMITTED"}}
+                ]
+                if cand.get("cv_score") is not None:
+                    ops.append({"op": "set_best_cv", "idempotency_key": f"{tick_id}:bestcv:{cand['cv_score']}", "data": {"score": cand["cv_score"]}})
+                self.state.apply_patch({"tick_id": tick_id, "operations": ops})
+                summary["submit"] = {"action": "submitted", "cv_score": cand.get("cv_score")}
+
         sa = decision.get("submit_action") or {"action": "none"}
+
         if sa.get("action") == "submit":
             summary["submit"] = self._do_submit(tick_id, sa)
 
@@ -299,6 +322,7 @@ class Orchestrator:
             ops.append({"op": "set_best_cv", "idempotency_key": f"{tick_id}:bestcv:{sa['cv_score']}",
                         "data": {"score": sa["cv_score"]}})
         self.state.apply_patch({"tick_id": tick_id, "operations": ops})
+        return {"action": "submitted", "cv_score": sa.get("cv_score")}
         return {"action": "submitted", "cv_score": sa.get("cv_score")}
 
     def _queue_pending(self, sa: dict, reason: str) -> None:

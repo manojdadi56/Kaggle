@@ -22,7 +22,7 @@ SCHEMA_VERSION = 1
 
 # Operations the projection understands. Each appends a matching event.
 OPS = {
-    "append_event",
+    "append_event", "record_submission",
     "record_session", "update_session", "clear_session",
     "record_gpu_run", "update_gpu_run", "clear_gpu_run",
     "gpu_dispatch",
@@ -69,7 +69,7 @@ def default_state(active_competition: str = "") -> dict:
 
 def _apply_op(state: dict, op: str, data: dict) -> None:
     """Pure projection: mutate `state` for one operation. Used by apply + replay."""
-    if op == "append_event":
+    if op in ("append_event", "record_submission"):
         return  # event-only; no projection change
     if op == "record_session":
         sid = data["session_id"]
