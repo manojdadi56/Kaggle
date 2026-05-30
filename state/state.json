@@ -248,7 +248,7 @@
       "branch": "main",
       "created_at": "2026-05-30T11:18:15.855361+00:00",
       "pr_url": null,
-      "state": "AWAITING_USER_FEEDBACK",
+      "state": "IN_PROGRESS",
       "task_id": "TASK-E007-cryptarithm-guess-integration"
     },
     "5869851881805383251": {
@@ -847,5 +847,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T11:46:39.064262+00:00"
+  "updated_at": "2026-05-30T12:13:40.868937+00:00"
 }

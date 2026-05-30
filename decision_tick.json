@@ -1,0 +1,1 @@
+{"tick_id": "RUN-20260530-114605b", "status": "complete", "summary": "Sync E-007 session state to IN_PROGRESS after sendmessage steer", "state_patch": {"tick_id": "RUN-20260530-114605b", "operations": [{"op": "update_session", "idempotency_key": "RUN-20260530-114605b:13107147469450254389:state", "data": {"session_id": "13107147469450254389", "state": "IN_PROGRESS"}}]}}
