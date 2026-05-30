@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 51
+    "jules_dispatched_2026-05-30": 55
   },
   "decisions": {
     "D-AUDIT-2026-05-30": {
@@ -364,14 +364,14 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
-    "2464321044829184839": {
+    "16470966891545264459": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/master_roadmap.xlsx, tests/test_master_roadmap.py",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
       "branch": "main",
-      "created_at": "2026-05-30T21:48:48.475064+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/54",
-      "state": "COMPLETED",
-      "task_id": "TASK-XLSX-master-roadmap"
+      "created_at": "2026-05-30T22:40:25.213677+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-EVAL-host-chat-template"
     },
     "3423175478610363796": {
       "account_idx": 0,
@@ -382,59 +382,32 @@
       "state": "IN_PROGRESS",
       "task_id": "TASK-DATA-cot-corpus-v1"
     },
-    "3959759277942667967": {
+    "6061109906340266177": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx, tests/test_community_and_tabs.py",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
       "branch": "main",
-      "created_at": "2026-05-30T21:17:11.924311+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/51",
-      "state": "COMPLETED",
-      "task_id": "TASK-XLSX-community-and-tabs"
+      "created_at": "2026-05-30T22:40:22.697826+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-EVAL-cv-fixture-9cat"
     },
-    "4066723169138526005": {
+    "6780419095411095356": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_vs_current_v1.md",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
       "branch": "main",
-      "created_at": "2026-05-30T21:02:55.946132+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/49",
-      "state": "COMPLETED",
-      "task_id": "TASK-RESEARCH-winner-vs-ours"
+      "created_at": "2026-05-30T22:40:19.953196+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-CORPUS-scale-9cat"
     },
-    "4245240514941347715": {
+    "9475504503105628655": {
       "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_extract.xlsx, tests/test_discussions_extract.py",
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
       "branch": "main",
-      "created_at": "2026-05-30T21:17:14.547105+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/53",
-      "state": "COMPLETED",
-      "task_id": "TASK-XLSX-discussions-extract"
-    },
-    "7816444016371433148": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/discussions_insights_v1.md",
-      "branch": "main",
-      "created_at": "2026-05-30T21:02:50.446034+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/52",
-      "state": "COMPLETED",
-      "task_id": "TASK-RESEARCH-mine-discussions"
-    },
-    "8614860216596085950": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/top_notebooks_v1.md",
-      "branch": "main",
-      "created_at": "2026-05-30T21:02:53.187066+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/48",
-      "state": "COMPLETED",
-      "task_id": "TASK-RESEARCH-mine-top-notebooks"
-    },
-    "9470450860965081304": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/winner_code_analysis.xlsx, tests/test_winner_code_analysis.py",
-      "branch": "main",
-      "created_at": "2026-05-30T21:17:17.632853+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/50",
-      "state": "COMPLETED",
-      "task_id": "TASK-XLSX-winner-code-analysis"
+      "created_at": "2026-05-30T22:40:17.378623+00:00",
+      "pr_url": null,
+      "state": "IN_PROGRESS",
+      "task_id": "TASK-ABLATION-configs"
     }
   },
   "submit_counter": {},
@@ -530,22 +503,26 @@
     },
     "TASK-ABLATION-configs": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
+      "branch": "main",
       "created_at": "2026-05-31T03:30:00Z",
       "est_hours": 0.75,
       "hypothesis_id": "H-FINAL-PREP-PARALLEL",
       "priority": "P1",
+      "session_id": "9475504503105628655",
       "spec": "Create a single Python module that yields 5 ablation configs as dicts (one per knob), each one compatible with our notebook's tunables (LORA_RANK, MAX_TRAIN, REASONING_ON, EPOCHS, etc). Place at competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py exposing CONFIGS = {'baseline':..., 'rank16':..., '2epoch':..., 'curriculum':..., 'select2reason':..., 'logprob_filter':...}}. For each, include: (a) the parameter delta from baseline (e.g. rank=16 instead of 32), (b) one-line hypothesis, (c) source citation (winner repo file:line or discussion id). Also write experiments/README.md explaining how the operator applies one config to the notebook via save_notebook (search/replace the tunable block). Add tests/test_ablation_configs.py asserting all 6 keys exist and each has the required fields. Acceptance: 6 configs total (baseline + 5); each has rank, alpha, epochs, lr, target_modules, hypothesis, source; pytest -q green.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Pre-build 5 ablation config JSONs (rank16, 2epoch, curriculum, select2reason, logprob_filter)"
     },
     "TASK-CORPUS-scale-9cat": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
+      "branch": "main",
       "created_at": "2026-05-31T03:30:00Z",
       "est_hours": 2.0,
       "hypothesis_id": "H-FINAL-PREP-PARALLEL",
       "priority": "P0",
+      "session_id": "6780419095411095356",
       "spec": "Read existing data/corpus/v2/corpus.jsonl (398 rows, 4 cats) and references/analysis-winner.md + winner-reasoning.py.md + winner-augmentation.py.md + winner-corpus.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/corpus.jsonl with: (a) 9 categories covered: bit_manipulation, cipher, gravity, numeral, cryptarithm, cryptarithm_guess, equation_numeric, unit_conversion, select2reason. (b) >= 300 rows per category (3000+ total). (c) Use per-category deterministic Python solvers (NO LLM/API), mirror winner's reasoning.py logic. (d) Apply the 5 winner augmenters (paraphrase, perturbation, etc) per augmentation.py. (e) HARD verification: each row's completion must end with \\boxed{X} where X exactly equals or numerically matches the original answer; reject mismatched rows; do NOT mark verified=True falsely. (f) Write data/corpus/v4/quality_report.json with per-category {generated, verified, rejected, samples}. (g) Add tests/test_corpus_v4_quality.py asserting >= 3000 rows, >= 95% verified, all 9 cats present. Acceptance: pytest -q green; quality report shows >= 95% verified for every category.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Scale CoT corpus to 3K+ rows across ALL 9 host categories (winner-grade volume)"
     },
     "TASK-DATA-cot-corpus-v1": {
@@ -786,12 +763,14 @@
     },
     "TASK-EVAL-cv-fixture-9cat": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
+      "branch": "main",
       "created_at": "2026-05-31T03:30:00Z",
       "est_hours": 1.0,
       "hypothesis_id": "H-FINAL-PREP-PARALLEL",
       "priority": "P0",
+      "session_id": "6061109906340266177",
       "spec": "Read data/raw/train.csv (run tools/download_competition_data.py if missing) and data/curation/classify.py (the 9-category classifier from R28). Build competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2.jsonl with: (a) 300 rows total, stratified across 9 categories with floor(33/cat). (b) Schema per line: {id, category, prompt, answer}. (c) HARD requirement: rows MUST NOT appear in data/corpus/v4/corpus.jsonl (no train/eval leakage). (d) The fixture file itself is gitignored (contains answers); commit the builder script + README +   per-category count manifest at eval/cv_fixture_v2_manifest.json. (e) Add eval/build_cv_fixture_v2.py + tests/test_cv_fixture_v2.py asserting 300 rows, 9 cats, no overlap with corpus, schema valid. Acceptance: pytest -q green; manifest committed with counts.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Build held-out CV fixture (300 rows stratified across all 9 host categories)"
     },
     "TASK-EVAL-cv-score-ingest": {
@@ -815,12 +794,14 @@
     },
     "TASK-EVAL-host-chat-template": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
+      "branch": "main",
       "created_at": "2026-05-31T03:30:00Z",
       "est_hours": 0.75,
       "hypothesis_id": "H-FINAL-PREP-PARALLEL",
       "priority": "P0",
+      "session_id": "16470966891545264459",
       "spec": "Per references/analysis-winner-training-internals.md + the winner repo's notebook_tinker.py, the host uses a SPECIFIC chat template + reasoning_on system header. Our v23 notebook now calls tokenizer.apply_chat_template \u2014 but we need parity tests. Build: (a) competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md documenting the exact template, system prompt text,   max_new_tokens, temperature, top_p, max_model_len that the host uses (extract from analyses +   any official references). (b) competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py: load tokenizer from a local fake or skip if not   available; render 5 fixed prompts via apply_chat_template + reasoning_on;   assert byte-equality vs expected strings in host_template_spec.md. Acceptance: spec.md exists with concrete strings; parity test runs (xfail allowed if local tokenizer isn't accessible). Cite source line numbers in analyses + winner repo.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Capture exact Nemotron host chat template + reasoning_on system prompt for parity testing"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
@@ -1420,5 +1401,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T22:40:12.442254+00:00"
+  "updated_at": "2026-05-30T22:43:48.342463+00:00"
 }

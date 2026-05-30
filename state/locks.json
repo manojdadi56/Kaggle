@@ -1,8 +1,24 @@
 {
   "cap": 15,
   "holders": {
+    "TASK-ABLATION-configs": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/experiments/ablation_configs.py, competitions/nvidia-nemotron-model-reasoning-challenge/experiments/README.md, tests/test_ablation_configs.py",
+      "kind": "jules"
+    },
+    "TASK-CORPUS-scale-9cat": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
+      "kind": "jules"
+    },
     "TASK-DATA-cot-corpus-v1": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
+      "kind": "jules"
+    },
+    "TASK-EVAL-cv-fixture-9cat": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
+      "kind": "jules"
+    },
+    "TASK-EVAL-host-chat-template": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
       "kind": "jules"
     },
     "TASK-OPS-auto-rescue": {
