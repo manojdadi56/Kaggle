@@ -69,6 +69,13 @@ The earlier "T4×2 only / 7 fixes" notes were based on the WRONG assumption that
 
 The old "T4×2 / 7 fixes" subsection above is retained for history but is SUPERSEDED by this block for any RTX-Pro-6000 run.
 
+### HARD LIMIT: two operations are interactive-UI-only (cannot be done via API/MCP)
+Verified across 9 programmatic `save_notebook` attempts (E-002 v1–v5 + variants):
+1. **Accelerator selection** — embedding `metadata.kaggle.accelerator="nvidiaRtxPro6000"` is IGNORED by `save_notebook`; the batch run always lands on a generic P100 (sm_60, incompatible). Only the web-editor's Settings→Accelerator dropdown sets the real GPU.
+2. **Model attachment** — `save_notebook` data-source params (and embedded `metadata.kaggle.dataSources`) do NOT attach the model; `/kaggle/input` comes back empty, and runtime `kagglehub.model_download` fails with **`New Models cannot be attached in non-interactive sessions`**. A model must be attached once via the interactive editor (Add Input).
+
+**Workflow that actually works**: USER does a ONE-TIME interactive setup in the web editor (open notebook → Add Input: competition + `metric/nemotron-3-nano-30b-a3b-bf16` model → Settings→Accelerator: NVIDIA RTX Pro 6000 → Save & Run All). AFTER that one interactive save, the inputs + accelerator are baked into the notebook config, and the operator CAN iterate via MCP: `save_notebook` (new code, inherits attached inputs) + `get_notebook_session_status` + `download_notebook_output` + `submit_to_competition`. So: **1 manual setup, then fully API-driven iteration + monitoring + submission.**
+
 ### Orphan PRs to ignore
 - **PR #42** (`tools/package_submission.py`): superseded by operator-rescue merge `868481f`. Functionally identical.
 - **PR #47** (kernel-metadata fix): partially correct but uses non-canonical model slug `daroai/nvidia-nemotron-3-nano-30b-a3b-bf16` instead of official `metric/nemotron-3-nano-30b-a3b-bf16`, and missing fixes 3-7 above. Superseded by `train-baseline-e002` direct edits. **Do NOT merge.**
