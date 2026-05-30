@@ -4,8 +4,75 @@
   "cursors": {
     "jules_dispatched_2026-05-30": 22
   },
-  "decisions": {},
-  "experiments": {},
+  "decisions": {
+    "D-EXPLAN-001": {
+      "decision": "Lock experimentation plan (Phase A done, B->C->D->E->F; E-007 cryptarithm_guess prioritized).",
+      "entity": "project",
+      "rationale": "Cross-validated against winner repo (R13), discussion deltas (R11b), 18 ledger hypotheses. See EXPERIMENTATION_PLAN.md."
+    }
+  },
+  "experiments": {
+    "E-001-corpus-v1": {
+      "backend": "jules",
+      "hypothesis": "H-DQ",
+      "notes": "Assemble corpus.jsonl from 7 landed solvers + verified CoT; stratified train/dev; winner build_datum mask convention.",
+      "status": "PROPOSED"
+    },
+    "E-002-baseline-rank32": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-LORA32",
+      "notes": "Winner-faithful baseline. rank=32, alpha=64, 1 epoch, LinearDecay 2e-5->1e-5, Mamba+attention targets. Goal ~0.85.",
+      "status": "PROPOSED"
+    },
+    "E-003-rank16": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-RANK16",
+      "notes": "rank 32 -> 16, alpha 64 -> 32. Compute-efficient floor test.",
+      "status": "PROPOSED"
+    },
+    "E-004-2-epoch": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-1EPOCH",
+      "notes": "1 epoch -> 2 epochs. Refutation test.",
+      "status": "PROPOSED"
+    },
+    "E-005-curriculum": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-CURRICULUM",
+      "notes": "Random order -> difficulty-ascending (R23 config).",
+      "status": "PROPOSED"
+    },
+    "E-006-select2reason": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-SELECT2REASON",
+      "notes": "Full corpus -> top-utility filtered (~30 percent retained).",
+      "status": "PROPOSED"
+    },
+    "E-007-cryptarithm-guess": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-CRYPTARITHM-GUESS",
+      "notes": "Add cryptarithm_guess CoT to corpus (winner skipped). Highest-confidence direct LB.",
+      "status": "PROPOSED"
+    },
+    "E-008-logprob-filter": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-LOGPROB-FILTER",
+      "notes": "Drop examples where base-model min-logprob > -0.05.",
+      "status": "PROPOSED"
+    },
+    "E-009-synthesis": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-DQ",
+      "notes": "Combine winning ablation choices into final config. Train + submit (gated).",
+      "status": "PROPOSED"
+    },
+    "E-PRECOND-mamba-targets": {
+      "backend": "kaggle_gpu",
+      "hypothesis": "H-MAMBA-TARGETS",
+      "notes": "Smoke run (10 steps) on 2xT4 4-bit with explicit Mamba+attention targets. Validates no MoE-scan hang.",
+      "status": "PROPOSED"
+    }
+  },
   "gpu_runs": {},
   "hypotheses": {
     "H-1EPOCH": {
@@ -44,6 +111,15 @@
       "statement": "Cryptarithm-deduce problems are uniquely solvable letter-digit assignment problems; constraint propagation (or python-constraint / Z3) yields the exact answer.",
       "status": "proposed"
     },
+    "H-CRYPTARITHM-GUESS": {
+      "expected_effect": "+0.01-0.03 LB direct from a category the winner never trained on.",
+      "source_refs": [
+        "analysis-discussions-deltas.md",
+        "winner-reasoning.py.md"
+      ],
+      "statement": "Winner skipped cryptarithm_guess; adding a solver + verified CoT for it gives direct LB headroom (164 train rows).",
+      "status": "proposed"
+    },
     "H-CURRICULUM": {
       "expected_effect": "+0.01-0.03 LB vs random ordering, free improvement",
       "source_refs": [
@@ -64,6 +140,15 @@
       "statement": "DATA QUALITY is the dominant lever: per-category deterministic solvers + verified \boxed{} CoT corpora beat fancier training regimes.",
       "status": "proposed"
     },
+    "H-EQ-FALLBACK": {
+      "expected_effect": "+0.01 LB on equation_numeric category.",
+      "source_refs": [
+        "analysis-discussions-deltas.md",
+        "winner-reasoning.py.md"
+      ],
+      "statement": "Default to absolute-difference fallback in equation_numeric solvers when no rule is found; captures edge cases.",
+      "status": "proposed"
+    },
     "H-EQ-SYMPY": {
       "expected_effect": "+0.07 LB on equation_numeric_deduce(596)+_guess(136) categories",
       "source_refs": [
@@ -82,6 +167,15 @@
       "statement": "Gravity-category problems (free-fall/projectile/orbital mechanics) reduce to closed-form physics formulas and admit a deterministic solver.",
       "status": "proposed"
     },
+    "H-LOGPROB-FILTER": {
+      "expected_effect": "+0.01 LB on hard categories.",
+      "source_refs": [
+        "analysis-discussions-deltas.md",
+        "winner-loss_config.py.md"
+      ],
+      "statement": "Filtering out examples whose base-model min-logprob > -0.05 prevents over-tuning on easy examples and improves accuracy on hard rules.",
+      "status": "proposed"
+    },
     "H-LORA32": {
       "expected_effect": "matches winner; cheaper variants underperform",
       "source_refs": [
@@ -89,6 +183,15 @@
       ],
       "statement": "LoRA rank 32 / alpha 64 SFT (winner config) is the right anchor; deviations should justify themselves with CV evidence.",
       "status": "supported"
+    },
+    "H-MAMBA-TARGETS": {
+      "expected_effect": "Unblocks training on free GPU. Critical precondition.",
+      "source_refs": [
+        "analysis-discussions-deltas.md",
+        "multiple discussions"
+      ],
+      "statement": "Explicit Mamba mixer LoRA targeting (mixer.in_proj, mixer.out_proj) + attention-only avoids the MoE expert-scan hang and enables training on 2xT4 4-bit.",
+      "status": "proposed"
     },
     "H-NORL": {
       "expected_effect": "saves compute; lower risk",
@@ -115,6 +218,15 @@
         "technique-backlog.md"
       ],
       "statement": "LoRA rank 16 (half the cap) reaches within 0.005 of rank-32 with half the parameters; ablation worth running for compute efficiency.",
+      "status": "proposed"
+    },
+    "H-SELECT2REASON": {
+      "expected_effect": "~equal LB at half cost; may slightly improve generalization.",
+      "source_refs": [
+        "analysis-discussions-deltas.md",
+        "konbu17 discussion"
+      ],
+      "statement": "Select2Reason-style curation (drop low-utility / repetitive traces) matches baseline accuracy at ~30 percent of cost.",
       "status": "proposed"
     },
     "H-UNIT-CONV-100": {
@@ -652,5 +764,5 @@
       "title": "Corpus curation: filter, dedup, difficulty-balance"
     }
   },
-  "updated_at": "2026-05-30T09:57:57.433955+00:00"
+  "updated_at": "2026-05-30T10:09:14.376075+00:00"
 }
