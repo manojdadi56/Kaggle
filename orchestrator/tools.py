@@ -137,6 +137,36 @@ def cmd_promote(orch: Orchestrator, tick: str, n: int) -> dict:
     return dispatcher.promote_backlog(orch.state, tick_id=tick, max_promote=n)
 
 
+def cmd_register_session(orch: Orchestrator, tick: str, sid: str,
+                         task_id: str | None = None, area: str | None = None,
+                         branch: str = "main") -> dict:
+    """Register a Jules session started outside `tools dispatch` (e.g. manually
+    via jules.google) into the worker pool so the operator polls + auto-merges
+    its PR like a native dispatch.
+    """
+    # Fetch live to learn its state + any PR url it already has
+    remote = orch.jules.get_session(sid) if hasattr(orch.jules, "get_session") else {}
+    from .jules_client import JulesClient
+    state = JulesClient.state_of(remote) if remote else "QUEUED"
+    pr_url = JulesClient.pr_url(remote) if remote else None
+    ops = [{"op": "record_session", "idempotency_key": f"{tick}:{sid}:register",
+            "data": {"session_id": sid, "task_id": task_id, "allowed_area": area,
+                     "state": state, "branch": branch, "pr_url": pr_url}}]
+    if task_id:
+        ops.append({"op": "set_status", "idempotency_key": f"{tick}:{task_id}:inprogress",
+                    "data": {"collection": "tasks", "id": task_id, "status": "IN_PROGRESS"}})
+        ops.append({"op": "update_entity", "idempotency_key": f"{tick}:{task_id}:session_link",
+                    "data": {"collection": "tasks", "id": task_id, "session_id": sid, "branch": branch}})
+    if area and task_id:
+        orch.locks.acquire(task_id, area, kind="jules")
+    return orch.state.apply_patch({"tick_id": tick, "operations": ops})
+
+
+def cmd_sendmessage(orch: Orchestrator, sid: str, prompt: str) -> dict:
+    """Send a steer/follow-up message into an in-flight Jules session."""
+    return orch.jules.send_message(sid, prompt)
+
+
 def _today() -> str:
     from datetime import datetime, timezone
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -158,7 +188,10 @@ def cmd_seed(orch: Orchestrator, tick: str = "SEED") -> dict:
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if not argv:
-        print("usage: python -m orchestrator.tools {context|apply <file>|status} [--tick ID]")
+        print("usage: python -m orchestrator.tools "
+              "{context|apply <file>|status|next|dashboard|seed|"
+              "promote [-n N]|dispatch|register-session <sid> [--task ID] [--area AREA]|"
+              "sendmessage <sid> \"<prompt>\"} [--tick ID]")
         return 2
     cmd = argv[0]
     tick = "RUN-MANUAL"
@@ -187,6 +220,23 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "promote":
         n = int(argv[argv.index("-n") + 1]) if "-n" in argv else 5
         print(json.dumps(cmd_promote(orch, tick, n), indent=2, default=str))
+        return 0
+    if cmd == "register-session":
+        if len(argv) < 2:
+            print("usage: register-session <session_id> [--task <id>] [--area <allowed_area>] [--branch main]")
+            return 2
+        sid = argv[1]
+        task_id = argv[argv.index("--task") + 1] if "--task" in argv else None
+        area = argv[argv.index("--area") + 1] if "--area" in argv else None
+        branch = argv[argv.index("--branch") + 1] if "--branch" in argv else "main"
+        print(json.dumps(cmd_register_session(orch, tick, sid, task_id, area, branch),
+                         indent=2, default=str))
+        return 0
+    if cmd == "sendmessage":
+        if len(argv) < 3:
+            print("usage: sendmessage <session_id> \"<prompt>\"")
+            return 2
+        print(json.dumps(cmd_sendmessage(orch, argv[1], argv[2]), indent=2, default=str))
         return 0
     if cmd == "apply":
         if len(argv) < 2:

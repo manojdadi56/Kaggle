@@ -47,6 +47,9 @@ Up to 5 Jules sessions run in parallel; each is blind to the others. Before push
 - `competitions/<slug>/` — one self-contained folder per competition: `plan.md`, `tasks/`, `user-stories/`, `decisions/`, `experiments/`, `kernels/`, `submissions/`, `references/`, `data/`.
 - `state/` — orchestrator state (operator-only; never modify).
 
+## You are one worker in a pool — read COORDINATION.md
+Multiple Jules sessions on this repo are part of the same worker pool. The operator polls and auto-merges them all identically. Open `COORDINATION.md` for the pool model and conflict-avoidance rules. Stay strictly in `{{allowed_area}}`; prefer per-task subfolders so PRs auto-merge cleanly; never destroy work from another worker.
+
 ## Workflow: UNSUPERVISED — your PR auto-merges to main on COMPLETED
 This is an unsupervised loop. The operator does **not review** your PR for quality, scope, or acceptance criteria. The moment your Jules session reports COMPLETED, the operator's poll picks up the PR URL and **auto-merges it to main** with a "theirs wins on conflicts" strategy. There is no human or LLM gate between you and `main`. Practical consequences:
 
