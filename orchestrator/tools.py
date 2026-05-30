@@ -111,6 +111,37 @@ def _parse_task_md(text: str, fallback_id: str) -> dict:
     return rec
 
 
+def cmd_dispatch(orch: Orchestrator, tick: str) -> dict:
+    from . import dispatcher
+    used = orch.state.submits_today  # not relevant here; budget tracked by daily-jules counter
+    day_budget = int(os.environ.get("DAILY_JULES_BUDGET", "100"))
+    used_today = orch.state.state.get("cursors", {}).get(f"jules_dispatched_{_today()}", 0)
+    left = max(0, day_budget - int(used_today))
+    res = dispatcher.dispatch_ready(
+        orch.state, orch.locks, orch.jules,
+        slug=orch.settings.active_competition, tick_id=tick,
+        concurrency_cap=orch.settings.concurrency_cap,
+        daily_budget_left=left,
+    )
+    # bump the per-day dispatch counter
+    if res["created"]:
+        new = int(used_today) + len(res["created"])
+        orch.state.apply_patch({"tick_id": tick, "operations": [
+            {"op": "set_cursor", "idempotency_key": f"{tick}:jules_dispatched",
+             "data": {"key": f"jules_dispatched_{_today()}", "value": new}}]})
+    return res
+
+
+def cmd_promote(orch: Orchestrator, tick: str, n: int) -> dict:
+    from . import dispatcher
+    return dispatcher.promote_backlog(orch.state, tick_id=tick, max_promote=n)
+
+
+def _today() -> str:
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
 def cmd_seed(orch: Orchestrator, tick: str = "SEED") -> dict:
     """Ingest competitions/<slug>/tasks/todo/*.md into ledger task rows (one-time)."""
     from pathlib import Path
@@ -149,6 +180,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if cmd == "seed":
         print(json.dumps(cmd_seed(orch, tick), indent=2, default=str))
+        return 0
+    if cmd == "dispatch":
+        print(json.dumps(cmd_dispatch(orch, tick), indent=2, default=str))
+        return 0
+    if cmd == "promote":
+        n = int(argv[argv.index("-n") + 1]) if "-n" in argv else 5
+        print(json.dumps(cmd_promote(orch, tick, n), indent=2, default=str))
         return 0
     if cmd == "apply":
         if len(argv) < 2:
