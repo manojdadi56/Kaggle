@@ -318,17 +318,8 @@
       "branch": "main",
       "created_at": "2026-05-30T14:19:13.062724+00:00",
       "pr_url": null,
-      "state": "QUEUED",
-      "task_id": "TASK-FIX-kernel-metadata"
-    },
-    "4390025997776432846": {
-      "account_idx": 0,
-      "allowed_area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
-      "branch": "main",
-      "created_at": "2026-05-30T13:56:09.030293+00:00",
-      "pr_url": null,
       "state": "IN_PROGRESS",
-      "task_id": "TASK-OPS-auto-rescue"
+      "task_id": "TASK-FIX-kernel-metadata"
     }
   },
   "submit_counter": {},
@@ -726,7 +717,7 @@
         "orchestrator/github_ops.py"
       ],
       "spec": "Extend orchestrator/loop.py.poll_in_flight: when a session response has state=COMPLETED AND pr_url is empty, before clearing the session: (1) GET https://jules.googleapis.com/v1alpha/sessions/<sid>/activities (use the existing JulesClient or jules_pool routing). (2) Find the last activity with sessionCompleted and a non-empty artifact.changeSet.gitPatch.unidiffPatch; if none found, mark the session FAILED and skip rescue. (3) Create a temp rescue branch off main: 'operator-rescue/<sid>-<short_ts>'. (4) Write the patch to a temp file and run `git apply --whitespace=nowarn <patchfile>`. If apply fails, mark FAILED and skip. (5) Run pytest -q with subprocess.run; capture rc. If rc != 0, leave the rescue branch and mark the session FAILED with a rescue_failed note. (6) On rc==0: commit the staged files with message 'rescue: <task_id> from session <sid>'; switch to main; merge --no-ff with the same -X theirs strategy used by github_ops.merge_pr; scan diff for secrets (same regex KGAT_/AQ.Ab/sk-ant-); on secret leak, abort and mark FAILED. (7) On success: mark the task DONE and clear the session - emit the ops via the existing StatePatch flow, not a side effect. Add tests/test_auto_rescue.py covering: happy path (rescue + merge + DONE), pytest-fails path (rescue branch present, main untouched, FAILED), patch-fails path (FAILED, no branch), no-artifact path (FAILED, no branch), secret-leak path (FAILED, no merge). Acceptance: pytest -q green; happy path produces a real merge commit in a test git repo.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Add auto-rescue path to poll_in_flight (COMPLETED-without-PR -> extract patch + pytest + merge)"
     },
     "TASK-OPS-cron-trigger": {
@@ -1177,5 +1168,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T14:19:13.070627+00:00"
+  "updated_at": "2026-05-30T15:13:04.159766+00:00"
 }
