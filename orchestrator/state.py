@@ -33,6 +33,7 @@ OPS = {
     "create_suggestion", "create_decision", "add_metric",
     "set_status",          # generic status transition: data={collection, id, status}
     "update_entity",       # generic field merge: data={collection, id, ...fields}
+    "record_cv_score",     # add cv score, update best_cv if applicable
 }
 
 # ledger collections (the "sheets") + the status vocabulary, ported from the SDLC workbook
@@ -60,7 +61,7 @@ def default_state(active_competition: str = "") -> dict:
         "experiments": {},     # E-id -> {hypothesis,config,backend,cv_score,status,...}
         "suggestions": {},     # S-id -> {title,change_size,status,...}
         "decisions": {},       # D-id -> {entity,decision,rationale,...}
-        "metrics": [],         # append-only [{name,value,unit,at}]
+        "metrics": {},         # f'cv:{experiment_id}' -> data
         "submit_counter": {},  # "YYYY-MM-DD" -> int
         "best_cv": None,
         "cursors": {},
@@ -123,6 +124,21 @@ def _apply_op(state: dict, op: str, data: dict) -> None:
         state["submit_counter"][day] = state["submit_counter"].get(day, 0) + 1
     elif op == "set_best_cv":
         state["best_cv"] = data["score"]
+    elif op == "record_cv_score":
+        eid = data["experiment_id"]
+        cv_agg = data["cv_aggregate"]
+        if isinstance(state["metrics"], list):
+            state["metrics"].append({
+                "name": f"cv:{eid}",
+                "value": data,
+                "at": _utc_now_iso()
+            })
+        else:
+            state["metrics"][f"cv:{eid}"] = data
+        best_cv = state.get("best_cv")
+        if best_cv is None or cv_agg > best_cv:
+            state["best_cv"] = cv_agg
+            state["best_cv_source"] = eid
     elif op == "set_cursor":
         state["cursors"][data["key"]] = data["value"]
     # --- ledger ops (R-004) ---
@@ -152,7 +168,10 @@ def _apply_op(state: dict, op: str, data: dict) -> None:
             **{k: v for k, v in data.items() if k != "id"},
         }
     elif op == "add_metric":
-        state["metrics"].append({k: v for k, v in data.items()})
+        if isinstance(state["metrics"], list):
+            state["metrics"].append({k: v for k, v in data.items()})
+        else:
+            state["metrics"][data.get("name", "metric")] = data
     elif op == "set_status":
         coll = state.setdefault(data["collection"], {})
         coll.setdefault(data["id"], {})["status"] = data["status"]

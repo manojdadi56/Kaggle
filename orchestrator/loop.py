@@ -126,9 +126,33 @@ class Orchestrator:
                         cv = None
                         url = None
 
-                    self.state.apply_patch({"tick_id": tick_id, "operations": [
+                    ops = [
                         {"op": "update_gpu_run", "idempotency_key": f"{tick_id}:{eid}:gpu:{st}",
-                         "data": {"slug": eid, "state": st, "cv_score": cv, "kernel_url": url}}]})
+                         "data": {"slug": eid, "state": st, "cv_score": cv, "kernel_url": url}}
+                    ]
+
+                    if st == "COMPLETE" and hasattr(handle, "_out_dir"):
+                        cv_score_path = Path(handle._out_dir) / "cv_score.json"
+                        if cv_score_path.exists():
+                            try:
+                                cv_data = json.loads(cv_score_path.read_text(encoding="utf-8"))
+                                ops.append({
+                                    "op": "record_cv_score",
+                                    "idempotency_key": f"{tick_id}:{eid}:cv_score",
+                                    "data": {
+                                        "experiment_id": run.get("experiment_id", eid),
+                                        "cv_aggregate": cv_data.get("cv_aggregate"),
+                                        "per_category": cv_data.get("per_category"),
+                                        "n_total": cv_data.get("n_total"),
+                                        "n_correct": cv_data.get("n_correct"),
+                                        "n_boxed_missing": cv_data.get("n_boxed_missing"),
+                                        "source_kernel": eid
+                                    }
+                                })
+                            except (ValueError, TypeError, KeyError):
+                                pass
+
+                    self.state.apply_patch({"tick_id": tick_id, "operations": ops})
                     changed["gpu_terminal"].append(eid)
             else:
                 ex = self.executor_factory(run.get("backend"))
@@ -247,6 +271,8 @@ class Orchestrator:
                 proc = subprocess.Popen(cmd, stdout=out_file, stderr=subprocess.STDOUT, text=True)
                 # Store the file object so we can read it later
                 proc._log_file = out_file
+                proc._out_dir = out_dir
+
                 self._gpu_handles[slug] = proc
                 summary["gpu_started"].append(slug)
             else:
