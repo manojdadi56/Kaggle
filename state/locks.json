@@ -9,8 +9,16 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
       "kind": "jules"
     },
+    "TASK-EVAL-chat-template-parity": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/chat_template_fixture.jsonl, tests/test_chat_template_parity.py",
+      "kind": "jules"
+    },
     "TASK-EVAL-cv-score-ingest": {
       "area": "orchestrator/state.py, orchestrator/loop.py, orchestrator/status.py, tests/test_record_cv_score.py",
+      "kind": "jules"
+    },
+    "TASK-OPS-auto-rescue": {
+      "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
       "kind": "jules"
     },
     "TASK-SUBMIT-gate-decision": {

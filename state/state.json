@@ -2,7 +2,7 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 40
+    "jules_dispatched_2026-05-30": 42
   },
   "decisions": {
     "D-EXPLAN-001": {
@@ -307,6 +307,15 @@
   "metrics": [],
   "schema_version": 1,
   "sessions": {
+    "11091484301140930622": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/chat_template_fixture.jsonl, tests/test_chat_template_parity.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:56:06.431789+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-chat-template-parity"
+    },
     "11172407645040114728": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-synthesis-e009",
@@ -315,6 +324,15 @@
       "pr_url": null,
       "state": "IN_PROGRESS",
       "task_id": "TASK-E009-synthesis-kernel"
+    },
+    "4390025997776432846": {
+      "account_idx": 0,
+      "allowed_area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
+      "branch": "main",
+      "created_at": "2026-05-30T13:56:09.030293+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-OPS-auto-rescue"
     },
     "5860122008944918375": {
       "account_idx": 0,
@@ -569,18 +587,20 @@
     "TASK-EVAL-chat-template-parity": {
       "acceptance_criteria": "Fixture has 10 rows across >=3 categories; test exercises byte-equality; pytest -q green (xfail allowed if harness uses hard-coded template).",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/chat_template_fixture.jsonl, tests/test_chat_template_parity.py",
+      "branch": "main",
       "created_at": "2026-05-30T13:45:00Z",
       "definition_of_done": "One PR; tests green; PR body documents whether harness already loads the official template; hypothesis_id=H-CHAT-TEMPLATE.",
       "est_hours": 1.0,
       "hypothesis_id": "H-CHAT-TEMPLATE",
       "priority": "P1",
+      "session_id": "11091484301140930622",
       "source_refs": [
         "discussion-682208.md",
         "discussion-690161.md",
         "competitions/.../eval/vllm_eval.py (from PR #35)"
       ],
       "spec": "(1) Create eval/chat_template_fixture.jsonl with 10 host-realistic prompts (mix of equation_numeric, cryptarithm, cipher, bit_manipulation - sample from existing data/curation classifier output, NOT raw train.csv since that is gitignored). (2) For each fixture row, write a 'expected_rendered' field containing the EXACT string the official Nemotron tokenizer's apply_chat_template returns for a {role=user, content=<prompt>} message with the reasoning_on system header matching the host. (Capture these offline using the HF tokenizer.) (3) Write tests/test_chat_template_parity.py that: imports the prompt-rendering function from competitions/.../eval/vllm_eval.py (which TASK-EVAL-vllm-harness-skeleton already provides) and asserts the rendered output byte-equals expected_rendered for all 10 rows. (4) If our vllm_eval.py uses a hard-coded template (current state), this task documents the gap and the test should be marked xfail with a TODO note pointing at a follow-up task to load the official tokenizer template. If our harness already loads the official template, the test should pass. Acceptance: pytest -q passes (including xfail if applicable); fixture jsonl committed with prompts but the answer column dropped (DATA.md rule).",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Add eval/chat_template_fixture.jsonl + tests/test_chat_template_parity.py asserting byte-equality vs official tokenizer"
     },
     "TASK-EVAL-cv-fixture": {
@@ -653,18 +673,20 @@
     "TASK-OPS-auto-rescue": {
       "acceptance_criteria": "auto-rescue exercises all 5 branches in unit tests; happy path produces a merge commit in a test fixture repo; pytest -q green.",
       "allowed_area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
+      "branch": "main",
       "created_at": "2026-05-30T13:45:00Z",
       "definition_of_done": "One PR; tests green; PR body lists the 5 branches; hypothesis_id=H-AUTO-RESCUE.",
       "est_hours": 1.5,
       "hypothesis_id": "H-AUTO-RESCUE",
       "priority": "P0",
+      "session_id": "4390025997776432846",
       "source_refs": [
         "state/run_log.jsonl",
         "orchestrator/loop.py",
         "orchestrator/github_ops.py"
       ],
       "spec": "Extend orchestrator/loop.py.poll_in_flight: when a session response has state=COMPLETED AND pr_url is empty, before clearing the session: (1) GET https://jules.googleapis.com/v1alpha/sessions/<sid>/activities (use the existing JulesClient or jules_pool routing). (2) Find the last activity with sessionCompleted and a non-empty artifact.changeSet.gitPatch.unidiffPatch; if none found, mark the session FAILED and skip rescue. (3) Create a temp rescue branch off main: 'operator-rescue/<sid>-<short_ts>'. (4) Write the patch to a temp file and run `git apply --whitespace=nowarn <patchfile>`. If apply fails, mark FAILED and skip. (5) Run pytest -q with subprocess.run; capture rc. If rc != 0, leave the rescue branch and mark the session FAILED with a rescue_failed note. (6) On rc==0: commit the staged files with message 'rescue: <task_id> from session <sid>'; switch to main; merge --no-ff with the same -X theirs strategy used by github_ops.merge_pr; scan diff for secrets (same regex KGAT_/AQ.Ab/sk-ant-); on secret leak, abort and mark FAILED. (7) On success: mark the task DONE and clear the session - emit the ops via the existing StatePatch flow, not a side effect. Add tests/test_auto_rescue.py covering: happy path (rescue + merge + DONE), pytest-fails path (rescue branch present, main untouched, FAILED), patch-fails path (FAILED, no branch), no-artifact path (FAILED, no branch), secret-leak path (FAILED, no merge). Acceptance: pytest -q green; happy path produces a real merge commit in a test git repo.",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Add auto-rescue path to poll_in_flight (COMPLETED-without-PR -> extract patch + pytest + merge)"
     },
     "TASK-OPS-gpu-dispatch-op": {
@@ -1103,5 +1125,5 @@
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     }
   },
-  "updated_at": "2026-05-30T13:55:41.878125+00:00"
+  "updated_at": "2026-05-30T13:56:09.037696+00:00"
 }

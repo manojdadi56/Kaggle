@@ -242,9 +242,12 @@ class Orchestrator:
                 if os.environ.get("RUN_KERNEL_MOCK"):
                     cmd.append("--mock")
 
-                # The instructions say "(via subprocess.run with --mock=$RUN_KERNEL_MOCK) and update gpu_runs[slug] with terminal_state + cv_aggregate. (3) loop.py.poll_in_flight: extend to also poll non-terminal gpu_runs and update their state."
-                # It says "subprocess.run", but polling requires it to be async, so we use subprocess.Popen
-                out_file = open(f"/tmp/gpu_run_{slug}.log", "w+", encoding="utf-8")
+                # subprocess.Popen so we can poll asynchronously; log to a cross-platform
+                # temp path (the prior /tmp/-prefix crashed on Windows hosts — audit F-056).
+                import tempfile
+                safe_slug = slug.replace("/", "_").replace("\\", "_")
+                log_path = Path(tempfile.gettempdir()) / f"gpu_run_{safe_slug}.log"
+                out_file = open(log_path, "w+", encoding="utf-8")
                 proc = subprocess.Popen(cmd, stdout=out_file, stderr=subprocess.STDOUT, text=True)
                 # Store the file object so we can read it later
                 proc._log_file = out_file

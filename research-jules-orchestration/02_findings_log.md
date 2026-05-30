@@ -274,13 +274,13 @@ Sources: live ledger `cursors` + session count + task-status count. **Confidence
 Sessions for TASK-E009-synthesis-kernel and TASK-SUBMIT-gate-decision and TASK-EVAL-cv-score-ingest are all `state: QUEUED` with `created_at` in the last few minutes. No PR URLs yet. Account_idx=0 only — the second Jules account hasn't been routed to. JulesPool round-robin may be account-skewed (need to verify it actually alternates). Not a defect today, but in a sustained run the 100/day cap of one account could clip.
 Sources: live ledger sessions table. **Confidence: Supported (would need to inspect `jules_pool.py` round-robin and run-history to be Well-established).**
 
-### F-061 — `state.py` schema is missing migration handling — old `data.experiment_id` vs new `data.slug` mismatch in `update_gpu_run`
-`loop.py`'s new-path GPU polling (line 131) emits `update_gpu_run` with `data: {"slug": eid, ...}`, but `state.py` `_apply_op` for `update_gpu_run` keys the state dict by `data["experiment_id"]` (line 100). The two names disagree, so a `gpu_dispatch`-completed kernel's terminal state would be recorded under `state['gpu_runs'][None]` (the `.get("experiment_id")` default) instead of the intended slug. Silent data loss for GPU-run tracking.
-Sources: live disk read of `loop.py:131` + `state.py:99-103`. **Confidence: Well-established (static analysis).**
+### F-061 — `state.py` `update_gpu_run` slug-vs-experiment_id mismatch (RESOLVED mid-audit)
+**Initial observation:** `loop.py`'s new-path GPU polling emitted `update_gpu_run` with `data: {"slug": eid, ...}`, but `state.py` `_apply_op` for `update_gpu_run` keyed the state dict by `data["experiment_id"]`. **Re-verified late in audit:** `state.py:101` now reads `eid = data.get("slug") or data.get("experiment_id")` and the writeback filters both keys. Likely an intervening Jules PR (or linter) landed the fix between when the conversation summary was captured and the audit ran. **Status: FIXED in current code.**
+Sources: live disk re-read of `state.py:96-104`. **Confidence: Well-established (verified after edit).**
 
-### F-062 — `state.py` OPS set includes `"gpu_dispatch"` but no projection branch handles it in `_apply_op`
-`OPS` contains `"gpu_dispatch"`, so `apply_patch` accepts the op without raising "unknown op". But `_apply_op` has no `elif op == "gpu_dispatch"` arm — it falls through to `raise ValueError(f"unknown op: {op}")`. So a `gpu_dispatch` op crashes mid-apply with a misleading error. (Confirms why no GPU run has been recorded yet.)
-Sources: live disk read of `state.py:24-156`. **Confidence: Well-established (static analysis).**
+### F-062 — `state.py` `gpu_dispatch` projection handler (RESOLVED mid-audit)
+**Initial observation:** `OPS` contained `"gpu_dispatch"` but `_apply_op` had no branch for it; would have raised "unknown op". **Re-verified late in audit:** an `elif op == "gpu_dispatch":` arm now exists and initializes `state["gpu_runs"][slug]` to QUEUED with `experiment_id`/`started_at`/`kernel_url`. **Status: FIXED in current code.** Caveat: nobody has emitted a `gpu_dispatch` op yet (F-055 still blocks the trigger), so the handler is untested at runtime.
+Sources: live disk re-read of `state.py:_apply_op`. **Confidence: Well-established (verified after edit).**
 
 ### F-063 — The 4 "IN_PROGRESS" tasks ARE the entire pending queue; nothing follows them
 Ledger snapshot 2026-05-30T13:00Z:
