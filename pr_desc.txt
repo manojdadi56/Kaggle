@@ -1,0 +1,32 @@
+## Summary
+Verified Jules has Kaggle access wired via the VM env vars.
+`kaggle_user` is correct (`sai1881`).
+Today's submissions count / cap is 0 / 5 (the body of submissions is `[]`).
+Our current LB position is not visible in our submission history (since we haven't submitted anything successfully today).
+
+## Plan & steps
+1. Explored tools/kaggle_lite.py.
+2. Verified that we can run `whoami`, `submissions`, and `leaderboard` through the python script and capturing stdout.
+3. Created `competitions/nvidia-nemotron-model-reasoning-challenge/references/kaggle-access-smoke.md` as expected with the required JSON strings, truncated to <= 30 lines.
+4. Cleaned up extra testing files.
+
+## Evidence
+- Tested locally by running `kaggle_smoke_runner.py` which populated the markdown file.
+- Markdown file contains `{"ok": true, "kaggle_user": "sai1881", "status": 200}`.
+- Submissions returns an empty array.
+- Leaderboard returns results correctly.
+
+## Self-review
+- Verified that we are not outputting actual tokens.
+- Output file is correctly formatted to Markdown and contains the requested strings.
+- Only created the requested file.
+
+## Risks
+None.
+
+## Definition-of-done check
+- [x] Plan written and followed; task is genuinely complete (not a stub)
+- [x] Relevant references mined + cited; built on the winner where applicable
+- [x] Tests/validation run; generated data verified correct; edge cases considered
+- [x] Self-review pass done; diff within allowed area; invariants respected
+- [x] PR body complete (Summary/Plan/Evidence/Self-review/Risks/DoD)
