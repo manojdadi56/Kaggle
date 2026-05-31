@@ -68,6 +68,8 @@ def solve(prompt: str) -> str:
         )
 
     match_int_to_roman = re.search(r'Convert (\d+) to Roman numerals', last_line)
+    if not match_int_to_roman:
+        match_int_to_roman = re.search(r'write the number (\d+) in the Wonderland numeral system', last_line)
     if match_int_to_roman:
         num = int(match_int_to_roman.group(1))
         res = int_to_roman(num)

@@ -8,7 +8,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from reasoners.store_types import Problem
+@dataclass
+class Problem:
+    question: str
+    examples: list
 
 
 @dataclass

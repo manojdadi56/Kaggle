@@ -1,0 +1,47 @@
+{
+  "bit_manipulation": {
+    "n_total": 161,
+    "n_verified": 121,
+    "n_examples_pasted": 0
+  },
+  "cryptarithm_deduce": {
+    "n_total": 0,
+    "n_verified": 0,
+    "n_examples_pasted": 0
+  },
+  "cryptarithm_guess": {
+    "n_total": 0,
+    "n_verified": 0,
+    "n_examples_pasted": 0
+  },
+  "unit_conversion": {
+    "n_total": 121,
+    "n_verified": 121,
+    "n_examples_pasted": 121
+  },
+  "cipher": {
+    "n_total": 325,
+    "n_verified": 121,
+    "n_examples_pasted": 0
+  },
+  "gravity": {
+    "n_total": 121,
+    "n_verified": 121,
+    "n_examples_pasted": 121
+  },
+  "equation_numeric_deduce": {
+    "n_total": 163,
+    "n_verified": 121,
+    "n_examples_pasted": 163
+  },
+  "numeral": {
+    "n_total": 121,
+    "n_verified": 121,
+    "n_examples_pasted": 0
+  },
+  "equation_numeric_guess": {
+    "n_total": 0,
+    "n_verified": 0,
+    "n_examples_pasted": 0
+  }
+}
