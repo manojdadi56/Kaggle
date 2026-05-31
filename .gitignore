@@ -28,6 +28,8 @@ competitions/*/data/raw/*
 competitions/*/data/synthetic/cache/
 competitions/*/data/corpus/*/corpus.jsonl
 competitions/*/data/corpus/*/dev_split.jsonl
+# operator-built verified corpus (contains raw prompts+gold answers) — never commit per ToS
+competitions/*/data/build_v13/*.jsonl
 
 # Other large/generated artifacts
 competitions/*/references/*/
