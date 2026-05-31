@@ -1,0 +1,17 @@
+{
+  "total_rows": 3593,
+  "per_category": {
+    "bit_manipulation": 400,
+    "cipher": 397,
+    "gravity": 400,
+    "numeral": 398,
+    "cryptarithm": 400,
+    "cryptarithm_guess": 400,
+    "equation_numeric": 399,
+    "unit_conversion": 400,
+    "select2reason": 399
+  },
+  "equation_numeric_refined": 373,
+  "equation_numeric_skipped_too_complex": 26,
+  "method": "operator-substitution multi-rule solver (20 candidate operations)"
+}
