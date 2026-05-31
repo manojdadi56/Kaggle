@@ -104,7 +104,7 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "browser Save&RunAll; model loaded full bf16; training in progress; first baseline",
-      "notebook_version": 46,
+      "notebook_version": 47,
       "run_ready": true,
       "state": "RUNNING",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
@@ -113,7 +113,8 @@
       "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval",
       "v44_fix": "ptxas-blackwell prefix-match + subprocess.Popen redirect shim for RO-mount triton bin",
       "v45_fix": "host-faithful gen params: temp 1.0->0.0, max_new_tokens 3584->7680, max_model_len 4096->8192",
-      "v46_fix": "local eval cap 2048 + EVAL_N 16 for speed (host still 7680)"
+      "v46_fix": "local eval cap 2048 + EVAL_N 16 for speed (host still 7680)",
+      "v47": "tqdm progress bars + ETA on train + eval loops"
     }
   },
   "hypotheses": {
@@ -1492,7 +1493,7 @@
     "TASK-V13-bit-verified": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
       "est_hours": 2,
-      "notes": "Real format: 8-bit binary 'NNNNNNNN -> MMMMMMMM' + 'Now, determine the output for:'. Existing solvers/bit_manipulation/solve.py searches unary ops \u2014 TEST on real classified rows, measure exact-match, keep verified. Extend op-search (rotations/shifts/XOR-with-const/majority) if yield is low.",
+      "notes": "Real-data test: existing bit_manipulation solve_transformation scores 0/200 (unary/2-op search insufficient for real transforms incl majority/choice/per-bit functions). REWORK: infer each OUTPUT bit as a boolean function of input bits (the 8 examples give 8 of 256 truth-table rows per output position; with shifts/rotations the function is position-shared) - fit per-output-bit, verify, keep matches.",
       "owner": "operator",
       "status": "BACKLOG",
       "title": "Verified bit_manipulation corpus from real rows"
@@ -1555,5 +1556,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:48:50.671288+00:00"
+  "updated_at": "2026-05-31T08:52:55.933077+00:00"
 }
