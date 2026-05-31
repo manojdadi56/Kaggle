@@ -28,10 +28,27 @@ The underlying Jinja template processes `reasoning_content` and handles `<think>
 
 ## Generation Hyperparameters
 
-The default sampling and generation parameters evaluated on the vLLM server (from `notebook_tinker.py` defaults):
-- `max_tokens`: 3584
-- `temperature`: 1.0
-- `top_p`: 1.0
-- `max_model_len`: 4096
+**AUTHORITATIVE host scoring config** — from the official competition **Evaluation page**
+(https://www.kaggle.com/competitions/nvidia-nemotron-model-reasoning-challenge/overview/evaluation),
+verified 2026-05-31. The host loads base model + our LoRA adapter under **vLLM** and scores with:
 
-*Note: While some code cells in the notebook override these for certain runs (e.g., `temperature=0.0`, `max_tokens=7680`), the exact default parameters defined in the `evaluate` function interface are specified above.*
+| Parameter | Value |
+| :--- | :--- |
+| `max_lora_rank` | 32 |
+| `max_tokens` | **7680** |
+| `temperature` | **0.0** (greedy/deterministic) |
+| `top_p` | 1.0 |
+| `max_num_seqs` | 64 |
+| `gpu_memory_utilization` | 0.85 |
+| `max_model_len` | **8192** |
+
+Scoring: extract the final answer (prioritize `\boxed{}`, fall back to other heuristics / last numeric
+value); correct if it matches ground truth exactly as a string OR within relative tolerance 1e-2.
+
+⚠️ CONTRADICTION RESOLVED (C-GENPARAMS, 2026-05-31): an earlier version of this spec listed
+`max_tokens=3584, temperature=1.0, max_model_len=4096`. Those were the `evaluate()` *defaults* in
+`winner-notebook_tinker.py.md`, NOT the competition's actual scoring config — the official Evaluation
+page is authoritative. Our local-CV notebook (cell 2/3) was updated to match (temp=0.0,
+max_new_tokens=7680, max_model_len=8192) in notebook **v45** so CV faithfully predicts the LB. The KEY
+difference is **temperature 1.0 → 0.0**: the host decodes greedily, so any CV measured with sampling
+(temp=1.0) is non-faithful and overstates noise.

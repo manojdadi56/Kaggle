@@ -5,6 +5,11 @@
     "jules_dispatched_2026-05-30": 57
   },
   "decisions": {
+    "C-GENPARAMS-RESOLVED": {
+      "decision": "Adopt the OFFICIAL Evaluation page gen params as authoritative for local CV: temperature=0.0 (greedy), max_tokens=7680, top_p=1.0, max_model_len=8192, max_lora_rank=32. Winner-notebook evaluate() defaults (1.0/3584/4096) are NON-authoritative.",
+      "entity": "eval",
+      "rationale": "Host scores greedily; a CV measured at temp=1.0 sampling does not predict the leaderboard. temp 1.0->0.0 is the key fix."
+    },
     "D-AUDIT-2026-05-30": {
       "decision": "Pause new feature work; land the 6 audit-corrections + 5 seeded tasks before adding capability.",
       "entity": "project",
@@ -93,13 +98,15 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 44,
+      "notebook_version": 45,
       "run_ready": true,
       "state": "READY_AWAITING_USER_RERUN",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
+      "submission_format_verified": "submission.zip(LoRA adapter, rank<=32, adapter_config.json) per official Evaluation page",
       "user_progress": "v43 ran on GPU, passed model load, failed at kernel-compile ptxas exec (now fixed)",
       "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval",
-      "v44_fix": "ptxas-blackwell prefix-match + subprocess.Popen redirect shim for RO-mount triton bin"
+      "v44_fix": "ptxas-blackwell prefix-match + subprocess.Popen redirect shim for RO-mount triton bin",
+      "v45_fix": "host-faithful gen params: temp 1.0->0.0, max_new_tokens 3584->7680, max_model_len 4096->8192"
     }
   },
   "hypotheses": {
@@ -239,6 +246,15 @@
       "statement": "4 Jules workers (corpus-scale 9cat, cv-fixture 9cat, host-template-parity, ablation-configs) + operator-side notebook v23 (chat template + reasoning_on + full corpus) + corpus-uploader tool close all 10 gaps from the readiness audit in parallel; once landed, the operator can run baseline + 5 ablations within 3 days.",
       "status": "PROPOSED",
       "title": "Parallel close of all 10 gaps unblocks final-quality training within 24h"
+    },
+    "H-GENPARITY": {
+      "expected_effect": "CV becomes a reliable submit gate; reduces wasted submissions on CV that doesn't transfer.",
+      "source_refs": [
+        "official Evaluation page 2026-05-31",
+        "eval/host_template_spec.md"
+      ],
+      "statement": "Evaluating local CV with host-exact gen params (temp=0.0 greedy, max_tokens=7680, max_model_len=8192) yields a CV that tracks the leaderboard within a small constant offset; sampling-based CV (temp=1.0) does not.",
+      "status": "PROPOSED"
     },
     "H-GPU-DISPATCH": {
       "created_at": "2026-05-30T12:00:00Z",
@@ -1390,5 +1406,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T07:37:43.724304+00:00"
+  "updated_at": "2026-05-31T07:43:53.550905+00:00"
 }
