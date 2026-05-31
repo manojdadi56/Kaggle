@@ -39,6 +39,8 @@ state/snapshots/
 state/_decision_*.json
 state/last_run_output/
 state/live_notebook_*.json
+# derived from raw train.csv (keyed to competition ids) — keep out of public repo per ToS
+state/train_id_category.json
 
 # os
 .DS_Store

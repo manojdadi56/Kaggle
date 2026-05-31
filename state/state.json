@@ -16,6 +16,11 @@
       "entity": "project",
       "rationale": "Audit found 5 live defects (3 fixed mid-pass), 6 invalidated assumptions, 0 end-to-end runs. Infrastructure-complete but execution-untriggered. Adding features now compounds cross-PR invariant drift the audit identified."
     },
+    "D-CATEGORIES-6": {
+      "decision": "train.csv = EXACTLY 6 categories: gravity, numeral, unit_conversion, bit_manipulation, cipher, equation_numeric. DROP cryptarithm/cryptarithm_guess/select2reason from the corpus (not in test distribution). Build operator-VERIFIED solvers for the 3 real-but-synthetic categories (bit_manipulation=binary, cipher=word-substitution, equation_numeric=SYMBOLIC transform) by running on classified real rows and verifying vs gold.",
+      "entity": "data",
+      "rationale": "Classifier over 9500 rows: 6 signatures partition the set exactly; 0 cryptarithm/?-pattern rows. Winner's 9-category analysis was a different dataset version."
+    },
     "D-EXPLAN-001": {
       "decision": "Lock experimentation plan (Phase A done, B->C->D->E->F; E-007 cryptarithm_guess prioritized).",
       "entity": "project",
@@ -584,6 +589,14 @@
       "spec": "This is technique-backlog #1: the largest single CV-lever. Read references/analysis-winner.md + winner-reasoning.py.md + winner-corpus.py.md + winner-augmentation.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/cot_v1.jsonl by: (a) loading data/raw/train.csv (run tools/download_competition_data.py if missing), (b) classifying each row into one of the 9 host categories using data/curation/classify.py, (c) for each row generating a step-by-step \\boxed{} chain-of-thought using a per-category deterministic solver (Python, NO LLM/API calls). Cover at least 6 of the 9 categories (equation_numeric, cryptarithm, cipher, bit_manipulation, numeral, gravity priorities). Output schema per line: {id, category, prompt, cot_completion, verified:bool}. Target: >=500 verified-CoT rows. Add tests/test_cot_corpus_v1.py asserting each output row has \\boxed{answer} matching the original train.csv answer (verification gate). Acceptance: corpus.jsonl exists with >=500 rows >=90 percent verified across >=6 categories; pytest -q green.",
       "status": "DONE",
       "title": "Build CoT corpus from train.csv using winner's deterministic solver pattern (the 0.65->0.85 lever)"
+    },
+    "TASK-DATA-solve-real-rows": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/",
+      "est_hours": 3,
+      "notes": "Using classify.py output: for bit_manipulation(binary), cipher(word-sub), equation_numeric(symbolic transform) run/extend the deterministic solvers on the REAL classified rows, verify each \\boxed{} vs gold, emit verified corpus. Assemble v13 = 3 verified base cats (gravity/numeral/unit_conv) + 3 newly-verified (bit/cipher/equation), DROP fabricated cats. Target: maximize verified coverage of the full 9500.",
+      "owner": "operator",
+      "status": "BACKLOG",
+      "title": "Run solvers on REAL train.csv rows -> verified corpus v13"
     },
     "TASK-DATA-train-classifier": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/classify/",
@@ -1429,9 +1442,10 @@
       "branch": "main",
       "definition_of_done": "One PR adding the solver module + tests under the allowed_area; tests pass.",
       "est_hours": 1,
+      "notes": "OBSOLETE: cryptarithm_guess does not exist in train.csv (0 rows). Do not merge this Jules PR. Category was a fabrication from a different dataset version.",
       "session_id": "13572689577807863885",
       "spec": "Write a pure-Python deterministic solver for the cryptarithm_guess puzzle category (the winning solution SKIPPED this category, so it is the single highest un-captured leaderboard headroom). IMPORTANT: your VM does NOT have train.csv (it is gitignored under Kaggle ToS). Work ONLY from the in-context examples embedded in each puzzle prompt. Each prompt gives letter->word/arithmetic example pairs and a target to solve. Implement: (1) parse the example pairs from the prompt text, (2) deduce the consistent digit<->letter (or rule) assignment, (3) apply it to the target, (4) emit a CONCISE chain-of-thought that shows the deduction and ends with the final answer inside \\boxed{}. Provide solve(prompt:str)->str returning the full CoT+boxed string, plus a build_rows(prompts:list)->list[dict] emitting {prompt, completion, category:'cryptarithm_guess'}. Include >=6 inline unit tests with hand-verified expected boxed answers (the operator will then run your solver against the full local train.csv and report accuracy). Keep stdlib-only.",
-      "status": "IN_PROGRESS",
+      "status": "OBSOLETE",
       "title": "Deterministic cryptarithm_guess CoT solver"
     },
     "TASK-SOLVER-equation-fallback": {
@@ -1440,9 +1454,10 @@
       "branch": "main",
       "definition_of_done": "One PR adding the fallback module + tests under allowed_area; tests pass.",
       "est_hours": 1,
+      "notes": "OBSOLETE: real equation_numeric is SYMBOLIC char-transformation, not numeric +/-, so the |a-b| fallback is the wrong model. Operator will build a symbolic-transform solver instead.",
       "session_id": "12166516957131497176",
       "spec": "Implement a deterministic fallback for equation_numeric puzzles where the primary rule cannot be identified: assume the operator is absolute difference |a-b| and emit the corresponding concise CoT ending in \\boxed{}. Provide try_rule(examples)->rule_or_None (attempt +,-,*,abs-diff from example pairs) and fallback_solve(prompt)->str that uses |a-b| when try_rule returns None. No train.csv on the VM - parse the in-prompt examples only. Include >=6 inline unit tests covering both the rule-found and fallback paths. Stdlib-only. The operator will measure real capture rate against local train.csv.",
-      "status": "IN_PROGRESS",
+      "status": "OBSOLETE",
       "title": "Equation |a-b| fallback heuristic"
     },
     "TASK-SUBMIT-gate-decision": {
@@ -1549,5 +1564,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:09:39.796200+00:00"
+  "updated_at": "2026-05-31T08:18:46.632218+00:00"
 }
