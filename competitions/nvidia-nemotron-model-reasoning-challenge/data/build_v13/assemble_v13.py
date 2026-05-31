@@ -25,16 +25,27 @@ BASE_CATS = ("gravity", "numeral", "unit_conversion")
 
 def main() -> int:
     out, cnt = [], collections.Counter()
-    v6 = DATA / "corpus" / "v6_local" / "corpus.jsonl"
-    if v6.exists():
-        for line in v6.read_text(encoding="utf-8").splitlines():
+    # base categories: prefer the full build_v13/base_verified.jsonl; fall back to v6_local
+    base_full = DATA / "build_v13" / "base_verified.jsonl"
+    if base_full.exists():
+        for line in base_full.read_text(encoding="utf-8").splitlines():
             try:
                 r = json.loads(line)
             except Exception:
                 continue
-            if r.get("category") in BASE_CATS:
-                out.append({"prompt": r["prompt"], "completion": r["completion"], "category": r["category"]})
-                cnt[r["category"]] += 1
+            out.append(r)
+            cnt[r.get("category", "?")] += 1
+    else:
+        v6 = DATA / "corpus" / "v6_local" / "corpus.jsonl"
+        if v6.exists():
+            for line in v6.read_text(encoding="utf-8").splitlines():
+                try:
+                    r = json.loads(line)
+                except Exception:
+                    continue
+                if r.get("category") in BASE_CATS:
+                    out.append({"prompt": r["prompt"], "completion": r["completion"], "category": r["category"]})
+                    cnt[r["category"]] += 1
     for fn in ("cipher_verified.jsonl", "bit_verified.jsonl"):
         p = DATA / "build_v13" / fn
         if not p.exists():
