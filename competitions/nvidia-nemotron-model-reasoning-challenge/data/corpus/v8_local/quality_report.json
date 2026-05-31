@@ -1,0 +1,17 @@
+{
+  "total_rows": 3593,
+  "per_category": {
+    "bit_manipulation": 400,
+    "cipher": 397,
+    "gravity": 400,
+    "numeral": 398,
+    "cryptarithm": 400,
+    "cryptarithm_guess": 400,
+    "equation_numeric": 399,
+    "unit_conversion": 400,
+    "select2reason": 399
+  },
+  "bit_refined": 400,
+  "bit_skipped_unparseable": 0,
+  "method": "regex-parse nickname format + bit-by-bit walk + verified op"
+}
