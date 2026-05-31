@@ -392,15 +392,6 @@
       "pr_url": "https://github.com/manojdadi56/Kaggle/pull/59",
       "state": "COMPLETED",
       "task_id": "TASK-EVAL-cv-fixture-9cat"
-    },
-    "6780419095411095356": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
-      "branch": "main",
-      "created_at": "2026-05-30T22:40:19.953196+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-CORPUS-scale-9cat"
     }
   },
   "submit_counter": {},
@@ -515,7 +506,7 @@
       "priority": "P0",
       "session_id": "6780419095411095356",
       "spec": "Read existing data/corpus/v2/corpus.jsonl (398 rows, 4 cats) and references/analysis-winner.md + winner-reasoning.py.md + winner-augmentation.py.md + winner-corpus.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/corpus.jsonl with: (a) 9 categories covered: bit_manipulation, cipher, gravity, numeral, cryptarithm, cryptarithm_guess, equation_numeric, unit_conversion, select2reason. (b) >= 300 rows per category (3000+ total). (c) Use per-category deterministic Python solvers (NO LLM/API), mirror winner's reasoning.py logic. (d) Apply the 5 winner augmenters (paraphrase, perturbation, etc) per augmentation.py. (e) HARD verification: each row's completion must end with \\boxed{X} where X exactly equals or numerically matches the original answer; reject mismatched rows; do NOT mark verified=True falsely. (f) Write data/corpus/v4/quality_report.json with per-category {generated, verified, rejected, samples}. (g) Add tests/test_corpus_v4_quality.py asserting >= 3000 rows, >= 95% verified, all 9 cats present. Acceptance: pytest -q green; quality report shows >= 95% verified for every category.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Scale CoT corpus to 3K+ rows across ALL 9 host categories (winner-grade volume)"
     },
     "TASK-DATA-cot-corpus-v1": {
@@ -1418,5 +1409,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T00:13:31.905029+00:00"
+  "updated_at": "2026-05-31T00:27:45.994131+00:00"
 }
