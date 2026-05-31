@@ -1,0 +1,26 @@
+{
+  "total_rows": 3593,
+  "per_category": {
+    "bit_manipulation": 400,
+    "cipher": 397,
+    "gravity": 400,
+    "numeral": 398,
+    "cryptarithm": 400,
+    "cryptarithm_guess": 400,
+    "equation_numeric": 399,
+    "unit_conversion": 400,
+    "select2reason": 399
+  },
+  "refined": {
+    "cryptarithm": 13,
+    "cryptarithm_guess": 14,
+    "unit_conversion": 400,
+    "select2reason": 200
+  },
+  "skipped_when_attempted": {
+    "cryptarithm": 387,
+    "cryptarithm_guess": 386,
+    "select2reason": 199
+  },
+  "method": "operator-side refinement of cryptarithm/cryptarithm_guess/unit_conversion/select2reason from v8"
+}
