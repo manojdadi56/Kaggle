@@ -35,6 +35,11 @@ competitions/*/experiments/*/adapter/
 competitions/*/submissions/**/*.zip
 state/snapshots/
 
+# transient operator scratch (decisions are replayed from events.jsonl; nb pulls are caches)
+state/_decision_*.json
+state/last_run_output/
+state/live_notebook_*.json
+
 # os
 .DS_Store
 Thumbs.db
