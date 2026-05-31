@@ -1,0 +1,19 @@
+{
+  "total_rows": 3964,
+  "per_category_with_source": {
+    "operator_solver": {
+      "unit_conversion": 500,
+      "gravity": 529,
+      "numeral": 540
+    },
+    "jules_synthetic": {
+      "bit_manipulation": 400,
+      "cipher": 397,
+      "cryptarithm": 400,
+      "cryptarithm_guess": 400,
+      "equation_numeric": 399,
+      "select2reason": 399
+    }
+  },
+  "rationale": "Hybrid: operator-built rows are train.csv-matched (high host-format fidelity) for the 3 cats I have solvers for; Jules synthetic rows fill the remaining 6 cats."
+}
