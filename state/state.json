@@ -170,6 +170,14 @@
       "statement": "Cipher-category problems reduce to substitution+offset and admit a 100% deterministic solver.",
       "status": "PROPOSED"
     },
+    "H-CIPHER-DICT": {
+      "expected_effect": "Converts cipher from synthetic to verified; meaningful per-category CV gain.",
+      "source_refs": [
+        "real-data test 2026-05-31"
+      ],
+      "statement": "Completing the substitution via a comprehensive English wordlist (pattern + known-letter constraints) lifts cipher solver exact-match from ~0% to >=60% on real rows, yielding verified cipher CoT.",
+      "status": "PROPOSED"
+    },
     "H-CRYPTARITHM": {
       "expected_effect": "+0.07 LB on 659+164 cryptarithm rows",
       "source_refs": [
@@ -1431,9 +1439,11 @@
       "branch": "main",
       "definition_of_done": "One PR adding cipher solver + tests under allowed_area; tests pass.",
       "est_hours": 1,
+      "notes": "OPERATOR-OWNED (needs train.csv). Real-data diagnosis 2026-05-31: existing solve.py builds correct char-map + \\boxed{} but verifies ~0% on real rows. FIX: (1) case-insensitive candidate cross-check (lowercase bug); (2) replace ~90-word WONDERLAND_WORDS with a COMPREHENSIVE English wordlist for pattern completion; (3) permutation-closure: the 5 missing cipher letters map to the 5 unused plaintext letters - use word-context to disambiguate. Keep ONLY rows that exactly match gold (verified). Even 50-70% yield = ~800-1100 verified cipher rows.",
+      "owner": "operator",
       "session_id": "711085316798077704",
       "spec": "Write a pure-Python deterministic solver for the cipher category. The prompt gives example pairs 'ciphertext -> plaintext' (e.g. 'ucoov pwgtfyoqg' -> 'queen discovers') and then 'decrypt: <ciphertext>'. Algorithm: align each ciphertext word with its plaintext word to build a consistent char->char substitution map across ALL examples; if conflicts arise prefer the most frequent mapping; apply the map to the target ciphertext; emit a CONCISE CoT showing the mapping table + application, ending in \\boxed{plaintext}. IMPORTANT: no train.csv on the VM (gitignored) - work only from in-prompt examples. Provide solve(prompt)->str and build_rows(prompts)->list[dict] with category='cipher'. Include >=6 inline unit tests with hand-verified answers (operator runs it against local train.csv afterward). Stdlib-only.",
-      "status": "IN_PROGRESS",
+      "status": "BACKLOG",
       "title": "Substitution-cipher CoT solver"
     },
     "TASK-SOLVER-cryptarithm-guess": {
@@ -1564,5 +1574,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:18:46.632218+00:00"
+  "updated_at": "2026-05-31T08:29:29.617519+00:00"
 }
