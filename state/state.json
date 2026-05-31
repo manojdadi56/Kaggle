@@ -93,9 +93,11 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 42,
-      "state": "API_CONFIRMED_CPU_ONLY",
-      "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000"
+      "notebook_version": 43,
+      "run_ready": true,
+      "state": "READY_AWAITING_USER_RUN",
+      "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
+      "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval"
     }
   },
   "hypotheses": {
@@ -1386,5 +1388,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T02:48:29.836158+00:00"
+  "updated_at": "2026-05-31T02:53:29.027458+00:00"
 }

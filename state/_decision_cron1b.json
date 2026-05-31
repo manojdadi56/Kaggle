@@ -1,0 +1,17 @@
+{
+  "tick_id": "RUN-20260531-CRON1B",
+  "status": "needs_user",
+  "summary": "Audited live notebook v42 and found 3 run-blocking/correctness gaps; fixed all 3 and pushed v43. (1) Empty cell 0 -> restored verified site.addsitedir bootstrap for nvidia-utility-script (cutlass.cute/Mamba3 deps) + Blackwell ptxas /tmp mirror. (2) Stale last cell overwrote cv_score.json with a non-host-parity eval -> replaced with submission.zip packaging (rank<=32 validated). (3) No submission.zip was ever produced -> now packaged. Notebook is run-ready; first submission still gated on user browser 'Save & Run All' with RTX Pro 6000 + Internet ON.",
+  "actions_taken": [
+    "Pulled + audited all 5 cells of live notebook v42",
+    "Wrote reusable tools/patch_notebook_bootstrap.py",
+    "Pushed v43: cell 0 bootstrap + packaging cell"
+  ],
+  "state_patch": {
+    "operations": [
+      {"op": "update_gpu_run", "idempotency_key": "RUN-20260531-CRON1B:gpu:v43", "data": {"slug": "nvidia-nemotron-submission-demo", "notebook_version": 43, "state": "READY_AWAITING_USER_RUN", "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval", "run_ready": true, "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON"}},
+      {"op": "append_event", "idempotency_key": "RUN-20260531-CRON1B:v43", "data": {"notebook_version": 43, "fixes": ["cell0_bootstrap", "submission_zip_packaging", "removed_stale_eval"], "tool": "tools/patch_notebook_bootstrap.py"}, "summary": "CRON1B: pushed notebook v43 (run-ready: offline bootstrap + packaging)"}
+    ]
+  },
+  "next_recommended_action": "USER: open https://www.kaggle.com/code/sai1881/nvidia-nemotron-submission-demo/edit -> Session options: Accelerator=NVIDIA RTX Pro 6000, Internet=ON -> 'Save & Run All (Commit)'. Then operator runs tools/submit_after_run.py."
+}
