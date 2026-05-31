@@ -118,7 +118,7 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "browser Save&RunAll; model loaded full bf16; training in progress; first baseline",
-      "notebook_version": 49,
+      "notebook_version": 50,
       "run_ready": true,
       "state": "RUNNING",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
@@ -131,7 +131,8 @@
       "v46_fix": "local eval cap 2048 + EVAL_N 16 for speed (host still 7680)",
       "v47": "tqdm progress bars + ETA on train + eval loops",
       "v48": "cell1 prefers v13 corpus path",
-      "v49": "per-category CV eval (safe try/except); category preserved through load"
+      "v49": "per-category CV eval (safe try/except); category preserved through load",
+      "v50": "honest held-out dev CV (stratified, safe); notebook prep complete"
     }
   },
   "hypotheses": {
@@ -857,7 +858,7 @@
       "depends_on": "first baseline CV",
       "est_hours": 1,
       "notes": "Currently eval runs on train_data[:20] which were trained on -> optimistic CV. Hold out a stratified dev slice (NOT trained on) and measure CV there so the submit-gate (cv > best) is meaningful vs the LB. Use eval/build_cv_fixture_v2.py / cv_fixture_v2_manifest.json if helpful.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "title": "Hold out stratified dev set for honest CV gate"
     },
     "TASK-EVAL-host-chat-template": {
@@ -1573,5 +1574,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T10:29:12.935665+00:00"
+  "updated_at": "2026-05-31T10:43:31.418260+00:00"
 }
