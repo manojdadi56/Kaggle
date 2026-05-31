@@ -46,29 +46,58 @@ if os.path.isdir(UTIL):
 else:
     print('WARN: nvidia-utility-script mount NOT found - model load may fail on cutlass.cute')
 
-# Blackwell (RTX Pro 6000, sm_120): RO mount strips +x from triton ptxas-blackwell ->
-# PermissionError when a kernel compiles. Mirror ONLY triton's nvidia bin dir to /tmp,
-# chmod +x, point TRITON_* env at the writable copies. (.so unaffected; never copy whole tree.)
+# Blackwell (RTX Pro 6000, sm_120): the RO mount strips +x from triton's ptxas-blackwell ->
+# PermissionError when a kernel compiles. Mirror ONLY triton's nvidia bin dir to /tmp (writable,
+# NOT saved as output), chmod +x, and force triton to use the copies. (.so unaffected; never copy
+# the whole vendored tree -> that breaks torch._dynamo.)
 try:
     import triton
     tdir = os.path.join(os.path.dirname(triton.__file__), 'backends', 'nvidia', 'bin')
+    dst = '/tmp/triton_bin'
     if os.path.isdir(tdir):
-        dst = '/tmp/triton_bin'
         os.makedirs(dst, exist_ok=True)
         for f in os.listdir(tdir):
             s = os.path.join(tdir, f); d = os.path.join(dst, f)
             if not os.path.exists(d):
-                shutil.copy2(s, d); os.chmod(d, 0o755)
-        for env_k, fn in [('TRITON_PTXAS_PATH', 'ptxas'),
-                          ('TRITON_CUOBJDUMP_PATH', 'cuobjdump'),
-                          ('TRITON_NVDISASM_PATH', 'nvdisasm')]:
-            p = os.path.join(dst, fn)
-            if os.path.exists(p):
-                os.environ[env_k] = p
+                shutil.copy2(s, d)
+            try: os.chmod(d, 0o755)        # ALWAYS ensure +x on the writable copy
+            except OSError: pass
+        # (a) point TRITON_* env at the writable copies. Match by PREFIX because the Blackwell
+        #     build ships 'ptxas-blackwell' (not 'ptxas'); prefer the -blackwell variant.
+        def _set(env_k, prefix):
+            cands = sorted(glob.glob(os.path.join(dst, prefix + '*')),
+                           key=lambda p: (0 if 'blackwell' in p else 1, p))
+            for p in cands:
+                if os.path.isfile(p):
+                    os.environ[env_k] = p; return p
+            return None
+        px = _set('TRITON_PTXAS_PATH', 'ptxas')
+        _set('TRITON_CUOBJDUMP_PATH', 'cuobjdump')
+        _set('TRITON_NVDISASM_PATH', 'nvdisasm')
         os.environ['PATH'] = dst + os.pathsep + os.environ.get('PATH', '')
-        print('triton bin mirrored to', dst)
+        # (b) BULLETPROOF: transparently reroute ANY exec of a binary inside the RO mount bin dir
+        #     to its writable /tmp copy. Version-independent; works even if triton ignores the env.
+        import subprocess as _sp
+        _ro_bin = tdir
+        if not getattr(_sp.Popen, '_nemotron_patched', False):
+            _orig_init = _sp.Popen.__init__
+            def _init(self, args, *a, **k):
+                try:
+                    if isinstance(args, (list, tuple)) and args and isinstance(args[0], str) \
+                       and args[0].startswith(_ro_bin):
+                        alt = os.path.join(dst, os.path.basename(args[0]))
+                        if os.path.exists(alt):
+                            args = [alt, *args[1:]]
+                except Exception:
+                    pass
+                return _orig_init(self, args, *a, **k)
+            _sp.Popen.__init__ = _init
+            _sp.Popen._nemotron_patched = True
+        print('triton ptxas ->', px, '| /tmp bin:', sorted(os.listdir(dst)))
+    else:
+        print('triton nvidia bin dir not found at', tdir)
 except Exception as e:
-    print('triton bin mirror skipped:', e)
+    print('triton bin mirror skipped:', repr(e))
 '''
 
 CELL_PACKAGE = r'''# === v43: package LoRA adapter into submission.zip (host requires rank<=32) ===

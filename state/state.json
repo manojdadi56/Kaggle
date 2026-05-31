@@ -93,11 +93,13 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 43,
+      "notebook_version": 44,
       "run_ready": true,
-      "state": "READY_AWAITING_USER_RUN",
+      "state": "READY_AWAITING_USER_RERUN",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
-      "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval"
+      "user_progress": "v43 ran on GPU, passed model load, failed at kernel-compile ptxas exec (now fixed)",
+      "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval",
+      "v44_fix": "ptxas-blackwell prefix-match + subprocess.Popen redirect shim for RO-mount triton bin"
     }
   },
   "hypotheses": {
@@ -1388,5 +1390,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T02:53:29.027458+00:00"
+  "updated_at": "2026-05-31T07:37:43.724304+00:00"
 }
