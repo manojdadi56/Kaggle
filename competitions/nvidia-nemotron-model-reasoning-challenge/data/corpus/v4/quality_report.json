@@ -1,0 +1,58 @@
+{
+  "categories": {
+    "bit_manipulation": {
+      "generated": 400,
+      "verified": 400,
+      "rejected": 0,
+      "samples": []
+    },
+    "cipher": {
+      "generated": 400,
+      "verified": 397,
+      "rejected": 3,
+      "samples": []
+    },
+    "gravity": {
+      "generated": 400,
+      "verified": 400,
+      "rejected": 0,
+      "samples": []
+    },
+    "numeral": {
+      "generated": 400,
+      "verified": 398,
+      "rejected": 2,
+      "samples": []
+    },
+    "cryptarithm": {
+      "generated": 400,
+      "verified": 400,
+      "rejected": 0,
+      "samples": []
+    },
+    "cryptarithm_guess": {
+      "generated": 400,
+      "verified": 400,
+      "rejected": 0,
+      "samples": []
+    },
+    "equation_numeric": {
+      "generated": 400,
+      "verified": 399,
+      "rejected": 1,
+      "samples": []
+    },
+    "unit_conversion": {
+      "generated": 400,
+      "verified": 400,
+      "rejected": 0,
+      "samples": []
+    },
+    "select2reason": {
+      "generated": 400,
+      "verified": 399,
+      "rejected": 1,
+      "samples": []
+    }
+  }
+}
