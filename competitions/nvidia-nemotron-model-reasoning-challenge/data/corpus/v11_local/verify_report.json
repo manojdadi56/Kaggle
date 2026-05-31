@@ -1,0 +1,86 @@
+{
+  "per_category": [
+    {
+      "category": "bit_manipulation",
+      "n_total": 400,
+      "predicted_match": 0,
+      "unmatched_in_train": 400,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "cipher",
+      "n_total": 397,
+      "predicted_match": 0,
+      "unmatched_in_train": 397,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "cryptarithm",
+      "n_total": 400,
+      "predicted_match": 0,
+      "unmatched_in_train": 400,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "cryptarithm_guess",
+      "n_total": 400,
+      "predicted_match": 0,
+      "unmatched_in_train": 400,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "equation_numeric",
+      "n_total": 399,
+      "predicted_match": 0,
+      "unmatched_in_train": 399,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "gravity",
+      "n_total": 400,
+      "predicted_match": 0,
+      "unmatched_in_train": 400,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "numeral",
+      "n_total": 398,
+      "predicted_match": 0,
+      "unmatched_in_train": 390,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 8,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "select2reason",
+      "n_total": 399,
+      "predicted_match": 0,
+      "unmatched_in_train": 399,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    },
+    {
+      "category": "unit_conversion",
+      "n_total": 400,
+      "predicted_match": 0,
+      "unmatched_in_train": 400,
+      "wrong_prediction": 0,
+      "no_boxed_in_completion": 0,
+      "verified_pct": 0.0
+    }
+  ],
+  "examples_wrong": {}
+}
