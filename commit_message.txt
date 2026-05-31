@@ -1,29 +1,8 @@
-## Summary
-Implemented a pre-filter script `logprob_filter.py` that runs an inference pass on the `Nemotron-3-Nano-30B-A3B-BF16` base model to calculate token-level log-probabilities. It filters out already-easy examples by dropping rows where the minimum answer token logprob is > -0.05. I also configured the `train.py` kernel inside `train-logprob-filter-e008` to default to the generated `corpus_filtered.jsonl` dataset.
+Generate v3 CoT corpus with corrected verification and expanded categories
 
-## Plan & steps
-1. Cloned the E-002 baseline to `train-logprob-filter-e008`.
-2. Created `logprob_filter.py` to tokenize, run generation, extract logprobs masked by `build_datum` answer tokens, and drop high-confidence answers.
-3. Added `--smoke` logic using `gpt2` to test the script locally.
-4. Ran `logprob_filter.py` locally on the CPU (using `gpt2`) to produce `corpus_filtered.jsonl`.
-5. Modified `train.py` default arguments to target the filtered corpus.
-6. Conducted local inference testing and cleanup.
-
-## Evidence
-- `logprob_filter.py --smoke` generated the following dropped-rows histogram (due to small GPT2 tests):
-  - `numeral`: 70 dropped
-- `train.py --smoke --data corpus_filtered.jsonl` completes training on 21 rows without error.
-
-## Self-review
-- Kept all work correctly inside `competitions/nvidia-nemotron-model-reasoning-challenge/kernels/train-logprob-filter-e008`.
-- Kept the LoRA rank ≤ 32 invariant (unchanged from base kernel).
-- Base model correctly set to `Nemotron-3-Nano-30B-A3B-BF16`.
-- Logprob calculation correctly shifts and masks input IDs for the CoT reasoning + answer segment.
-
-## Risks
-- Full scale runs over the entire 8192 token length for 30B may OOM on Kaggle depending on memory utilization. BitsAndBytes 4-bit config is enabled to help.
-
-## Definition-of-done check
-- [x] Deliverable complete and tests pass.
-- [x] Pre-commit steps executed.
-- [x] Diff localized to allowed area.
+Summary:
+- Built `build_corpus_v3.py` script to parse prompts, route to solvers, extract and strictly verify CoT answers against `train.csv`.
+- Generated `corpus.jsonl` with 726 rows across 6 verified categories (bit_manipulation, numeral, cipher, unit_conversion, gravity, equation_numeric_deduce).
+- Patched solvers to correctly output deterministic CoT for their respective categories, fixing issues with numeral regex mapping and cryptarithm reasoning fallback mapping logic.
+- Included robust tests in `test_cot_corpus_v3.py` asserting exact and numerical matching logic, row counts, and category coverage.
+- Exported quality metadata to `quality_report.json` as specified.

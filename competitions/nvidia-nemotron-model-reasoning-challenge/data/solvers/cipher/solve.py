@@ -47,17 +47,15 @@ def solve(prompt: str) -> str:
             for s, d in zip(src, dst):
                 if s.isalpha() and d.isalpha():
                     mapping[s] = d
-        else:
-            if not any(kw in line.lower() for kw in ['decrypt', 'cipher']):
-                question_line = line
+        elif "Now, decrypt the following text:" in line:
+            question_line = line.split("Now, decrypt the following text:")[1].strip()
+        elif "Decrypt:" in line:
+            question_line = line.split("Decrypt:")[1].strip()
+        elif "Decrypt" in line:
+            question_line = line.split("Decrypt")[1].strip()
 
     if not question_line:
         question_line = lines[-1]
-
-    if question_line.startswith("Decrypt: "):
-        question_line = question_line[len("Decrypt: "):]
-    elif question_line.startswith("Decrypt"):
-        question_line = question_line[len("Decrypt"):].strip()
 
     cot = "## Classification\n"
     cot += "Letters are consistently substituted across examples — the same ciphertext\n"
