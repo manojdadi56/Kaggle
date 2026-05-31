@@ -1517,9 +1517,9 @@
     "TASK-V13-equation-symbolic": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
       "est_hours": 3,
-      "notes": "Real format: examples 'SYMBOLS = SYMBOLS' where symbols encode numbers; input/output lengths differ so it is arithmetic on a symbol-numeral system, NOT a 1:1 substitution (cipher trick does not apply). Solver: infer symbol->digit map + base, decode operands, infer operation, encode result. Multi-hour.",
+      "notes": "Evidence-based defer (see references/analysis-equation-numeric.md). Revisit as dedicated multi-hour task only if a baseline shows equation is the marginal bottleneck.",
       "owner": "operator",
-      "status": "BACKLOG",
+      "status": "DEFERRED",
       "title": "Symbolic-transform solver for equation_numeric"
     },
     "TASK-XLSX-community-and-tabs": {
@@ -1572,5 +1572,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T09:50:40.683972+00:00"
+  "updated_at": "2026-05-31T10:01:53.954838+00:00"
 }
