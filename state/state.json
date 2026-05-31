@@ -31,7 +31,7 @@
     "E-002-baseline-rank32": {
       "backend": "kaggle_gpu",
       "hypothesis": "H-LORA32",
-      "notes": "Winner-faithful baseline. rank=32, alpha=64, 1 epoch, LinearDecay 2e-5->1e-5, Mamba+attention targets. Goal ~0.85.",
+      "notes": "Winner-faithful baseline. rank=32, 1 epoch, step-linear LR 2e-5->1e-5, MLP+attention(+unembed) targets. ALPHA NOTE (corrected 2026-05-31): winner used tinker framework (create_lora_training_client_async rank=32, train_mlp/attn/unembed) which abstracts lora_alpha away \u2014 there is NO primary-source alpha=64. Baseline uses the official demo's alpha=16 (scaling 0.5); alpha is a POST-baseline ablation axis (16 vs 32 vs 64). Goal ~0.85.",
       "status": "PROPOSED"
     },
     "E-003-rank16": {
@@ -818,6 +818,14 @@
       "status": "DONE",
       "title": "Write eval/vllm_eval.py harness skeleton with host-faithful params + \\boxed{} extractor + per-category scoring"
     },
+    "TASK-EXP-alpha-ablation": {
+      "allowed_area": "notebook cell 2",
+      "depends_on": "first baseline CV",
+      "est_hours": 1,
+      "notes": "Demo uses alpha=16 (scaling alpha/r=0.5). Winner's tinker scaling is internal/unknown (likely ~1.0). Once a baseline CV exists, test alpha 32 (scaling 1.0) and 64 (scaling 2.0) to find best update magnitude. One-line change (lora_alpha=N).",
+      "status": "BACKLOG",
+      "title": "Ablate LoRA alpha (16 vs 32 vs 64) post-baseline"
+    },
     "TASK-FIX-kernel-metadata": {
       "acceptance_criteria": "All 8 files have non-placeholder values; dry-run passes.",
       "actor": "jules",
@@ -1422,5 +1430,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T07:48:07.171348+00:00"
+  "updated_at": "2026-05-31T07:54:35.816878+00:00"
 }
