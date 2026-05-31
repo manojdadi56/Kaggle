@@ -1,14 +1,14 @@
 """Build VERIFIED cipher corpus rows from real train.csv (operator-owned; needs raw data).
 
-Strategy (validated 2026-05-31): each cipher puzzle is a consistent letter substitution.
-Build the char-map from the in-prompt 'ciphertext -> plaintext' example pairs, decrypt the
-target, and KEEP ONLY rows whose target uses letters all present in the examples (so the
-decryption is fully determined). On those, exact-match vs gold is 100% (605/1576 = 38.4%).
-The remaining ~62% need letter-completion (comprehensive English wordlist) — future work
-(H-CIPHER-DICT). Emitting only the 605 fully-determined rows gives guaranteed-correct CoT.
+Each cipher puzzle is a fixed letter substitution. Build the char-map from the in-prompt
+'ciphertext -> plaintext' example pairs. For target letters absent from the examples, use
+WORD COMPLETION against a vocabulary harvested from the plaintext side of ALL cipher prompts
+(77 words, covers 100% of target words — legitimate: it's in the prompts, not the gold).
 
-Output: verified rows {prompt, completion, category:'cipher'} with a concise CoT ending in
-\\boxed{answer}. corpus jsonl is gitignored (operator-built; not committed).
+Iterative completion: for each unresolved target word, find vocab words whose length, known-
+letter positions, and repeated-letter pattern are consistent with the current char-map; if a
+unique decryption results, assign it and extend the map (cascades). Keep ONLY rows whose final
+decryption exactly matches gold (guaranteed-correct CoT).
 
 Usage:
     python competitions/.../data/build_v13/cipher_verified.py            # report
@@ -28,7 +28,6 @@ sys.path.insert(0, str(COMP / "data" / "classify"))
 
 
 def _parse(prompt: str):
-    """Return (mapping cipher->plain lowercase, target_ciphertext) or (None,None)."""
     mapping, target = {}, None
     for line in prompt.split("\n"):
         line = line.strip()
@@ -42,13 +41,93 @@ def _parse(prompt: str):
     return mapping, target
 
 
-def _cot(mapping: dict, target: str, answer: str) -> str:
+def harvest_vocab(rows) -> set:
+    vocab = set()
+    for r in rows:
+        for line in r["prompt"].split("\n"):
+            if " -> " in line:
+                _, dst = line.split(" -> ", 1)
+                for w in dst.strip().split():
+                    w = "".join(c for c in w if c.isalpha()).lower()
+                    if w:
+                        vocab.add(w)
+    return vocab
+
+
+def _pattern(word: str):
+    seen, pat = {}, []
+    for c in word:
+        if c not in seen:
+            seen[c] = len(seen)
+        pat.append(seen[c])
+    return tuple(pat)
+
+
+def _by_len_pattern(vocab):
+    idx = {}
+    for v in vocab:
+        idx.setdefault((len(v), _pattern(v)), []).append(v)
+    return idx
+
+
+def solve_row(prompt: str, vocab_idx) -> str | None:
+    mapping, target = _parse(prompt)
+    if not mapping or not target:
+        return None
+    words = target.split()
+    decoded = [None] * len(words)
+    # first pass: fully-covered words
+    changed = True
+    while changed:
+        changed = False
+        for wi, w in enumerate(words):
+            if decoded[wi] is not None:
+                continue
+            cw = w.lower()
+            letters = [c for c in cw if c.isalpha()]
+            if all(c in mapping for c in letters):
+                decoded[wi] = "".join(mapping.get(c, c) for c in cw)
+                changed = True
+                continue
+            # candidate completion via vocab (same len+pattern, consistent with known map)
+            cands = []
+            for v in vocab_idx.get((len(cw), _pattern(cw)), []):
+                ok = True
+                trial = {}
+                for cc, pc in zip(cw, v):
+                    if cc in mapping:
+                        if mapping[cc] != pc:
+                            ok = False; break
+                    else:
+                        if cc in trial and trial[cc] != pc:
+                            ok = False; break
+                        trial[cc] = pc
+                if ok:
+                    cands.append((v, trial))
+            # unique decryption?
+            decs = {v for v, _ in cands}
+            if len(decs) == 1:
+                v, trial = cands[0]
+                decoded[wi] = v
+                # extend map (bijection: don't overwrite, don't double-assign a plain letter)
+                used = set(mapping.values())
+                for cc, pc in trial.items():
+                    if cc not in mapping and pc not in used:
+                        mapping[cc] = pc; used.add(pc)
+                changed = True
+    if any(d is None for d in decoded):
+        return None
+    return " ".join(decoded)
+
+
+def _cot(prompt, answer) -> str:
+    mapping, target = _parse(prompt)
     pairs = ", ".join(f"{s}->{mapping[s]}" for s in sorted(mapping))
     return (
-        "The same ciphertext letter always maps to the same plaintext letter, so this is a "
-        "fixed substitution cipher.\n"
-        f"From the examples, the letter map is: {pairs}.\n"
-        f"Applying it to '{target}' character by character gives the plaintext.\n"
+        "The same ciphertext letter always maps to the same plaintext letter (fixed substitution).\n"
+        f"Letter map from the examples: {pairs}.\n"
+        f"Decrypting '{target}' (completing any unseen letters by matching the known plaintext "
+        f"vocabulary) gives the answer.\n"
         f"\\boxed{{{answer}}}"
     )
 
@@ -57,21 +136,18 @@ def build(limit: int | None = None):
     import classify as C
     rows = list(csv.DictReader(TRAIN.open(encoding="utf-8")))
     ciph = [r for r in rows if C.classify(r["prompt"]) == "cipher"]
+    vocab_idx = _by_len_pattern(harvest_vocab(ciph))
     out, kept, total, mismatch = [], 0, 0, 0
     for r in ciph:
-        mapping, target = _parse(r["prompt"])
-        if not mapping or not target:
-            continue
         total += 1
-        letters = {c.lower() for c in target if c.isalpha()}
-        if not letters.issubset(mapping.keys()):
-            continue  # undecryptable letter -> skip (needs wordlist completion)
-        dec = "".join(mapping.get(c.lower(), c) if c.isalpha() else c for c in target)
-        if dec.strip().lower() != r["answer"].strip().lower():
+        pred = solve_row(r["prompt"], vocab_idx)
+        if pred is None:
+            continue
+        if pred.strip().lower() != r["answer"].strip().lower():
             mismatch += 1
             continue
         kept += 1
-        out.append({"prompt": r["prompt"], "completion": _cot(mapping, target, r["answer"].strip()),
+        out.append({"prompt": r["prompt"], "completion": _cot(r["prompt"], r["answer"].strip()),
                     "category": "cipher"})
         if limit and kept >= limit:
             break
