@@ -88,9 +88,10 @@
       "fix_v27": "cutlass DSL site-dir + ptxas chmod + bnb install appended to user heartbeat cell 0",
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
       "machine": "NvidiaRtxPro6000",
+      "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 34,
-      "state": "AWAITING_USER_RUN"
+      "notebook_version": 40,
+      "state": "API_TRIGGERED"
     }
   },
   "hypotheses": {
@@ -1409,5 +1410,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T00:27:45.994131+00:00"
+  "updated_at": "2026-05-31T01:23:54.682416+00:00"
 }
