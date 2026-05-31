@@ -67,13 +67,21 @@ def find_rule(pairs):
         fn = (lambda s, T=T, const=const: _xor(T(s), const))
         if ok(fn):
             return fn, f"{name} XOR {const}"
-    # 3) XOR of two transforms
+    # 3) binary bitwise op of two transforms (XOR/AND/OR/ANDNOT/ORNOT)
     names = list(TRANSFORMS)
+    BINOPS = {
+        "XOR": lambda a, b: "".join("1" if x != y else "0" for x, y in zip(a, b)),
+        "AND": lambda a, b: "".join("1" if x == "1" and y == "1" else "0" for x, y in zip(a, b)),
+        "OR": lambda a, b: "".join("1" if x == "1" or y == "1" else "0" for x, y in zip(a, b)),
+        "ANDNOT": lambda a, b: "".join("1" if x == "1" and y == "0" else "0" for x, y in zip(a, b)),
+        "ORNOT": lambda a, b: "".join("1" if x == "1" or y == "0" else "0" for x, y in zip(a, b)),
+    }
     for a, b in itertools.combinations(names, 2):
         Ta, Tb = TRANSFORMS[a], TRANSFORMS[b]
-        fn = (lambda s, Ta=Ta, Tb=Tb: _xor(Ta(s), Tb(s)))
-        if ok(fn):
-            return fn, f"{a} XOR {b}"
+        for opn, op in BINOPS.items():
+            fn = (lambda s, Ta=Ta, Tb=Tb, op=op: op(Ta(s), Tb(s)))
+            if ok(fn):
+                return fn, f"{a} {opn} {b}"
     # 4) XOR of three rotations
     for a, b, c in itertools.combinations(ROT_KEYS, 3):
         Ta, Tb, Tc = TRANSFORMS[a], TRANSFORMS[b], TRANSFORMS[c]
