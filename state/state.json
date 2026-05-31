@@ -81,7 +81,7 @@
   "gpu_runs": {
     "nvidia-nemotron-submission-demo": {
       "backend": null,
-      "corpus_attached": "v5 (1029 verified CoT rows: gravity+unit_conversion)",
+      "corpus_attached": "v5 + v6 (1569 verified CoT rows: gravity 529 + unit_conv 500 + numeral 540)",
       "created_at": null,
       "cv_score": null,
       "fix": "corpus v2 uploaded to Kaggle dataset sai1881/nemotron-cot-corpus-v2; attached to notebook as dataSources entry \u2014 first time corpus is auto-mounted via /kaggle/input/",
@@ -89,7 +89,7 @@
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
       "machine": "NvidiaRtxPro6000",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 32,
+      "notebook_version": 34,
       "state": "AWAITING_USER_RUN"
     }
   },
@@ -1418,5 +1418,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-30T23:58:13.148508+00:00"
+  "updated_at": "2026-05-31T00:13:31.905029+00:00"
 }

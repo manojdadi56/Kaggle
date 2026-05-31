@@ -1,0 +1,11 @@
+{
+  "total_rows": 1569,
+  "per_category": {
+    "numeral": 540,
+    "unit_conversion": 500,
+    "gravity": 529
+  },
+  "rejected_per_category": {},
+  "verified_pct": 100.0,
+  "method": "deterministic solver + numeric/string verification vs train.csv"
+}
