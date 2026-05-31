@@ -1501,7 +1501,7 @@
     "TASK-V13-equation-symbolic": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
       "est_hours": 3,
-      "notes": "Real format is SYMBOLIC char-transformation (e.g. `!*[{ = '\"[`), NOT numeric. Net-new solver: infer per-position or per-symbol mapping from examples, apply to target, verify vs gold, keep verified.",
+      "notes": "Real format: examples 'SYMBOLS = SYMBOLS' where symbols encode numbers; input/output lengths differ so it is arithmetic on a symbol-numeral system, NOT a 1:1 substitution (cipher trick does not apply). Solver: infer symbol->digit map + base, decode operands, infer operation, encode result. Multi-hour.",
       "owner": "operator",
       "status": "BACKLOG",
       "title": "Symbolic-transform solver for equation_numeric"
@@ -1556,5 +1556,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:58:47.502289+00:00"
+  "updated_at": "2026-05-31T09:00:20.498751+00:00"
 }
