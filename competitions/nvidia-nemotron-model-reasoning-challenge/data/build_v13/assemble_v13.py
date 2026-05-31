@@ -58,10 +58,14 @@ def main() -> int:
                 continue
             out.append(r)
             cnt[r.get("category", "?")] += 1
+    # Deterministic shuffle so any prefix (the notebook caps at MAX_TRAIN) is stratified across
+    # all categories — otherwise category-block ordering drops whole categories from training.
+    import random
+    random.Random(1234).shuffle(out)
     dest = DATA / "corpus" / "v13_local"
     dest.mkdir(parents=True, exist_ok=True)
     (dest / "corpus.jsonl").write_text("\n".join(json.dumps(r) for r in out) + "\n", encoding="utf-8")
-    print(f"v13 assembled: {dict(cnt)} TOTAL {len(out)} -> {dest/'corpus.jsonl'}")
+    print(f"v13 assembled (shuffled): {dict(cnt)} TOTAL {len(out)} -> {dest/'corpus.jsonl'}")
     return 0
 
 
