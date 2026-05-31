@@ -38,7 +38,7 @@ def solve(prompt: str) -> str:
     Produces a deterministic Chain-of-Thought trace.
     """
     lines = [line.strip() for line in prompt.split('\n') if line.strip()]
-    mapping = {}
+    mapping_counts = collections.defaultdict(lambda: collections.defaultdict(int))
 
     question_line = None
     for line in lines:
@@ -46,7 +46,7 @@ def solve(prompt: str) -> str:
             src, dst = line.split(' -> ')
             for s, d in zip(src, dst):
                 if s.isalpha() and d.isalpha():
-                    mapping[s] = d
+                    mapping_counts[s.upper()][d.upper()] += 1
         elif "Now, decrypt the following text:" in line:
             question_line = line.split("Now, decrypt the following text:")[1].strip()
         elif "Decrypt:" in line:
@@ -56,6 +56,12 @@ def solve(prompt: str) -> str:
 
     if not question_line:
         question_line = lines[-1]
+
+    # Resolve conflicting character mappings using the most frequent one.
+    mapping = {}
+    for s, counts in mapping_counts.items():
+        best_d = max(counts.items(), key=lambda x: (x[1], x[0]))[0]
+        mapping[s] = best_d
 
     cot = "## Classification\n"
     cot += "Letters are consistently substituted across examples — the same ciphertext\n"
@@ -70,67 +76,85 @@ def solve(prompt: str) -> str:
     cot += f"\n### Decrypt the question\n"
 
     words = question_line.split()
-    decrypted_words = []
-
-    # Word matching
+    words_to_resolve = []
     for word in words:
-        decrypted_word = ""
-        missing_chars = False
-        for c in word:
-            if c.isalpha():
-                if c in mapping:
-                    decrypted_word += mapping[c]
-                elif c.upper() in mapping:
-                    decrypted_word += mapping[c.upper()]
-                else:
-                    decrypted_word += "?"
-                    missing_chars = True
-            else:
-                decrypted_word += c
+        clean_word = "".join(c for c in word if c.isalpha()).upper()
+        if clean_word:
+            words_to_resolve.append((word, clean_word))
 
-        if not missing_chars:
-            decrypted_words.append(decrypted_word)
-        else:
-            # Match the word using pattern and length
-            cot += f"Word '{word}' partially decrypts to '{decrypted_word}'.\n"
-            word_pattern = get_word_pattern(word)
-            word_len = len(word)
+    def get_candidates(word):
+        word_pattern = get_word_pattern(word)
+        word_len = len(word)
+        candidates = []
+        mapped_values = set(mapping.values())
 
-            candidates = []
-            for w in WONDERLAND_WORDS:
-                if len(w) == word_len and get_word_pattern(w) == word_pattern:
-                    # Cross-check with known mapping
-                    valid = True
+        for w in WONDERLAND_WORDS:
+            if len(w) == word_len and get_word_pattern(w) == word_pattern:
+                valid = True
+                for i, char in enumerate(word):
+                    upper_char = char.upper()
+                    mapped_char = mapping.get(upper_char)
+                    if mapped_char and mapped_char != w[i].upper():
+                        valid = False
+                        break
+
+                # Bijective mapping enforcement
+                if valid:
                     for i, char in enumerate(word):
-                        if char in mapping and mapping[char] != w[i]:
+                        upper_char = char.upper()
+                        if upper_char not in mapping and w[i].upper() in mapped_values:
                             valid = False
                             break
-                    if valid:
-                        candidates.append(w)
+                if valid:
+                    candidates.append(w)
+        return candidates
 
-            if candidates:
-                # We assume the first candidate is correct for simplicity, but if there's only 1 it's deterministic
-                cot += f"Candidates for '{word}' based on pattern and known letters: {candidates}\n"
+    # Iteratively resolve unambiguous words
+    changed = True
+    while changed:
+        changed = False
+        for original_word, word in words_to_resolve:
+            missing_chars = any(c.upper() not in mapping for c in word)
+            if not missing_chars:
+                continue
+
+            candidates = get_candidates(word)
+            if len(candidates) == 1:
                 best_match = candidates[0]
-                cot += f"Selected '{best_match}'.\n"
-                decrypted_words.append(best_match)
-                # Update mapping
+                cot += f"Word '{word}' unambiguously decrypts to '{best_match}'.\n"
                 for i, char in enumerate(word):
-                    if char.isalpha() and char not in mapping:
-                        mapping[char] = best_match[i]
-                        cot += f"New mapping: {char} -> {best_match[i]}\n"
-            else:
-                cot += f"No candidates found for '{word}'. Keeping as '{decrypted_word}'.\n"
-                decrypted_words.append(decrypted_word)
+                    upper_char = char.upper()
+                    if upper_char not in mapping:
+                        mapping[upper_char] = best_match[i].upper()
+                        cot += f"New mapping: {upper_char} -> {best_match[i].upper()}\n"
+                changed = True
 
-    ans = " ".join(decrypted_words)
+    # If there are still unresolved words, guess the first candidate
+    changed = True
+    while changed:
+        changed = False
+        for original_word, word in words_to_resolve:
+            missing_chars = any(c.upper() not in mapping for c in word)
+            if not missing_chars:
+                continue
 
-    # Re-evaluate any unknown words if mapping got updated
+            candidates = get_candidates(word)
+            if candidates:
+                best_match = candidates[0]
+                cot += f"Word '{word}' has multiple candidates: {candidates}. Guessing '{best_match}'.\n"
+                for i, char in enumerate(word):
+                    upper_char = char.upper()
+                    if upper_char not in mapping:
+                        mapping[upper_char] = best_match[i].upper()
+                        cot += f"New mapping: {upper_char} -> {best_match[i].upper()}\n"
+                changed = True
+
+    # Apply final mapping
     final_ans = ""
     for c in question_line:
         if c.isalpha():
             is_upper = c.isupper()
-            mapped = mapping.get(c, mapping.get(c.upper(), mapping.get(c.lower())))
+            mapped = mapping.get(c.upper())
             if mapped:
                 final_ans += mapped.upper() if is_upper else mapped.lower()
             else:
@@ -142,3 +166,50 @@ def solve(prompt: str) -> str:
     cot += f"\n\\boxed{{{final_ans}}}\n"
 
     return cot
+
+def build_rows(prompts: List[str]) -> List[Dict[str, str]]:
+    """Builds a list of dictionaries with prompt, response, and category."""
+    rows = []
+    for prompt in prompts:
+        rows.append({
+            "prompt": prompt,
+            "response": solve(prompt),
+            "category": "cipher"
+        })
+    return rows
+
+def test_solve_basic():
+    prompt = "A B C -> X Y Z\n\nDecrypt: A B C"
+    result = solve(prompt)
+    assert "\\boxed{X Y Z}" in result
+
+def test_solve_lower_upper():
+    prompt = "A b C -> X y Z\n\nDecrypt: A b c"
+    result = solve(prompt)
+    assert "\\boxed{X y z}" in result
+
+def test_solve_words():
+    prompt = "UCOOV -> QUEEN\nPWGTFYOQG -> DISCOVERS\n\nDecrypt: UCOOV PWGTFYOQG"
+    result = solve(prompt)
+    assert "\\boxed{QUEEN DISCOVERS}" in result
+
+def test_solve_conflict_resolution():
+    prompt = "A B C -> X Y Z\nA B C -> X W Z\nA B C -> X Y Z\n\nDecrypt: B"
+    result = solve(prompt)
+    assert "\\boxed{Y}" in result
+
+def test_build_rows():
+    prompts = ["A -> X\nDecrypt: A", "B -> Y\nDecrypt: B"]
+    rows = build_rows(prompts)
+    assert len(rows) == 2
+    assert rows[0]["prompt"] == prompts[0]
+    assert "\\boxed{X}" in rows[0]["response"]
+    assert rows[0]["category"] == "cipher"
+    assert rows[1]["prompt"] == prompts[1]
+    assert "\\boxed{Y}" in rows[1]["response"]
+    assert rows[1]["category"] == "cipher"
+
+def test_solve_punctuation():
+    prompt = "UCOOV, PWGTFYOQG! -> QUEEN, DISCOVERS!\n\nDecrypt: UCOOV, PWGTFYOQG!"
+    result = solve(prompt)
+    assert "\\boxed{QUEEN, DISCOVERS!}" in result
