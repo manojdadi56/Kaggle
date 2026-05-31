@@ -1409,7 +1409,7 @@
       "owner": "operator",
       "session_id": "711085316798077704",
       "spec": "Write a pure-Python deterministic solver for the cipher category. The prompt gives example pairs 'ciphertext -> plaintext' (e.g. 'ucoov pwgtfyoqg' -> 'queen discovers') and then 'decrypt: <ciphertext>'. Algorithm: align each ciphertext word with its plaintext word to build a consistent char->char substitution map across ALL examples; if conflicts arise prefer the most frequent mapping; apply the map to the target ciphertext; emit a CONCISE CoT showing the mapping table + application, ending in \\boxed{plaintext}. IMPORTANT: no train.csv on the VM (gitignored) - work only from in-prompt examples. Provide solve(prompt)->str and build_rows(prompts)->list[dict] with category='cipher'. Include >=6 inline unit tests with hand-verified answers (operator runs it against local train.csv afterward). Stdlib-only.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "title": "Substitution-cipher CoT solver"
     },
     "TASK-SOLVER-cryptarithm-guess": {
@@ -1556,5 +1556,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:52:55.933077+00:00"
+  "updated_at": "2026-05-31T08:58:47.502289+00:00"
 }
