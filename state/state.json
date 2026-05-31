@@ -118,7 +118,7 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "browser Save&RunAll; model loaded full bf16; training in progress; first baseline",
-      "notebook_version": 48,
+      "notebook_version": 49,
       "run_ready": true,
       "state": "RUNNING",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
@@ -130,7 +130,8 @@
       "v45_fix": "host-faithful gen params: temp 1.0->0.0, max_new_tokens 3584->7680, max_model_len 4096->8192",
       "v46_fix": "local eval cap 2048 + EVAL_N 16 for speed (host still 7680)",
       "v47": "tqdm progress bars + ETA on train + eval loops",
-      "v48": "cell1 prefers v13 corpus path"
+      "v48": "cell1 prefers v13 corpus path",
+      "v49": "per-category CV eval (safe try/except); category preserved through load"
     }
   },
   "hypotheses": {
@@ -876,7 +877,7 @@
       "depends_on": "first baseline CV",
       "est_hours": 1,
       "notes": "Preserve `category` when loading corpus rows; build a stratified eval set (N per category, deterministic); emit aggregate score AND cv_by_category{} into cv_score.json. Wrap in try/except so an eval error never blocks adapter save / submission.zip packaging. Turns each run into a category-level diagnostic that directs corpus/experiment priorities.",
-      "status": "BACKLOG",
+      "status": "DONE",
       "title": "Per-category stratified CV in eval cell"
     },
     "TASK-EVAL-percat-module": {
@@ -1572,5 +1573,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T10:17:29.937755+00:00"
+  "updated_at": "2026-05-31T10:29:12.935665+00:00"
 }
