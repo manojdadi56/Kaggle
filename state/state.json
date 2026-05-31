@@ -1488,6 +1488,22 @@
       "status": "DONE",
       "title": "Write tools/validate_adapter.py pre-submit gate (loadability + rank<=32 + boxed-output smoke)"
     },
+    "TASK-V13-bit-verified": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
+      "est_hours": 2,
+      "notes": "Real format: 8-bit binary 'NNNNNNNN -> MMMMMMMM' + 'Now, determine the output for:'. Existing solvers/bit_manipulation/solve.py searches unary ops \u2014 TEST on real classified rows, measure exact-match, keep verified. Extend op-search (rotations/shifts/XOR-with-const/majority) if yield is low.",
+      "owner": "operator",
+      "status": "BACKLOG",
+      "title": "Verified bit_manipulation corpus from real rows"
+    },
+    "TASK-V13-equation-symbolic": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
+      "est_hours": 3,
+      "notes": "Real format is SYMBOLIC char-transformation (e.g. `!*[{ = '\"[`), NOT numeric. Net-new solver: infer per-position or per-symbol mapping from examples, apply to target, verify vs gold, keep verified.",
+      "owner": "operator",
+      "status": "BACKLOG",
+      "title": "Symbolic-transform solver for equation_numeric"
+    },
     "TASK-XLSX-community-and-tabs": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/analysis/community_and_tabs.xlsx, tests/test_community_and_tabs.py",
       "branch": "main",
@@ -1538,5 +1554,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:38:33.245896+00:00"
+  "updated_at": "2026-05-31T08:43:53.325645+00:00"
 }
