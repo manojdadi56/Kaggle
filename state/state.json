@@ -773,6 +773,14 @@
       "status": "DONE",
       "title": "Add record_cv_score state op + auto best_cv update + apply_decision pickup from kernel-output"
     },
+    "TASK-EVAL-honest-dev-split": {
+      "allowed_area": "notebook cell 2/3",
+      "depends_on": "first baseline CV",
+      "est_hours": 1,
+      "notes": "Currently eval runs on train_data[:20] which were trained on -> optimistic CV. Hold out a stratified dev slice (NOT trained on) and measure CV there so the submit-gate (cv > best) is meaningful vs the LB. Use eval/build_cv_fixture_v2.py / cv_fixture_v2_manifest.json if helpful.",
+      "status": "BACKLOG",
+      "title": "Hold out stratified dev set for honest CV gate"
+    },
     "TASK-EVAL-host-chat-template": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
       "branch": "main",
@@ -784,6 +792,14 @@
       "spec": "Per references/analysis-winner-training-internals.md + the winner repo's notebook_tinker.py, the host uses a SPECIFIC chat template + reasoning_on system header. Our v23 notebook now calls tokenizer.apply_chat_template \u2014 but we need parity tests. Build: (a) competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md documenting the exact template, system prompt text,   max_new_tokens, temperature, top_p, max_model_len that the host uses (extract from analyses +   any official references). (b) competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py: load tokenizer from a local fake or skip if not   available; render 5 fixed prompts via apply_chat_template + reasoning_on;   assert byte-equality vs expected strings in host_template_spec.md. Acceptance: spec.md exists with concrete strings; parity test runs (xfail allowed if local tokenizer isn't accessible). Cite source line numbers in analyses + winner repo.",
       "status": "DONE",
       "title": "Capture exact Nemotron host chat template + reasoning_on system prompt for parity testing"
+    },
+    "TASK-EVAL-percat-cv": {
+      "allowed_area": "notebook cell 1/2/3",
+      "depends_on": "first baseline CV",
+      "est_hours": 1,
+      "notes": "Preserve `category` when loading corpus rows; build a stratified eval set (N per category, deterministic); emit aggregate score AND cv_by_category{} into cv_score.json. Wrap in try/except so an eval error never blocks adapter save / submission.zip packaging. Turns each run into a category-level diagnostic that directs corpus/experiment priorities.",
+      "status": "BACKLOG",
+      "title": "Per-category stratified CV in eval cell"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
       "acceptance_criteria": "eval/vllm_eval.py exists; CLI works in mock mode (no vllm needed); cv_score.json schema includes aggregate + per_category + n_boxed_missing; pytest -q green.",
@@ -1406,5 +1422,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T07:43:53.550905+00:00"
+  "updated_at": "2026-05-31T07:48:07.171348+00:00"
 }
