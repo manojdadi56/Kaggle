@@ -84,6 +84,7 @@
       "corpus_attached": "v5 + v6 (1569 verified CoT rows: gravity 529 + unit_conv 500 + numeral 540)",
       "created_at": null,
       "cv_score": null,
+      "finding": "SaveAndRunAll via MCP ran on CPU even with proper fork bindings; AGENTS.md updated",
       "fix": "corpus v2 uploaded to Kaggle dataset sai1881/nemotron-cot-corpus-v2; attached to notebook as dataSources entry \u2014 first time corpus is auto-mounted via /kaggle/input/",
       "fix_v27": "cutlass DSL site-dir + ptxas chmod + bnb install appended to user heartbeat cell 0",
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
@@ -91,7 +92,7 @@
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
       "notebook_version": 40,
-      "state": "API_TRIGGERED"
+      "state": "API_CONFIRMED_CPU_ONLY"
     }
   },
   "hypotheses": {
@@ -376,15 +377,6 @@
       "state": "COMPLETED",
       "task_id": "TASK-EVAL-host-chat-template"
     },
-    "3423175478610363796": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
-      "branch": "main",
-      "created_at": "2026-05-30T21:02:47.830874+00:00",
-      "pr_url": null,
-      "state": "IN_PROGRESS",
-      "task_id": "TASK-DATA-cot-corpus-v1"
-    },
     "6061109906340266177": {
       "account_idx": 0,
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
@@ -519,7 +511,7 @@
       "priority": "P0",
       "session_id": "3423175478610363796",
       "spec": "This is technique-backlog #1: the largest single CV-lever. Read references/analysis-winner.md + winner-reasoning.py.md + winner-corpus.py.md + winner-augmentation.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/cot_v1.jsonl by: (a) loading data/raw/train.csv (run tools/download_competition_data.py if missing), (b) classifying each row into one of the 9 host categories using data/curation/classify.py, (c) for each row generating a step-by-step \\boxed{} chain-of-thought using a per-category deterministic solver (Python, NO LLM/API calls). Cover at least 6 of the 9 categories (equation_numeric, cryptarithm, cipher, bit_manipulation, numeral, gravity priorities). Output schema per line: {id, category, prompt, cot_completion, verified:bool}. Target: >=500 verified-CoT rows. Add tests/test_cot_corpus_v1.py asserting each output row has \\boxed{answer} matching the original train.csv answer (verification gate). Acceptance: corpus.jsonl exists with >=500 rows >=90 percent verified across >=6 categories; pytest -q green.",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "title": "Build CoT corpus from train.csv using winner's deterministic solver pattern (the 0.65->0.85 lever)"
     },
     "TASK-E-PRECOND-mamba-targets-smoke": {
@@ -1410,5 +1402,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T01:23:54.682416+00:00"
+  "updated_at": "2026-05-31T01:34:15.749149+00:00"
 }

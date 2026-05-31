@@ -65,6 +65,15 @@ How to swap accounts: change the `Authorization: Bearer` header from `$KAGGLE_AP
 - **kagglehub vs mount**: prefer reading the model from the mounted `/kaggle/input/...` path (it's attached as a dataSource on a fork). `kagglehub.model_download` works only when the model is already attached (it re-attaches otherwise → batch-mode error). If `/kaggle/input` shows the model, point `from_pretrained` straight at it.
 - MCP creds: Kaggle MCP is registered at user scope (`~/.claude.json`, HTTP transport, KGAT bearer). 66 tools. Call via JSON-RPC `tools/call` if the harness tools aren't loaded in-session.
 
+### HARD LIMIT (re-confirmed C23 with v40 — properly-bound fork)
+Tested `save_notebook` with `kernelExecutionType: SaveAndRunAll` on the demo-fork v39 which has every binding correct (accelerator nvidiaRtxPro6000, isInternetEnabled True, isGpuEnabled True, 5 valid dataSources with `databundleVersionId` pins, corpus v10 attached). Result: the API-triggered run executed on **CPU** (`AssertionError: Torch not compiled with CUDA enabled`), `machine_shape: None`, `enable_gpu: False`, `enable_internet: False` post-run. Even on the perfectly-bound fork, **API-triggered runs lose the saved accelerator + internet flags**. Only the browser "Save Version → Save & Run All (Commit)" provisions GPU and respects the saved Session Options. The previous AGENTS.md text remains correct: **operator can edit code via API, only USER can actually run on GPU**.
+
+### Operator-side workflow that DOES work via API (no GPU needed)
+- `dataset_create_new` / `dataset_create_version` via `kaggle.KaggleApi()` — upload corpora/fixtures as private datasets. See `tools/upload_corpus_dataset.py` pattern. KGAT auth via env var.
+- `save_notebook` with `QuickSave` — push new code into the notebook (preserves fork bindings). User runs.
+- `get_notebook_info` + `get_notebook_session_status` + `list_notebook_session_output` — poll/read after a real (browser-triggered) run.
+- `submit_to_competition` — after the user-triggered run produces an adapter, operator can pull the submission.zip and submit via MCP. Submit limit 5/day per account.
+
 ### Old API-kernel path (DEPRECATED for Nemotron — kept for reference only)
 The `tools/kaggle_lite.py kernel-push` + `competitions/<slug>/kernels/<exp-id>/` flow below does NOT work for this competition (lands on P100, no model). Use the fork workflow above. The kernel dirs + `tools/check_kernel.py` 7-fix lint remain only as historical artifacts.
 
