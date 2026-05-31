@@ -84,15 +84,18 @@
       "corpus_attached": "v5 + v6 (1569 verified CoT rows: gravity 529 + unit_conv 500 + numeral 540)",
       "created_at": null,
       "cv_score": null,
+      "enable_gpu_at_v42": false,
       "finding": "SaveAndRunAll via MCP ran on CPU even with proper fork bindings; AGENTS.md updated",
       "fix": "corpus v2 uploaded to Kaggle dataset sai1881/nemotron-cot-corpus-v2; attached to notebook as dataSources entry \u2014 first time corpus is auto-mounted via /kaggle/input/",
       "fix_v27": "cutlass DSL site-dir + ptxas chmod + bnb install appended to user heartbeat cell 0",
       "fixes_active": "bnb>=0.46.1 cell-0 + T4x2 max_memory split",
+      "latest_complete_was": "QuickSave HTML-only render (801-char log, 11.25s, no execution)",
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "v3 demo-code crashed on T4 OOM; v4 has 4-bit NF4 fallback",
-      "notebook_version": 40,
-      "state": "API_CONFIRMED_CPU_ONLY"
+      "notebook_version": 42,
+      "state": "API_CONFIRMED_CPU_ONLY",
+      "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000"
     }
   },
   "hypotheses": {
@@ -367,26 +370,7 @@
   },
   "metrics": [],
   "schema_version": 1,
-  "sessions": {
-    "16470966891545264459": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/host_template_spec.md, competitions/nvidia-nemotron-model-reasoning-challenge/eval/test_template_parity.py",
-      "branch": "main",
-      "created_at": "2026-05-30T22:40:25.213677+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/56",
-      "state": "COMPLETED",
-      "task_id": "TASK-EVAL-host-chat-template"
-    },
-    "6061109906340266177": {
-      "account_idx": 0,
-      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/cv_fixture_v2_manifest.json, competitions/nvidia-nemotron-model-reasoning-challenge/eval/build_cv_fixture_v2.py, competitions/nvidia-nemotron-model-reasoning-challenge/eval/README.md, tests/test_cv_fixture_v2.py",
-      "branch": "main",
-      "created_at": "2026-05-30T22:40:22.697826+00:00",
-      "pr_url": "https://github.com/manojdadi56/Kaggle/pull/59",
-      "state": "COMPLETED",
-      "task_id": "TASK-EVAL-cv-fixture-9cat"
-    }
-  },
+  "sessions": {},
   "submit_counter": {},
   "suggestions": {},
   "tasks": {
@@ -1402,5 +1386,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T01:34:15.749149+00:00"
+  "updated_at": "2026-05-31T02:48:29.836158+00:00"
 }
