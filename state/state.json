@@ -375,6 +375,15 @@
       "statement": "Unit-conversion problems decompose into a directed graph of conversion factors; a Floyd-Warshall closure over the parsed factors yields exact answers.",
       "status": "PROPOSED"
     },
+    "H-VERIFIED-CORPUS": {
+      "expected_effect": "Higher and more faithful CV; removes risk of training on wrong synthetic reasoning.",
+      "source_refs": [
+        "corpus_verify v12 2026-05-31",
+        "C27 synthetic-vs-matched finding"
+      ],
+      "statement": "Replacing the 2395 synthetic rows (6 categories) with train.csv-VERIFIED solver output raises CV/LB vs the v12 hybrid, because verified rows guarantee correct CoT and match the host test distribution (same generator as train.csv).",
+      "status": "PROPOSED"
+    },
     "H-VLLM-EVAL": {
       "created_at": "2026-05-30T11:50:00Z",
       "expected_effect": "Per technique-backlog #2 (effort:M, expected_gain:HIGH); enables every other iteration and prevents wasted submits against the 5/day hard cap; mirrors winner dashboards.",
@@ -575,6 +584,14 @@
       "spec": "This is technique-backlog #1: the largest single CV-lever. Read references/analysis-winner.md + winner-reasoning.py.md + winner-corpus.py.md + winner-augmentation.py.md. Build competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/cot_v1.jsonl by: (a) loading data/raw/train.csv (run tools/download_competition_data.py if missing), (b) classifying each row into one of the 9 host categories using data/curation/classify.py, (c) for each row generating a step-by-step \\boxed{} chain-of-thought using a per-category deterministic solver (Python, NO LLM/API calls). Cover at least 6 of the 9 categories (equation_numeric, cryptarithm, cipher, bit_manipulation, numeral, gravity priorities). Output schema per line: {id, category, prompt, cot_completion, verified:bool}. Target: >=500 verified-CoT rows. Add tests/test_cot_corpus_v1.py asserting each output row has \\boxed{answer} matching the original train.csv answer (verification gate). Acceptance: corpus.jsonl exists with >=500 rows >=90 percent verified across >=6 categories; pytest -q green.",
       "status": "DONE",
       "title": "Build CoT corpus from train.csv using winner's deterministic solver pattern (the 0.65->0.85 lever)"
+    },
+    "TASK-DATA-train-classifier": {
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/classify/",
+      "est_hours": 2,
+      "notes": "OPERATOR-ONLY (Jules VMs lack train.csv). Classify all 9500 train.csv rows into the 9 categories by prompt pattern. Seed the 3 verified categories via exact-prompt membership from v6/v12 matched rows; pattern-match the other 6. Output id->category map + per-category counts. Unlocks running solvers on REAL rows to convert 6 synthetic categories -> verified, and exploits the full 9500 set (vs ~4k now).",
+      "owner": "operator",
+      "status": "BACKLOG",
+      "title": "train.csv category classifier (operator-owned, needs raw data)"
     },
     "TASK-E-PRECOND-mamba-targets-smoke": {
       "actor": "jules",
@@ -1532,5 +1549,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:01:54.465396+00:00"
+  "updated_at": "2026-05-31T08:09:39.796200+00:00"
 }
