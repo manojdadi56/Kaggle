@@ -88,14 +88,21 @@ def find_rule(pairs):
         fn = (lambda s, Ta=Ta, Tb=Tb, Tc=Tc: _xor(_xor(Ta(s), Tb(s)), Tc(s)))
         if ok(fn):
             return fn, f"{a} XOR {b} XOR {c}"
-    # 5) maj / ch of three rotations (+ID)
-    keys = ["ID"] + ROT_KEYS
+    # 5) maj / ch of three transforms over ID + rotations + SHIFTS (broader)
+    keys = ["ID"] + ROT_KEYS + [k for k in TRANSFORMS if k.startswith("SH")]
     for a, b, c in itertools.combinations(keys, 3):
         Ta, Tb, Tc = TRANSFORMS[a], TRANSFORMS[b], TRANSFORMS[c]
         for op, opn in ((_maj, "MAJ"), (_ch, "CH")):
             fn = (lambda s, Ta=Ta, Tb=Tb, Tc=Tc, op=op: op(Ta(s), Tb(s), Tc(s)))
             if ok(fn):
                 return fn, f"{opn}({a},{b},{c})"
+    # 7) XOR of three transforms over rotations + shifts (broader than rotations-only)
+    keys2 = ROT_KEYS + [k for k in TRANSFORMS if k.startswith("SH")]
+    for a, b, c in itertools.combinations(keys2, 3):
+        Ta, Tb, Tc = TRANSFORMS[a], TRANSFORMS[b], TRANSFORMS[c]
+        fn = (lambda s, Ta=Ta, Tb=Tb, Tc=Tc: _xor(_xor(Ta(s), Tb(s)), Tc(s)))
+        if ok(fn):
+            return fn, f"{a} XOR {b} XOR {c}"
     return None
 
 
