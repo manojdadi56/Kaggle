@@ -1493,9 +1493,9 @@
     "TASK-V13-bit-verified": {
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/build_v13/",
       "est_hours": 2,
-      "notes": "Real-data test: existing bit_manipulation solve_transformation scores 0/200 (unary/2-op search insufficient for real transforms incl majority/choice/per-bit functions). REWORK: infer each OUTPUT bit as a boolean function of input bits (the 8 examples give 8 of 256 truth-table rows per output position; with shifts/rotations the function is position-shared) - fit per-output-bit, verify, keep matches.",
+      "notes": "sigma-family search yields 665/1602 verified (41.5%), 0 bad rows. Follow-up: expand family with AND/OR-of-rotations, T XOR const variants, and per-output-bit boolean fitting to push beyond 41%.",
       "owner": "operator",
-      "status": "BACKLOG",
+      "status": "IN_PROGRESS",
       "title": "Verified bit_manipulation corpus from real rows"
     },
     "TASK-V13-equation-symbolic": {
@@ -1556,5 +1556,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T09:00:20.498751+00:00"
+  "updated_at": "2026-05-31T09:05:54.478520+00:00"
 }
