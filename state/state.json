@@ -2,7 +2,8 @@
   "active_competition": "nvidia-nemotron-model-reasoning-challenge",
   "best_cv": null,
   "cursors": {
-    "jules_dispatched_2026-05-30": 57
+    "jules_dispatched_2026-05-30": 57,
+    "jules_dispatched_2026-05-31": 5
   },
   "decisions": {
     "C-GENPARAMS-RESOLVED": {
@@ -390,7 +391,53 @@
   },
   "metrics": [],
   "schema_version": 1,
-  "sessions": {},
+  "sessions": {
+    "12166516957131497176": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_fallback/",
+      "branch": "main",
+      "created_at": "2026-05-31T08:01:54.449127+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-SOLVER-equation-fallback"
+    },
+    "13572689577807863885": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm_guess/",
+      "branch": "main",
+      "created_at": "2026-05-31T08:01:51.860472+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-SOLVER-cryptarithm-guess"
+    },
+    "16052393350284726592": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/",
+      "branch": "main",
+      "created_at": "2026-05-31T08:01:43.674412+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-CORPUS-curation"
+    },
+    "711085316798077704": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher/",
+      "branch": "main",
+      "created_at": "2026-05-31T08:01:49.297911+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-SOLVER-cipher"
+    },
+    "7625620245297193268": {
+      "account_idx": 0,
+      "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/percat/",
+      "branch": "main",
+      "created_at": "2026-05-31T08:01:46.574218+00:00",
+      "pr_url": null,
+      "state": "QUEUED",
+      "task_id": "TASK-EVAL-percat-module"
+    }
+  },
   "submit_counter": {},
   "suggestions": {},
   "tasks": {
@@ -497,10 +544,12 @@
     "TASK-CORPUS-curation": {
       "acceptance_criteria": "curate() returns kept subset + drop report; deterministic; unit test on inline fixture passes; no source mutation.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/",
+      "branch": "main",
       "definition_of_done": "One PR adding curation module + test under allowed_area; tests pass.",
       "est_hours": 1,
+      "session_id": "16052393350284726592",
       "spec": "Implement a Select2Reason-style curation filter over an existing corpus.jsonl (rows have prompt/completion/category). Goal: quality over quantity - keep the highest-utility traces, drop near-duplicate/repetitive ones, balance per category. Implement curate(rows:list[dict], per_cat_cap:int=None)->(kept, dropped, report): group by (category, normalized-template signature), prefer longer/more-informative CoT, down-sample near-duplicates, and produce a report dict with kept/dropped counts per category and the selection rationale. Do NOT mutate or delete source files - read input path, write curated output + report JSON to your area. This needs NO train.csv. Include unit tests on a small synthetic in-repo fixture (build a tiny list of rows inline).",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "title": "Select2Reason corpus curation filter"
     },
     "TASK-CORPUS-scale-9cat": {
@@ -813,10 +862,12 @@
     "TASK-EVAL-percat-module": {
       "acceptance_criteria": "all 4 functions implemented + unit-tested on inline fixture; deterministic split; host-rule scoring; pytest green.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/percat/",
+      "branch": "main",
       "definition_of_done": "One PR adding the eval module + tests under allowed_area; tests pass.",
       "est_hours": 1,
+      "session_id": "7625620245297193268",
       "spec": "Build an import-safe module (stdlib + std json/re only) that the training notebook's eval cell will reuse. Provide: (1) extract_boxed(text)->str|None matching the host (last \\boxed{...}, depth-balanced); (2) is_correct(pred, gold)->bool using exact-string OR relative-numeric tolerance 1e-2 (host rule); (3) score_by_category(records)->{aggregate, by_category} where each record has {category, pred_text, gold}; (4) stratified_dev_split(rows, per_cat:int, seed:int)->(train, dev) deterministic, N held-out per category. NO train.csv needed - build a tiny inline fixture for tests. Match the host scoring described in eval/host_template_spec.md (the AUTHORITATIVE table: temp=0.0, boxed extraction, 1e-2 tolerance).",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "title": "Per-category + held-out CV module (host scoring)"
     },
     "TASK-EVAL-vllm-harness-skeleton": {
@@ -1347,28 +1398,34 @@
     "TASK-SOLVER-cipher": {
       "acceptance_criteria": ">=6 inline tests pass; build_rows valid; CoT ends in \\boxed{}; stdlib-only; pytest green.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher/",
+      "branch": "main",
       "definition_of_done": "One PR adding cipher solver + tests under allowed_area; tests pass.",
       "est_hours": 1,
+      "session_id": "711085316798077704",
       "spec": "Write a pure-Python deterministic solver for the cipher category. The prompt gives example pairs 'ciphertext -> plaintext' (e.g. 'ucoov pwgtfyoqg' -> 'queen discovers') and then 'decrypt: <ciphertext>'. Algorithm: align each ciphertext word with its plaintext word to build a consistent char->char substitution map across ALL examples; if conflicts arise prefer the most frequent mapping; apply the map to the target ciphertext; emit a CONCISE CoT showing the mapping table + application, ending in \\boxed{plaintext}. IMPORTANT: no train.csv on the VM (gitignored) - work only from in-prompt examples. Provide solve(prompt)->str and build_rows(prompts)->list[dict] with category='cipher'. Include >=6 inline unit tests with hand-verified answers (operator runs it against local train.csv afterward). Stdlib-only.",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "title": "Substitution-cipher CoT solver"
     },
     "TASK-SOLVER-cryptarithm-guess": {
       "acceptance_criteria": "solve() passes >=6 inline unit tests; build_rows emits valid {prompt,completion,category}; concise CoT ends in \\boxed{}; stdlib-only; pytest green.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm_guess/",
+      "branch": "main",
       "definition_of_done": "One PR adding the solver module + tests under the allowed_area; tests pass.",
       "est_hours": 1,
+      "session_id": "13572689577807863885",
       "spec": "Write a pure-Python deterministic solver for the cryptarithm_guess puzzle category (the winning solution SKIPPED this category, so it is the single highest un-captured leaderboard headroom). IMPORTANT: your VM does NOT have train.csv (it is gitignored under Kaggle ToS). Work ONLY from the in-context examples embedded in each puzzle prompt. Each prompt gives letter->word/arithmetic example pairs and a target to solve. Implement: (1) parse the example pairs from the prompt text, (2) deduce the consistent digit<->letter (or rule) assignment, (3) apply it to the target, (4) emit a CONCISE chain-of-thought that shows the deduction and ends with the final answer inside \\boxed{}. Provide solve(prompt:str)->str returning the full CoT+boxed string, plus a build_rows(prompts:list)->list[dict] emitting {prompt, completion, category:'cryptarithm_guess'}. Include >=6 inline unit tests with hand-verified expected boxed answers (the operator will then run your solver against the full local train.csv and report accuracy). Keep stdlib-only.",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "title": "Deterministic cryptarithm_guess CoT solver"
     },
     "TASK-SOLVER-equation-fallback": {
       "acceptance_criteria": "try_rule + fallback_solve implemented; >=6 inline tests pass; CoT ends in \\boxed{}; stdlib-only.",
       "allowed_area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_fallback/",
+      "branch": "main",
       "definition_of_done": "One PR adding the fallback module + tests under allowed_area; tests pass.",
       "est_hours": 1,
+      "session_id": "12166516957131497176",
       "spec": "Implement a deterministic fallback for equation_numeric puzzles where the primary rule cannot be identified: assume the operator is absolute difference |a-b| and emit the corresponding concise CoT ending in \\boxed{}. Provide try_rule(examples)->rule_or_None (attempt +,-,*,abs-diff from example pairs) and fallback_solve(prompt)->str that uses |a-b| when try_rule returns None. No train.csv on the VM - parse the in-prompt examples only. Include >=6 inline unit tests covering both the rule-found and fallback paths. Stdlib-only. The operator will measure real capture rate against local train.csv.",
-      "status": "READY",
+      "status": "IN_PROGRESS",
       "title": "Equation |a-b| fallback heuristic"
     },
     "TASK-SUBMIT-gate-decision": {
@@ -1475,5 +1532,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T08:01:39.225345+00:00"
+  "updated_at": "2026-05-31T08:01:54.465396+00:00"
 }

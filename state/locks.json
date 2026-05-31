@@ -1,6 +1,10 @@
 {
   "cap": 15,
   "holders": {
+    "TASK-CORPUS-curation": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/curation/",
+      "kind": "jules"
+    },
     "TASK-CORPUS-scale-9cat": {
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/v4/, tests/test_corpus_v4_quality.py",
       "kind": "jules"
@@ -9,8 +13,24 @@
       "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/corpus/, tests/test_cot_corpus_v1.py",
       "kind": "jules"
     },
+    "TASK-EVAL-percat-module": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/eval/percat/",
+      "kind": "jules"
+    },
     "TASK-OPS-auto-rescue": {
       "area": "orchestrator/loop.py, orchestrator/github_ops.py, tests/test_auto_rescue.py",
+      "kind": "jules"
+    },
+    "TASK-SOLVER-cipher": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cipher/",
+      "kind": "jules"
+    },
+    "TASK-SOLVER-cryptarithm-guess": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/cryptarithm_guess/",
+      "kind": "jules"
+    },
+    "TASK-SOLVER-equation-fallback": {
+      "area": "competitions/nvidia-nemotron-model-reasoning-challenge/data/solvers/equation_fallback/",
       "kind": "jules"
     }
   }
