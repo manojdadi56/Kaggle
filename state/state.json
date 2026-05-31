@@ -27,13 +27,17 @@
       "rationale": "Cross-validated against winner repo (R13), discussion deltas (R11b), 18 ledger hypotheses. See EXPERIMENTATION_PLAN.md."
     },
     "D-V13-VERIFIED": {
+      "base_expanded": "gravity1527+numeral1576+unitconv1475",
+      "coverage": "7121/9500 real rows ~75%",
       "dataset": "sai1881/nemotron-cot-corpus-v13",
       "dataset_uploaded": true,
+      "dataset_version": "create_version Ok 5MB",
       "decision": "Adopt v13 (3802 rows, 100% verified, 5 cats, equation held out) as the training corpus for the improved run, replacing v12. Attach sai1881/nemotron-cot-corpus-v13 to the notebook (swap out v12) before the post-baseline run.",
       "entity": "data",
       "rationale": "v13 is 100% train.csv-matched guaranteed-correct CoT; v12 was 60% synthetic/fabricated incl 3 categories absent from train.csv. Verified corpus should raise CV/LB and remove wrong-reasoning training.",
       "rows": 4112,
-      "upload_method": "kaggle python API dataset_create_new"
+      "upload_method": "kaggle python API dataset_create_new",
+      "v13_rows": 7121
     }
   },
   "experiments": {
@@ -1565,5 +1569,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T09:27:51.922681+00:00"
+  "updated_at": "2026-05-31T09:46:49.349940+00:00"
 }
