@@ -106,6 +106,7 @@
     "nvidia-nemotron-submission-demo": {
       "backend": null,
       "corpus_attached": "v5 + v6 (1569 verified CoT rows: gravity 529 + unit_conv 500 + numeral 540)",
+      "corpus_for_next_run": "nemotron-cot-corpus-v13 (7121 verified rows)",
       "created_at": null,
       "cv_score": null,
       "enable_gpu_at_v42": false,
@@ -117,17 +118,19 @@
       "machine": "NvidiaRtxPro6000",
       "method": "MCP save_notebook kernelExecutionType=SaveAndRunAll on properly-bound v39 (5 dataSources, accelerator nvidiaRtxPro6000)",
       "note": "browser Save&RunAll; model loaded full bf16; training in progress; first baseline",
-      "notebook_version": 47,
+      "notebook_version": 48,
       "run_ready": true,
       "state": "RUNNING",
       "still_blocked_on": "user browser Save & Run All (Commit) with RTX Pro 6000 + Internet ON",
       "submission_format_verified": "submission.zip(LoRA adapter, rank<=32, adapter_config.json) per official Evaluation page",
+      "user_action": "Add Input nemotron-cot-corpus-v13 then Save&RunAll",
       "user_progress": "v43 ran on GPU, passed model load, failed at kernel-compile ptxas exec (now fixed)",
       "v43_fixes": "cell0 site.addsitedir utility-script bootstrap + Blackwell ptxas mirror; submission.zip packaging; removed stale CV-overwriting eval",
       "v44_fix": "ptxas-blackwell prefix-match + subprocess.Popen redirect shim for RO-mount triton bin",
       "v45_fix": "host-faithful gen params: temp 1.0->0.0, max_new_tokens 3584->7680, max_model_len 4096->8192",
       "v46_fix": "local eval cap 2048 + EVAL_N 16 for speed (host still 7680)",
-      "v47": "tqdm progress bars + ETA on train + eval loops"
+      "v47": "tqdm progress bars + ETA on train + eval loops",
+      "v48": "cell1 prefers v13 corpus path"
     }
   },
   "hypotheses": {
@@ -1569,5 +1572,5 @@
       "title": "Excel: per-file deep analysis of all 17 winner-* code files"
     }
   },
-  "updated_at": "2026-05-31T09:46:49.349940+00:00"
+  "updated_at": "2026-05-31T09:50:40.683972+00:00"
 }
